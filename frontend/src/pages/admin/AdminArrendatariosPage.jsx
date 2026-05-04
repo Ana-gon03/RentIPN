@@ -18,7 +18,7 @@ const AdminArrendatariosPage = () => {
     setLoading(true)
     try {
       const data = await getArrendatarios(search)
-      setArrendatarios(data)
+      setArrendatarios(data.filter(a => a.idUsuario !== 10))
     } catch (error) {
       console.error('Error cargando arrendatarios:', error)
       setError('Error al cargar los datos')

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { getUnidadesAcademicas, getCarrerasByUnidad } from '../../services/catalogosService'
 import { validarCampo, registrarEstudiante } from '../../services/authService'
 import { useNavigate } from 'react-router-dom'
@@ -192,11 +192,51 @@ const RegistroEstudiante = ({ volver }) => {
 
   const [errors, setErrors] = useState({})
 
+  // Estado de verificación en tiempo real por campo
+  // null = sin verificar | 'checking' = consultando | 'ok' = disponible | 'taken' = ya existe
+  const [unicidad, setUnicidad] = useState({
+    username: null, correo: null, curp: null, boleta: null
+  })
+  const debounceTimers = useRef({})
+
   // Si sube constancia, desactivar el toggle de postergar
   const handleConstanciaSelect = (file) => {
     setConstanciaFile(file)
     if (file) setPostergarSeleccionado(false)
   }
+
+  // ── Verificación en tiempo real ────────────────────────────────────────────
+  const CAMPOS_UNICOS = {
+    username: { minLen: 3, regex: /^[a-zA-Z0-9_]+$/ },
+    correo:   { minLen: 5, regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
+    curp:     { minLen: 18, regex: /^[A-Z]{4}[0-9]{6}[A-Z]{6}[A-Z0-9]{2}$/ },
+    boleta:   { minLen: 10, regex: /^[0-9]{10}$/ },
+  }
+
+  const verificarCampoEnTiempoReal = useCallback((campo, valor) => {
+    const regla = CAMPOS_UNICOS[campo]
+    if (!regla) return
+
+    // Limpiar timer anterior
+    if (debounceTimers.current[campo]) clearTimeout(debounceTimers.current[campo])
+
+    // Si el valor no cumple el formato mínimo, resetear sin consultar
+    if (!valor || valor.length < regla.minLen || !regla.regex.test(valor)) {
+      setUnicidad(prev => ({ ...prev, [campo]: null }))
+      return
+    }
+
+    setUnicidad(prev => ({ ...prev, [campo]: 'checking' }))
+
+    debounceTimers.current[campo] = setTimeout(async () => {
+      try {
+        const r = await validarCampo(campo, valor)
+        setUnicidad(prev => ({ ...prev, [campo]: r.existe ? 'taken' : 'ok' }))
+      } catch {
+        setUnicidad(prev => ({ ...prev, [campo]: null }))
+      }
+    }, 600)
+  }, [])
 
   // ── Restricciones ──────────────────────────────────────────────────────────
   const calcularEdad = (fechaNacimiento) => {
@@ -231,6 +271,8 @@ const RegistroEstudiante = ({ volver }) => {
     }
     setFormData({ ...formData, [name]: v })
     if (errors[name]) setErrors({ ...errors, [name]: null })
+    // Verificar unicidad en tiempo real para campos únicos
+    if (name in CAMPOS_UNICOS) verificarCampoEnTiempoReal(name, v)
   }
 
   const handleCheckbox = (e) => {
@@ -332,14 +374,22 @@ const RegistroEstudiante = ({ volver }) => {
     fd.append('carreraId', formData.carreraId)
     fd.append('boleta', formData.boleta)
     fd.append('password', formData.password)
-    fd.append('postergarVerificacion', !constanciaFile && postergarSeleccionado)
+    // Si subió constancia → verificado; si no → pendiente (postergar)
+    const verificadoConDocumento = !!constanciaFile
+    fd.append('postergarVerificacion', verificadoConDocumento ? 'false' : 'true')
     if (constanciaFile) fd.append('constancia', constanciaFile)
 
     try {
       const response = await fetch('http://localhost:5000/api/auth/registro-estudiante', { method: 'POST', body: fd })
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || 'Error al registrar')
-      navigate('/verificar-correo', { state: { correo: formData.correo, verificadoConDocumento: !!constanciaFile } })
+      navigate('/verificar-correo', {
+        state: {
+          correo: formData.correo,
+          rol: 'estudiante',
+          verificadoConDocumento,  // true si subió constancia, false si postergó
+        }
+      })
     } catch (error) {
       alert(error.message || 'Error al registrar. Intenta de nuevo')
     } finally {
@@ -364,6 +414,28 @@ const RegistroEstudiante = ({ volver }) => {
     }
   }, [formData.escuela])
 
+  // ── Helper: indicador visual de unicidad ──────────────────────────────────
+  const IndicadorUnicidad = ({ campo }) => {
+    const estado = unicidad[campo]
+    if (!estado) return null
+    if (estado === 'checking') return (
+      <span style={{ fontSize: '0.78rem', color: '#6b7280', marginTop: '0.2rem', display: 'block' }}>
+        ⏳ Verificando...
+      </span>
+    )
+    if (estado === 'ok') return (
+      <span style={{ fontSize: '0.78rem', color: '#16a34a', marginTop: '0.2rem', display: 'block' }}>
+        ✓ Disponible
+      </span>
+    )
+    if (estado === 'taken') return (
+      <span style={{ fontSize: '0.78rem', color: '#dc2626', marginTop: '0.2rem', display: 'block' }}>
+        ✗ Ya está registrado
+      </span>
+    )
+    return null
+  }
+
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto' }}>
@@ -384,6 +456,7 @@ const RegistroEstudiante = ({ volver }) => {
             placeholder="Ej: juan_perez" style={{ width: '100%', padding: '0.5rem' }} />
           <small>Solo letras, números y guión bajo. Máximo 20 caracteres</small>
           {errors.username && <div style={{ color: 'red', fontSize: '0.8rem' }}>{errors.username}</div>}
+          <IndicadorUnicidad campo="username" />
         </div>
 
         <div style={{ marginBottom: '1rem' }}>
@@ -415,6 +488,7 @@ const RegistroEstudiante = ({ volver }) => {
           <input type="email" name="correo" value={formData.correo} onChange={handleChange}
             placeholder="Ej: juan@ejemplo.com" style={{ width: '100%', padding: '0.5rem' }} />
           {errors.correo && <div style={{ color: 'red', fontSize: '0.8rem' }}>{errors.correo}</div>}
+          <IndicadorUnicidad campo="correo" />
         </div>
 
         <div style={{ marginBottom: '1rem' }}>
@@ -431,6 +505,7 @@ const RegistroEstudiante = ({ volver }) => {
             placeholder="Ej: HERS850101MDFRRN09" style={{ width: '100%', padding: '0.5rem' }} />
           <small>18 caracteres: 4 letras, 6 números, 6 letras, 2 alfanuméricos</small>
           {errors.curp && <div style={{ color: 'red', fontSize: '0.8rem' }}>{errors.curp}</div>}
+          <IndicadorUnicidad campo="curp" />
         </div>
 
         <div style={{ marginBottom: '1rem' }}>
@@ -478,6 +553,7 @@ const RegistroEstudiante = ({ volver }) => {
             placeholder="Ej: 2024030001" style={{ width: '100%', padding: '0.5rem' }} />
           <small>10 dígitos, solo números</small>
           {errors.boleta && <div style={{ color: 'red', fontSize: '0.8rem' }}>{errors.boleta}</div>}
+          <IndicadorUnicidad campo="boleta" />
         </div>
 
         <h3>Contraseña</h3>

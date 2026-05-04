@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import { buscarCP } from '../../services/cpService'
 import { validarCampo } from '../../services/authService'
 import { useNavigate } from 'react-router-dom'
@@ -77,6 +77,10 @@ const RegistroArrendador = ({ volver }) => {
 
   const [errors, setErrors] = useState({})
 
+  // Estado de verificación en tiempo real por campo
+  const [unicidad, setUnicidad] = useState({ correo: null, curp: null, rfc: null })
+  const debounceTimers = useRef({})
+
   // ── Restricciones ──────────────────────────────────────────────────────────
   const calcularEdad = (fechaNacimiento) => {
     const hoy = new Date()
@@ -114,12 +118,39 @@ const RegistroArrendador = ({ volver }) => {
     }
     setFormData({ ...formData, [name]: v })
     if (errors[name]) setErrors({ ...errors, [name]: null })
+    if (name in CAMPOS_UNICOS) verificarCampoEnTiempoReal(name, v)
   }
 
   const handleCheckbox = (e) => {
     setFormData({ ...formData, aceptaTerminos: e.target.checked })
     if (errors.aceptaTerminos) setErrors({ ...errors, aceptaTerminos: null })
   }
+
+  // ── Verificación en tiempo real ────────────────────────────────────────────
+  const CAMPOS_UNICOS = {
+    correo: { minLen: 5,  regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
+    curp:   { minLen: 18, regex: /^[A-Z]{4}[0-9]{6}[A-Z]{6}[A-Z0-9]{2}$/ },
+    rfc:    { minLen: 13, regex: /^[A-Z]{4}[0-9]{6}[A-Z0-9]{3}$/ },
+  }
+
+  const verificarCampoEnTiempoReal = useCallback((campo, valor) => {
+    const regla = CAMPOS_UNICOS[campo]
+    if (!regla) return
+    if (debounceTimers.current[campo]) clearTimeout(debounceTimers.current[campo])
+    if (!valor || valor.length < regla.minLen || !regla.regex.test(valor)) {
+      setUnicidad(prev => ({ ...prev, [campo]: null }))
+      return
+    }
+    setUnicidad(prev => ({ ...prev, [campo]: 'checking' }))
+    debounceTimers.current[campo] = setTimeout(async () => {
+      try {
+        const r = await validarCampo(campo, valor)
+        setUnicidad(prev => ({ ...prev, [campo]: r.existe ? 'taken' : 'ok' }))
+      } catch {
+        setUnicidad(prev => ({ ...prev, [campo]: null }))
+      }
+    }, 600)
+  }, [])
 
   // ── Búsqueda de CP ─────────────────────────────────────────────────────────
   const handleCPChange = async (e) => {
@@ -266,12 +297,40 @@ const RegistroArrendador = ({ volver }) => {
       const response = await fetch('http://localhost:5000/api/auth/registro-arrendador', { method: 'POST', body: fd })
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || 'Error al registrar')
-      navigate('/verificar-correo', { state: { correo: formData.correo } })
+      navigate('/verificar-correo', {
+        state: {
+          correo: formData.correo,
+          rol: 'arrendador',
+          verificadoConDocumento: true,  // El arrendador siempre sube CURP, siempre está verificado
+        }
+      })
     } catch (error) {
       alert(error.message || 'Error al registrar. Intenta de nuevo')
     } finally {
       setEnviando(false)
     }
+  }
+
+  // ── Helper: indicador visual de unicidad ──────────────────────────────────
+  const IndicadorUnicidad = ({ campo }) => {
+    const estado = unicidad[campo]
+    if (!estado) return null
+    if (estado === 'checking') return (
+      <span style={{ fontSize: '0.78rem', color: '#6b7280', marginTop: '0.2rem', display: 'block' }}>
+        ⏳ Verificando...
+      </span>
+    )
+    if (estado === 'ok') return (
+      <span style={{ fontSize: '0.78rem', color: '#16a34a', marginTop: '0.2rem', display: 'block' }}>
+        ✓ Disponible
+      </span>
+    )
+    if (estado === 'taken') return (
+      <span style={{ fontSize: '0.78rem', color: '#dc2626', marginTop: '0.2rem', display: 'block' }}>
+        ✗ Ya está registrado
+      </span>
+    )
+    return null
   }
 
   // ── Render ─────────────────────────────────────────────────────────────────
@@ -314,6 +373,7 @@ const RegistroArrendador = ({ volver }) => {
           <input type="email" name="correo" value={formData.correo} onChange={handleChange}
             placeholder="Ej: juan@ejemplo.com" style={{ width: '100%', padding: '0.5rem' }} />
           {errors.correo && <div style={{ color: 'red', fontSize: '0.8rem' }}>{errors.correo}</div>}
+          <IndicadorUnicidad campo="correo" />
         </div>
 
         <div style={{ marginBottom: '1rem' }}>
@@ -329,6 +389,7 @@ const RegistroArrendador = ({ volver }) => {
             placeholder="Ej: MAGC030829MMNGRMA4" style={{ width: '100%', padding: '0.5rem' }} />
           <small>18 caracteres: 4 letras, 6 números, 6 letras, 2 alfanuméricos</small>
           {errors.curp && <div style={{ color: 'red', fontSize: '0.8rem' }}>{errors.curp}</div>}
+          <IndicadorUnicidad campo="curp" />
         </div>
 
         <div style={{ marginBottom: '1rem' }}>
@@ -345,6 +406,7 @@ const RegistroArrendador = ({ volver }) => {
             placeholder="Ej: HERS850101XXX" style={{ width: '100%', padding: '0.5rem' }} />
           <small>13 caracteres: 4 letras, 6 números, 3 alfanuméricos</small>
           {errors.rfc && <div style={{ color: 'red', fontSize: '0.8rem' }}>{errors.rfc}</div>}
+          <IndicadorUnicidad campo="rfc" />
         </div>
 
         <h3>Domicilio Actual</h3>

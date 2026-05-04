@@ -20,8 +20,11 @@ mkdir src
 cd src
 mkdir config models routes controllers middlewares services
 cd ..
+
+
+
 Frontend (React + Vite)
-bash
+
 # Crear y entrar a la carpeta del frontend
 cd ..
 mkdir frontend

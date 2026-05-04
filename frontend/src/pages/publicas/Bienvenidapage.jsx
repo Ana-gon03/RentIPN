@@ -8,9 +8,13 @@ const BienvenidaPage = () => {
   const navigate = useNavigate()
 
   const rol = location.state?.rol
-  // Solo muestra pendiente si EXPLÍCITAMENTE viene verificadoConDocumento: false
-  // y el rol es estudiante. Cualquier otro caso → verificado.
-  const pendiente = rol === 'estudiante' && location.state?.verificadoConDocumento === false
+  // Muestra aviso de pendiente ÚNICAMENTE cuando:
+  //   1. El rol es 'estudiante', Y
+  //   2. verificadoConDocumento es explícitamente false (no undefined, no null)
+  // Arrendadores siempre tienen verificadoConDocumento: true → nunca caen aquí.
+  // Si falta el state (acceso directo a la URL), se trata como verificado por seguridad.
+  const verificadoConDocumento = location.state?.verificadoConDocumento
+  const pendiente = rol === 'estudiante' && verificadoConDocumento === false
 
   // ── Estudiante con verificación pendiente ──────────────────────────────────
   if (pendiente) {

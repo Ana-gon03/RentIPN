@@ -6,14 +6,22 @@ const { Usuario, Arrendatario, Arrendador, Propiedad, Arrendamiento, Resena, Dir
 
 // ============ ARRENDATARIOS (ESTUDIANTES) ============
 
+// ID del arrendatario por defecto (usuario del sistema, nunca se muestra ni elimina)
+const ARRENDATARIO_DEFAULT_ID = 10;
+
 // Obtener todos los arrendatarios con búsqueda
 router.get('/arrendatarios', async (req, res) => {
   try {
     const { search } = req.query;
-    let whereCondition = {};
+
+    // Siempre excluir al arrendatario por defecto del sistema
+    let whereCondition = {
+      idArrendatario: { [Op.ne]: ARRENDATARIO_DEFAULT_ID }
+    };
     
     if (search) {
       whereCondition = {
+        ...whereCondition,
         [Op.or]: [
           { arrendatarioBoleta: { [Op.like]: `%${search}%` } },
           { arrendatarioUser: { [Op.like]: `%${search}%` } },
@@ -122,6 +130,11 @@ router.delete('/arrendatarios/:id', async (req, res) => {
     if (!arrendatario) {
       return res.status(404).json({ error: 'Arrendatario no encontrado' });
     }
+
+    // 🔒 Protección: el arrendatario por defecto del sistema nunca puede eliminarse
+    if (arrendatario.idArrendatario === ARRENDATARIO_DEFAULT_ID) {
+      return res.status(403).json({ error: 'Este usuario del sistema no puede ser eliminado' });
+    }
     
     const rentasActivas = await Arrendamiento.count({
       where: {
@@ -135,8 +148,11 @@ router.delete('/arrendatarios/:id', async (req, res) => {
       return res.status(400).json({ error: 'No se puede eliminar el estudiante porque tiene rentas activas' });
     }
     
-    // 1. Eliminar reseñas del arrendatario
-    await Resena.destroy({ where: { arrendatario_idArrendatario: req.params.id } });
+    // 1. Redirigir reseñas al usuario por defecto (se conservan para integridad del historial)
+    await Resena.update(
+      { arrendatario_idArrendatario: ARRENDATARIO_DEFAULT_ID },
+      { where: { arrendatario_idArrendatario: req.params.id } }
+    );
 
     // 2. Eliminar arrendamientos no activos del arrendatario
     await Arrendamiento.destroy({
@@ -146,8 +162,14 @@ router.delete('/arrendatarios/:id', async (req, res) => {
       }
     });
 
-    // 3. Eliminar arrendatario (el usuario se elimina en cascada por FK)
+    // 3. Guardar el idUsuario antes de destruir el arrendatario
+    const idUsuarioArrendatario = arrendatario.usuario_idUsuario;
+
+    // 4. Eliminar arrendatario
     await arrendatario.destroy();
+
+    // 5. Eliminar el usuario asociado (no se puede confiar solo en CASCADE de la FK)
+    await Usuario.destroy({ where: { idUsuario: idUsuarioArrendatario } });
 
     res.json({ message: 'Arrendatario eliminado correctamente' });
   } catch (error) {
@@ -423,14 +445,21 @@ router.delete('/arrendadores/:id', async (req, res) => {
       await Propiedad.destroy({ where: { arrendador_idArrendador: req.params.id } });
     }
 
-    // 5. Eliminar arrendador (el usuario se elimina en cascada por FK)
+    // 5. Guardar ids antes de destruir
+    const idUsuarioArrendador = arrendador.usuario_idUsuario;
+    const idDireccionArrendador = arrendador.direccion_idDireccion;
+
+    // 6. Eliminar arrendador
     await arrendador.destroy();
 
-    // 6. Eliminar dirección
-    if (arrendador.direccion_idDireccion) {
-      await Direccion.destroy({ where: { idDireccion: arrendador.direccion_idDireccion } });
+    // 7. Eliminar el usuario asociado (no se puede confiar solo en CASCADE de la FK)
+    await Usuario.destroy({ where: { idUsuario: idUsuarioArrendador } });
+
+    // 8. Eliminar dirección
+    if (idDireccionArrendador) {
+      await Direccion.destroy({ where: { idDireccion: idDireccionArrendador } });
     }
-    
+
     res.json({ message: 'Arrendador eliminado correctamente' });
   } catch (error) {
     res.status(500).json({ error: error.message });

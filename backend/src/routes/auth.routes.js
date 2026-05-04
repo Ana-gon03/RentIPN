@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const { Usuario, Arrendatario, Arrendador, Carrera, CP, Direccion } = require('../models/associations');
+const { Usuario, Arrendatario, Arrendador, Carrera, CP, Direccion, Administrador } = require('../models/associations');
+// sequelize se obtiene desde el modelo Usuario para poder usar transacciones
+const sequelize = Usuario.sequelize;
 const { Op } = require('sequelize');
 const { enviarCodigoVerificacion, reenviarCodigoVerificacion } = require('../config/email');
 const upload = require('../middlewares/upload');
@@ -178,96 +180,73 @@ router.post('/registro-estudiante', upload.single('constancia'), async (req, res
 // Registrar arrendador (OBLIGATORIO subir CURP)
 router.post('/registro-arrendador', upload.single('documentoCURP'), async (req, res) => {
   const {
-    nombres,
-    apellidoPaterno,
-    apellidoMaterno,
-    correo,
-    telefono,
-    curp,
-    fechaNacimiento,
-    rfc,
-    calle,
-    numExt,
-    numInt,
-    cp,
-    colonia,
-    municipio,
-    estado,
-    password,
+    nombres, apellidoPaterno, apellidoMaterno, correo, telefono, curp,
+    fechaNacimiento, rfc, calle, numExt, numInt, cp, colonia, municipio, estado, password,
   } = req.body;
-  
-  const curpFile = req.file;
-  
-  try {
-    // Validar que haya subido el documento CURP
-    if (!curpFile) {
-      return res.status(400).json({ error: 'Es obligatorio subir el documento CURP (PDF)' });
-    }
-    
-    // Verificar solo correo y curp
-    const usuarioExistente = await Usuario.findOne({
-      where: {
-        [Op.or]: [
-          { usuarioCorreo: correo },
-          { usuarioCurp: curp }
-        ]
-      }
-    });
-    
-    if (usuarioExistente) {
-      if (usuarioExistente.usuarioCorreo === correo) {
-        return res.status(400).json({ error: 'El correo ya está registrado' });
-      }
-      if (usuarioExistente.usuarioCurp === curp) {
-        return res.status(400).json({ error: 'El CURP ya está registrado' });
-      }
-    }
-    
-    // Validar documento CURP con PDF.co
-    const qrData = await extraerQRDePDF(curpFile.buffer, 'curp');
 
+  const curpFile = req.file;
+
+  // ── Paso 1: validaciones previas SIN tocar la BD ─────────────────────────
+  if (!curpFile) {
+    return res.status(400).json({ error: 'Es obligatorio subir el documento CURP (PDF)' });
+  }
+
+  try {
+    const usuarioExistente = await Usuario.findOne({
+      where: { [Op.or]: [{ usuarioCorreo: correo }, { usuarioCurp: curp }] }
+    });
+    if (usuarioExistente) {
+      if (usuarioExistente.usuarioCorreo === correo)
+        return res.status(400).json({ error: 'El correo ya está registrado' });
+      if (usuarioExistente.usuarioCurp === curp)
+        return res.status(400).json({ error: 'El CURP ya está registrado' });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: 'Error al verificar los datos' });
+  }
+
+  // Validar CURP con PDF.co ANTES de crear nada en la BD
+  try {
+    const qrData = await extraerQRDePDF(curpFile.buffer, 'curp');
     console.log('📄 Datos extraídos del QR:', qrData);
     console.log('📋 Datos del formulario:', { curp, fechaNacimiento });
 
     const erroresValidacion = validarCURPDocumento({ curp, fechaNacimiento }, qrData);
-
     console.log('❌ Errores de validación:', erroresValidacion);
-    
+
     if (erroresValidacion.length > 0) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'El documento CURP no coincide con los datos ingresados',
-        detalles: erroresValidacion 
+        detalles: erroresValidacion
       });
     }
-    
-    // Verificar si el CP existe en la tabla CP
-    let cpRecord = await CP.findOne({ where: { d_codigo: cp } });
+  } catch (error) {
+    console.error('Error al validar documento CURP:', error);
+    return res.status(400).json({ error: 'No se pudo procesar el documento CURP. Verifica que sea un PDF válido.' });
+  }
+
+  // ── Paso 2: todo válido — escribir en la BD con transacción ──────────────
+  // Si cualquier INSERT falla, el rollback deshace todo y no quedan registros huérfanos
+  const t = await sequelize.transaction();
+
+  try {
+    let cpRecord = await CP.findOne({ where: { d_codigo: cp }, transaction: t });
     if (!cpRecord) {
       cpRecord = await CP.create({
-        d_codigo: cp,
-        d_asenta: colonia,
-        D_mnpio: municipio,
-        d_estado: estado,
-        cpAceptadoSistema: 1
-      });
+        d_codigo: cp, d_asenta: colonia, D_mnpio: municipio,
+        d_estado: estado, cpAceptadoSistema: 1
+      }, { transaction: t });
     }
-    
-    // Crear dirección
+
     const nuevaDireccion = await Direccion.create({
-      direccionCalle: calle,
-      direccionNumExt: numExt,
-      direccionNumInt: numInt || null,
-      CP_idCP: cpRecord.idCP
-    });
-    
-    // Encriptar contraseña
+      direccionCalle: calle, direccionNumExt: numExt,
+      direccionNumInt: numInt || null, CP_idCP: cpRecord.idCP
+    }, { transaction: t });
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    
-    // Generar username automático a partir del correo
     const usernameAuto = correo.split('@')[0] + Math.floor(Math.random() * 1000);
-    
-    // Crear usuario
+
     const nuevoUsuario = await Usuario.create({
       usuarioNom: usernameAuto,
       usuarioApePat: apellidoPaterno,
@@ -278,31 +257,33 @@ router.post('/registro-arrendador', upload.single('documentoCURP'), async (req, 
       usuarioContra: hashedPassword,
       usuarioFechaNac: fechaNacimiento,
       usuarioFechaRegis: new Date(),
-      usuarioFechaUIS: new Date(),
+      usuarioFechaUIS: null,
       usuarioCodigo: Math.floor(10000000 + Math.random() * 90000000).toString(),
       usuarioCorreoVerificado: 0,
       usuarioCodigoFecha: new Date(),
-    });
-    
-    // Crear arrendador
+    }, { transaction: t });
+
     const nuevoArrendador = await Arrendador.create({
       arrendadorRFC: rfc,
       usuario_idUsuario: nuevoUsuario.idUsuario,
       direccion_idDireccion: nuevaDireccion.idDireccion
-    });
-    
-    // Enviar correo de verificación
+    }, { transaction: t });
+
+    // Commit antes de enviar el correo para no bloquear la transacción
+    await t.commit();
     await enviarCodigoVerificacion(correo, nuevoUsuario.usuarioCodigo, nombres);
-    
+
     res.status(201).json({
-      message: 'Arrendador registrado y verificado exitosamente',
+      message: 'Arrendador registrado exitosamente',
       usuarioId: nuevoUsuario.idUsuario,
-      arrendadorId: nuevoArrendador.idArrendador
+      arrendadorId: nuevoArrendador.idArrendador,
+      rol: 'arrendador'
     });
-    
+
   } catch (error) {
+    await t.rollback();
     console.error('Error en registro arrendador:', error);
-    res.status(500).json({ error: 'Error al registrar el arrendador' });
+    res.status(500).json({ error: 'Error al registrar el arrendador. Intenta de nuevo.' });
   }
 });
 
@@ -414,5 +395,48 @@ router.post('/actualizar-correo', async (req, res) => {
   }
 });
 
+// ============ LOGIN ADMINISTRADOR ============
+router.post('/login-admin', async (req, res) => {
+  const { adminUser, adminContra } = req.body;
+  
+  console.log('📥 Intento de login admin:', { adminUser });
+  
+  try {
+    // Importar modelo Administrador (asegúrate de que esté importado al inicio)
+    const { Administrador } = require('../models/associations');
+    
+    const admin = await Administrador.findOne({
+      where: { adminUser: adminUser }
+    });
+    
+    console.log('🔍 Administrador encontrado:', admin ? 'Sí' : 'No');
+    
+    if (!admin) {
+      return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
+    }
+    
+    // Comparar contraseña (sin encriptar por ahora)
+    if (admin.adminContra !== adminContra) {
+      return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
+    }
+    
+    // Actualizar fecha de último inicio de sesión
+    await admin.update({
+      adminFechaInicioSesion: new Date()
+    });
+    
+    console.log('✅ Login exitoso para:', adminUser);
+    
+    res.json({
+      message: 'Login exitoso',
+      adminId: admin.idAdmin,
+      adminUser: admin.adminUser
+    });
+    
+  } catch (error) {
+    console.error('❌ Error en login admin:', error);
+    res.status(500).json({ error: 'Error al iniciar sesión', details: error.message });
+  }
+});
 
 module.exports = router;

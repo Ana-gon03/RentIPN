@@ -8,7 +8,8 @@ const VerificarCorreoPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [correo, setCorreo] = useState('')
-  const [verificadoConDocumento, setVerificadoConDocumento] = useState(true)
+  const [verificadoConDocumento, setVerificadoConDocumento] = useState(null)
+  const [rolUsuario, setRolUsuario] = useState(null)
   const [codigo, setCodigo] = useState('')
   const [nuevoCorreo, setNuevoCorreo] = useState('')
   const [modoEdicion, setModoEdicion] = useState(false)
@@ -19,11 +20,14 @@ const VerificarCorreoPage = () => {
 
   useEffect(() => {
     const correoRegistro = location.state?.correo
-    const verificado = location.state?.verificado ?? false
+    // Leer el nombre correcto del campo que mandan RegistroEstudiante y RegistroArrendador
+    const verificado = location.state?.verificadoConDocumento ?? null
+    const rol = location.state?.rol ?? null
     if (correoRegistro) {
       setCorreo(correoRegistro)
       setNuevoCorreo(correoRegistro)
       setVerificadoConDocumento(verificado)
+      setRolUsuario(rol)
     } else {
       navigate('/registro')
     }
@@ -49,7 +53,8 @@ const VerificarCorreoPage = () => {
         // Redirigir a bienvenida pasando si el estudiante verificó con documento o no
         navigate('/bienvenida', {
           state: {
-            rol: response.rol || 'estudiante',
+            // Usar el rol que viene del state de registro; si el backend lo devuelve también, tiene prioridad
+            rol: response.rol || rolUsuario || 'estudiante',
             verificadoConDocumento
           }
         })
