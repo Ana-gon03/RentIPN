@@ -14,50 +14,50 @@ const ServicioHasPropiedad = require('./servicioHasPropiedad.model');
 const Administrador = require('./administrador.model');
 
 // Relaciones de Direccion
-Direccion.belongsTo(CP, { foreignKey: 'CP_idCP' });
-CP.hasMany(Direccion, { foreignKey: 'CP_idCP' });
+Direccion.belongsTo(CP, { foreignKey: 'CP_idCP', as: 'cp' });
+CP.hasMany(Direccion, { foreignKey: 'CP_idCP', as: 'direcciones' });
 
 // Relaciones de Carrera
-Carrera.belongsTo(UnidadAcademica, { foreignKey: 'idUnidadAcademica' });
-UnidadAcademica.hasMany(Carrera, { foreignKey: 'idUnidadAcademica' });
+Carrera.belongsTo(UnidadAcademica, { foreignKey: 'idUnidadAcademica', as: 'unidadAcademica' });
+UnidadAcademica.hasMany(Carrera, { foreignKey: 'idUnidadAcademica', as: 'carreras' });
 
 // Relaciones de Arrendatario
-Arrendatario.belongsTo(Usuario, { foreignKey: 'usuario_idUsuario' });
-Usuario.hasOne(Arrendatario, { foreignKey: 'usuario_idUsuario' });
-Arrendatario.belongsTo(Carrera, { foreignKey: 'carrera_idCarrera' });
-Carrera.hasMany(Arrendatario, { foreignKey: 'carrera_idCarrera' });
+Arrendatario.belongsTo(Usuario, { foreignKey: 'usuario_idUsuario', as: 'usuario' });
+Usuario.hasOne(Arrendatario, { foreignKey: 'usuario_idUsuario', as: 'arrendatario' });
+Arrendatario.belongsTo(Carrera, { foreignKey: 'carrera_idCarrera', as: 'carrera' });
+Carrera.hasMany(Arrendatario, { foreignKey: 'carrera_idCarrera', as: 'arrendatarios' });
 
 // Relaciones de Arrendador
-Arrendador.belongsTo(Usuario, { foreignKey: 'usuario_idUsuario' });
-Usuario.hasOne(Arrendador, { foreignKey: 'usuario_idUsuario' });
-Arrendador.belongsTo(Direccion, { foreignKey: 'direccion_idDireccion' });
-Direccion.hasMany(Arrendador, { foreignKey: 'direccion_idDireccion' });
+Arrendador.belongsTo(Usuario, { foreignKey: 'usuario_idUsuario', as: 'usuario' });
+Usuario.hasOne(Arrendador, { foreignKey: 'usuario_idUsuario', as: 'arrendador' });
+Arrendador.belongsTo(Direccion, { foreignKey: 'direccion_idDireccion', as: 'direccion' });
+Direccion.hasMany(Arrendador, { foreignKey: 'direccion_idDireccion', as: 'arrendadores' });
 
 // Relaciones de Propiedad
-Propiedad.belongsTo(Direccion, { foreignKey: 'direccion_idDireccion' });
-Direccion.hasMany(Propiedad, { foreignKey: 'direccion_idDireccion' });
-Propiedad.belongsTo(Arrendador, { foreignKey: 'arrendador_idArrendador' });
-Arrendador.hasMany(Propiedad, { foreignKey: 'arrendador_idArrendador' });
+Propiedad.belongsTo(Direccion, { foreignKey: 'direccion_idDireccion', as: 'direccion' });
+Direccion.hasMany(Propiedad, { foreignKey: 'direccion_idDireccion', as: 'propiedades' });
+Propiedad.belongsTo(Arrendador, { foreignKey: 'arrendador_idArrendador', as: 'arrendador' });
+Arrendador.hasMany(Propiedad, { foreignKey: 'arrendador_idArrendador', as: 'propiedades' });
 
 // Relaciones de Fotos
-Fotos.belongsTo(Propiedad, { foreignKey: 'propiedad_idPropiedad' });
-Propiedad.hasMany(Fotos, { foreignKey: 'propiedad_idPropiedad' });
+Fotos.belongsTo(Propiedad, { foreignKey: 'propiedad_idPropiedad', as: 'propiedad' });
+Propiedad.hasMany(Fotos, { foreignKey: 'propiedad_idPropiedad', as: 'fotos' });
 
 // Relaciones de Arrendamiento
-Arrendamiento.belongsTo(Arrendatario, { foreignKey: 'arrendatario_idArrendatario' });
-Arrendatario.hasMany(Arrendamiento, { foreignKey: 'arrendatario_idArrendatario' });
-Arrendamiento.belongsTo(Propiedad, { foreignKey: 'propiedad_idPropiedad' });
-Propiedad.hasMany(Arrendamiento, { foreignKey: 'propiedad_idPropiedad' });
+Arrendamiento.belongsTo(Arrendatario, { foreignKey: 'arrendatario_idArrendatario', as: 'arrendatario' });
+Arrendatario.hasMany(Arrendamiento, { foreignKey: 'arrendatario_idArrendatario', as: 'arrendamientos' });
+Arrendamiento.belongsTo(Propiedad, { foreignKey: 'propiedad_idPropiedad', as: 'propiedad' });
+Propiedad.hasMany(Arrendamiento, { foreignKey: 'propiedad_idPropiedad', as: 'arrendamientos' });
 
 // Relaciones de Resena
-Resena.belongsTo(Propiedad, { foreignKey: 'propiedad_idPropiedad' });
-Propiedad.hasMany(Resena, { foreignKey: 'propiedad_idPropiedad' });
-Resena.belongsTo(Arrendatario, { foreignKey: 'arrendatario_idArrendatario' });
-Arrendatario.hasMany(Resena, { foreignKey: 'arrendatario_idArrendatario' });
+Resena.belongsTo(Propiedad, { foreignKey: 'propiedad_idPropiedad', as: 'propiedad' });
+Propiedad.hasMany(Resena, { foreignKey: 'propiedad_idPropiedad', as: 'resenas' });
+Resena.belongsTo(Arrendatario, { foreignKey: 'arrendatario_idArrendatario', as: 'arrendatario' });
+Arrendatario.hasMany(Resena, { foreignKey: 'arrendatario_idArrendatario', as: 'resenas' });
 
 // Relaciones de ServicioHasPropiedad (muchos a muchos)
-Servicio.belongsToMany(Propiedad, { through: ServicioHasPropiedad, foreignKey: 'servicio_idServicio', otherKey: 'propiedad_idPropiedad' });
-Propiedad.belongsToMany(Servicio, { through: ServicioHasPropiedad, foreignKey: 'propiedad_idPropiedad', otherKey: 'servicio_idServicio' });
+Servicio.belongsToMany(Propiedad, { through: ServicioHasPropiedad, foreignKey: 'servicio_idServicio', otherKey: 'propiedad_idPropiedad', as: 'propiedades' });
+Propiedad.belongsToMany(Servicio, { through: ServicioHasPropiedad, foreignKey: 'propiedad_idPropiedad', otherKey: 'servicio_idServicio', as: 'servicios' });
 
 module.exports = {
   CP,

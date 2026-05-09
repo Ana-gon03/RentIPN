@@ -100,15 +100,26 @@ const FormRegistroArrendador = ({ onClose, onSuccess }) => {
 
   const validarPassword = (p) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(p)
 
+  const calcularEdad = (fechaNacimiento) => {
+    const hoy = new Date()
+    const nacimiento = new Date(fechaNacimiento)
+    let edad = hoy.getFullYear() - nacimiento.getFullYear()
+    const cumpleEsteAnio = new Date(hoy.getFullYear(), nacimiento.getMonth(), nacimiento.getDate())
+    if (hoy < cumpleEsteAnio) edad--
+    return edad
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     const errs = {}
     if (!formData.nombres) errs.nombres = 'Obligatorio'
     if (!formData.apellidoPaterno) errs.apellidoPaterno = 'Obligatorio'
+    if (!formData.apellidoMaterno) errs.apellidoMaterno = 'Obligatorio'
     if (!formData.correo) errs.correo = 'Obligatorio'
     if (!formData.telefono || formData.telefono.length !== 10) errs.telefono = 'Debe tener 10 dígitos'
     if (!formData.curp || formData.curp.length !== 18) errs.curp = 'Debe tener 18 caracteres'
     if (!formData.fechaNacimiento) errs.fechaNacimiento = 'Obligatorio'
+    else if (calcularEdad(formData.fechaNacimiento) < 18) errs.fechaNacimiento = 'El arrendador debe ser mayor de 18 años'
     if (!formData.rfc || formData.rfc.length < 12) errs.rfc = 'RFC inválido (12-13 caracteres)'
     if (!formData.cp || formData.cp.length !== 5) errs.cp = 'Debe tener 5 dígitos'
     if (!formData.calle) errs.calle = 'Obligatorio'
@@ -171,8 +182,9 @@ const FormRegistroArrendador = ({ onClose, onSuccess }) => {
           </div>
 
           <div style={fieldStyle}>
-            <label style={labelStyle}>Ap. Materno</label>
+            <label style={labelStyle}>Ap. Materno *</label>
             <input style={inputStyle} name="apellidoMaterno" value={formData.apellidoMaterno} onChange={handleChange} maxLength={60} />
+            {errors.apellidoMaterno && <p style={errorStyle}>{errors.apellidoMaterno}</p>}
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 0.75rem' }}>

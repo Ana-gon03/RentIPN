@@ -64,7 +64,7 @@ const AdminPropiedadesPage = () => {
                 <tr style={{ backgroundColor: '#f0f0f0', borderBottom: '2px solid #ddd' }}>
                   <th style={{ padding: '0.75rem', textAlign: 'left' }}>ID</th>
                   <th style={{ padding: '0.75rem', textAlign: 'left' }}>Título</th>
-                  <th style={{ padding: '0.75rem', textAlign: 'left' }}>Arrendador</th>
+                  <th style={{ padding: '0.75rem', textAlign: 'left' }}>arrendador</th>
                   <th style={{ padding: '0.75rem', textAlign: 'left' }}>Precio</th>
                   <th style={{ padding: '0.75rem', textAlign: 'left' }}>Tipo</th>
                   <th style={{ padding: '0.75rem', textAlign: 'center' }}>Rentas Activas</th>
@@ -77,7 +77,7 @@ const AdminPropiedadesPage = () => {
                   <tr key={p.idPropiedad} style={{ borderBottom: '1px solid #eee' }}>
                     <td style={{ padding: '0.75rem' }}>{p.idPropiedad}</td>
                     <td style={{ padding: '0.75rem' }}>{p.propiedadTitulo}</td>
-                    <td style={{ padding: '0.75rem' }}>{p.Arrendador?.Usuario?.usuarioApePat} {p.Arrendador?.Usuario?.usuarioNom}</td>
+                    <td style={{ padding: '0.75rem' }}>{p.arrendador?.usuario?.usuarioApePat} {p.arrendador?.usuario?.usuarioNom}</td>
                     <td style={{ padding: '0.75rem' }}>${p.propiedadPrecio}</td>
                     <td style={{ padding: '0.75rem' }}>{p.propiedadTipo}</td>
                     <td style={{ padding: '0.75rem', textAlign: 'center' }}>
@@ -120,8 +120,8 @@ const AdminPropiedadesPage = () => {
                     ['Lugares', selectedPropiedad.propiedadLugares],
                     ['Precio', `$${selectedPropiedad.propiedadPrecio}`],
                     ['Estatus', selectedPropiedad.propiedadEstatus],
-                    ['Dirección', `${selectedPropiedad.Direccion?.direccionCalle} ${selectedPropiedad.Direccion?.direccionNumExt}, ${selectedPropiedad.Direccion?.CP?.d_asenta}, ${selectedPropiedad.Direccion?.CP?.D_mnpio}, ${selectedPropiedad.Direccion?.CP?.d_estado}`],
-                    ['Arrendador', `${selectedPropiedad.Arrendador?.Usuario?.usuarioApePat} ${selectedPropiedad.Arrendador?.Usuario?.usuarioNom}`],
+                    ['Dirección', `${selectedPropiedad.direccion?.direccionCalle} ${selectedPropiedad.direccion?.direccionNumExt}, ${selectedPropiedad.direccion?.cp?.d_asenta}, ${selectedPropiedad.direccion?.cp?.D_mnpio}, ${selectedPropiedad.direccion?.cp?.d_estado}`],
+                    ['arrendador', `${selectedPropiedad.arrendador?.usuario?.usuarioApePat} ${selectedPropiedad.arrendador?.usuario?.usuarioNom}`],
                     ['Rentas activas', selectedPropiedad.rentasActivas],
                     ['Reseñas', selectedPropiedad.reseñas],
                   ].map(([k, v]) => (

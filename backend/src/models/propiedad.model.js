@@ -24,8 +24,13 @@ const Propiedad = sequelize.define('Propiedad', {
     allowNull: false,
   },
   propiedadPrecio: {
-    type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+  },
+  propiedadPrecioPor: {  
+    type: DataTypes.ENUM('Propiedad', 'Persona', 'Habitación'),
     allowNull: false,
+    defaultValue: 'Persona',
   },
   propiedadEstatus: {
     type: DataTypes.ENUM('Disponible', 'Sin Disponibilidad', 'Desactivada'),

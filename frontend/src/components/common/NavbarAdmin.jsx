@@ -19,7 +19,7 @@ const NavbarAdmin = () => {
       alignItems: 'center',
       flexWrap: 'wrap'
     }}>
-      <Link to="/admin/dashboard" style={{ color: 'white', textDecoration: 'none', fontSize: '1.5rem' }}>
+      <Link to="/admin/inicio-sesion" style={{ color: 'white', textDecoration: 'none', fontSize: '1.5rem' }}>
         👑 Admin Burroomies
       </Link>
       

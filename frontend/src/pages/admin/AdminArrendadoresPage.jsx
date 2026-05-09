@@ -18,6 +18,7 @@ const AdminArrendadoresPage = () => {
     setLoading(true)
     try {
       const data = await getArrendadores(search)
+      console.log('Primer arrendador:', JSON.stringify(data[0], null, 2))
       setArrendadores(data)
     } catch (error) {
       console.error('Error cargando arrendadores:', error)
@@ -78,10 +79,10 @@ const AdminArrendadoresPage = () => {
                 {arrendadores.map((a) => (
                   <tr key={a.idArrendador} style={{ borderBottom: '1px solid #eee' }}>
                     <td style={{ padding: '0.75rem' }}>{a.idArrendador}</td>
-                    <td style={{ padding: '0.75rem' }}>{a.Usuario?.usuarioApePat} {a.Usuario?.usuarioApeMat || ''} {a.Usuario?.usuarioNom}</td>
+                    <td style={{ padding: '0.75rem' }}>{a.usuario?.usuarioApePat} {a.usuario?.usuarioApeMat || ''} {a.usuario?.usuarioNom}</td>
                     <td style={{ padding: '0.75rem' }}>{a.arrendadorRFC || '-'}</td>
-                    <td style={{ padding: '0.75rem' }}>{a.Usuario?.usuarioCorreo || '-'}</td>
-                    <td style={{ padding: '0.75rem' }}>{a.Usuario?.usuarioCurp || '-'}</td>
+                    <td style={{ padding: '0.75rem' }}>{a.usuario?.usuarioCorreo || '-'}</td>
+                    <td style={{ padding: '0.75rem' }}>{a.usuario?.usuarioCurp || '-'}</td>
                     <td style={{ padding: '0.75rem', textAlign: 'center' }}>
                       <button onClick={() => handleView(a)} style={{ marginRight: '0.5rem', padding: '0.3rem 0.6rem', backgroundColor: '#17a2b8', color: 'white', border: 'none', borderRadius: '3px', cursor: 'pointer' }}>👁️ Ver</button>
                       <button onClick={() => handleEdit(a)} style={{ marginRight: '0.5rem', padding: '0.3rem 0.6rem', backgroundColor: '#ffc107', color: '#333', border: 'none', borderRadius: '3px', cursor: 'pointer' }}>✏️ Editar</button>
@@ -112,13 +113,13 @@ const AdminArrendadoresPage = () => {
                 <div style={{ padding: '1.25rem', overflowY: 'auto' }}>
                   {[
                     ['ID', selectedArrendador.idArrendador],
-                    ['Nombre', `${selectedArrendador.Usuario?.usuarioApePat} ${selectedArrendador.Usuario?.usuarioApeMat || ''} ${selectedArrendador.Usuario?.usuarioNom}`],
+                    ['Nombre', `${selectedArrendador.usuario?.usuarioApePat} ${selectedArrendador.usuario?.usuarioApeMat || ''} ${selectedArrendador.usuario?.usuarioNom}`],
                     ['RFC', selectedArrendador.arrendadorRFC],
-                    ['Correo', selectedArrendador.Usuario?.usuarioCorreo],
-                    ['Teléfono', selectedArrendador.Usuario?.usuarioTel],
-                    ['CURP', selectedArrendador.Usuario?.usuarioCurp],
-                    ['Fecha Nacimiento', selectedArrendador.Usuario?.usuarioFechaNac],
-                    ['Domicilio', `${selectedArrendador.Direccion?.direccionCalle} ${selectedArrendador.Direccion?.direccionNumExt}, ${selectedArrendador.Direccion?.CP?.d_asenta}, ${selectedArrendador.Direccion?.CP?.D_mnpio}, ${selectedArrendador.Direccion?.CP?.d_estado}`],
+                    ['Correo', selectedArrendador.usuario?.usuarioCorreo],
+                    ['Teléfono', selectedArrendador.usuario?.usuarioTel],
+                    ['CURP', selectedArrendador.usuario?.usuarioCurp],
+                    ['Fecha Nacimiento', selectedArrendador.usuario?.usuarioFechaNac],
+                    ['Domicilio', `${selectedArrendador.direccion?.direccionCalle} ${selectedArrendador.direccion?.direccionNumExt}, ${selectedArrendador.direccion?.cp?.d_asenta}, ${selectedArrendador.direccion?.cp?.D_mnpio}, ${selectedArrendador.direccion?.cp?.d_estado}`],
                   ].map(([k, v]) => (
                     <p key={k} style={{ margin: '0.4rem 0', fontSize: '0.875rem' }}><strong>{k}:</strong> {v || '-'}</p>
                   ))}
@@ -144,7 +145,7 @@ const AdminArrendadoresPage = () => {
                   <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem', color: '#6b7280' }}>×</button>
                 </div>
                 <div style={{ padding: '1.25rem' }}>
-                  <p style={{ fontSize: '0.875rem' }}>¿Eliminar a <strong>{selectedArrendador.Usuario?.usuarioNom}</strong>? (RFC: {selectedArrendador.arrendadorRFC})</p>
+                  <p style={{ fontSize: '0.875rem' }}>¿Eliminar a <strong>{selectedArrendador.usuario?.usuarioNom}</strong>? (RFC: {selectedArrendador.arrendadorRFC})</p>
                   <p style={{ color: '#dc2626', fontSize: '0.8rem' }}>⚠️ Esta acción también eliminará todas sus propiedades.</p>
                 </div>
                 <div style={{ padding: '0.75rem 1.25rem', borderTop: '1px solid #e5e7eb', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>

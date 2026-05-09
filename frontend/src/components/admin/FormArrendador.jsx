@@ -45,21 +45,21 @@ const FormArrendador = ({ arrendador, onClose, onSuccess }) => {
   useEffect(() => {
     if (arrendador) {
       setFormData({
-        usuarioApePat: arrendador.Usuario?.usuarioApePat || '',
-        usuarioApeMat: arrendador.Usuario?.usuarioApeMat || '',
-        usuarioNom: arrendador.Usuario?.usuarioNom || '',
-        usuarioCorreo: arrendador.Usuario?.usuarioCorreo || '',
-        usuarioTel: arrendador.Usuario?.usuarioTel || '',
-        usuarioCurp: arrendador.Usuario?.usuarioCurp || '',
-        usuarioFechaNac: arrendador.Usuario?.usuarioFechaNac || '',
+        usuarioApePat: arrendador.usuario?.usuarioApePat || '',
+        usuarioApeMat: arrendador.usuario?.usuarioApeMat || '',
+        usuarioNom: arrendador.usuario?.usuarioNom || '',
+        usuarioCorreo: arrendador.usuario?.usuarioCorreo || '',
+        usuarioTel: arrendador.usuario?.usuarioTel || '',
+        usuarioCurp: arrendador.usuario?.usuarioCurp || '',
+        usuarioFechaNac: arrendador.usuario?.usuarioFechaNac || '',
         arrendadorRFC: arrendador.arrendadorRFC || '',
-        direccionCalle: arrendador.Direccion?.direccionCalle || '',
-        direccionNumExt: arrendador.Direccion?.direccionNumExt || '',
-        direccionNumInt: arrendador.Direccion?.direccionNumInt || '',
-        cp: arrendador.Direccion?.CP?.d_codigo || '',
-        colonia: arrendador.Direccion?.CP?.d_asenta || '',
-        municipio: arrendador.Direccion?.CP?.D_mnpio || '',
-        estado: arrendador.Direccion?.CP?.d_estado || ''
+        direccionCalle: arrendador.direccion?.direccionCalle || '',
+        direccionNumExt: arrendador.direccion?.direccionNumExt || '',
+        direccionNumInt: arrendador.direccion?.direccionNumInt || '',
+        cp: arrendador.direccion?.cp?.d_codigo || '',
+        colonia: arrendador.direccion?.cp?.d_asenta || '',
+        municipio: arrendador.direccion?.cp?.D_mnpio || '',
+        estado: arrendador.direccion?.cp?.d_estado || ''
       })
     }
   }, [arrendador])

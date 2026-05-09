@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const { sequelize, testConnection } = require('./src/config/database');
+const path = require('path');
 
 // Importar modelos y asociaciones
 const {
@@ -27,6 +28,9 @@ const cpRoutes = require('./src/routes/cp.routes');
 const authRoutes = require('./src/routes/auth.routes');
 const adminRoutes = require('./src/routes/admin.routes');
 const contactoRoutes = require('./src/routes/contacto.routes');
+const arrendamientoRoutes = require('./src/routes/arrendamiento.routes');
+const usuarioRoutes = require('./src/routes/usuario.routes');
+const propiedadRoutes = require('./src/routes/propiedad.routes');
 
 
 dotenv.config();
@@ -43,6 +47,14 @@ app.use('/api/cp', cpRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api', contactoRoutes);
+app.use('/api/arrendamientos', arrendamientoRoutes);
+app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/propiedades', propiedadRoutes);
+
+// Servir archivos estáticos (para las fotos)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 // Ruta de prueba para verificar modelos
 app.get('/test-models', async (req, res) => {
   try {

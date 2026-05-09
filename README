@@ -11,6 +11,9 @@ npm init -y
 
 # Instalar dependencias principales
 npm install express sequelize mysql2 dotenv cors bcryptjs jsonwebtoken nodemailer multer axios cheerio form-data @getbrevo/brevo
+npm install sharp
+npm install bcrypt
+npm install pdfkit
 
 # Instalar dependencias de desarrollo
 npm install -D nodemon
@@ -46,81 +49,114 @@ mkdir publicas admin arrendador arrendatario
 cd ../..
 
 
+🔧 BACKEND
+Archivo	Descripción
+package.json	Dependencias y scripts
+.env	Variables de entorno
+server.js	Servidor Express principal
+Config	
+src/config/database.js	Conexión MySQL con Sequelize
+src/config/email.js	Envío de correos con Brevo
+Middleware	
+src/middlewares/upload.js	Subida de PDFs con Multer
+src/middlewares/uploadFotos.js	Subida y compresión de fotos
+Servicios	
+src/services/pdfco.service.js	Lectura de QR desde PDFs
+Rutas	
+src/routes/auth.routes.js	Registro, login, verificación de usuarios
+src/routes/admin.routes.js	CRUD de estudiantes, arrendadores, propiedades
+src/routes/arrendamiento.routes.js	Contratos y PDFs
+src/routes/propiedad.routes.js	Propiedades, servicios, fotos
+src/routes/catalogos.routes.js	Escuelas y carreras del IPN
+src/routes/cp.routes.js	Búsqueda de códigos postales
+src/routes/usuario.routes.js	Búsqueda de arrendatarios
+src/routes/contacto.routes.js	Formulario de contacto
+Modelos	
+src/models/usuario.model.js	Usuarios
+src/models/arrendatario.model.js	Estudiantes
+src/models/arrendador.model.js	Arrendadores
+src/models/propiedad.model.js	Propiedades
+src/models/arrendamiento.model.js	Contratos
+src/models/direccion.model.js	Direcciones
+src/models/cp.model.js	Códigos Postales
+src/models/carrera.model.js	Carreras
+src/models/unidadAcademica.model.js	Escuelas IPN
+src/models/fotos.model.js	Fotos de propiedades
+src/models/resena.model.js	Reseñas
+src/models/servicio.model.js	Servicios
+src/models/servicioHasPropiedad.model.js	Relación servicios-propiedades
+src/models/administrador.model.js	Administradores
+src/models/associations.js	Relaciones entre todos los modelos
 
-📁 Archivos Creados - Backend
-Ubicación	Archivo	Descripción
-
-backend/	package.json	Dependencias y scripts del proyecto
-backend/	.env	Variables de entorno (BD, puerto, API keys)
-backend/	server.js	Servidor Express, middlewares y rutas
-backend/src/config/	database.js	Conexión a MySQL con Sequelize
-backend/src/config/	email.js	Envío de correos con Brevo SMTP
-backend/src/middlewares/	upload.js	Subida de archivos PDF con Multer
-backend/src/services/	pdfco.service.js	Lectura de QR con PDF.co
-backend/src/routes/	auth.routes.js	Registro, login y verificación de usuarios
-backend/src/routes/	catalogos.routes.js	Escuelas y carreras del IPN
-backend/src/routes/	cp.routes.js	Búsqueda de códigos postales
-backend/src/routes/	admin.routes.js	CRUD de admin (estudiantes, arrendadores, propiedades)
-backend/src/models/	cp.model.js	Modelo de Códigos Postales
-backend/src/models/	direccion.model.js	Modelo de Direcciones
-backend/src/models/	usuario.model.js	Modelo de Usuarios
-backend/src/models/	unidadAcademica.model.js	Modelo de Escuelas IPN
-backend/src/models/	carrera.model.js	Modelo de Carreras
-backend/src/models/	arrendatario.model.js	Modelo de Estudiantes
-backend/src/models/	arrendador.model.js	Modelo de Arrendadores
-backend/src/models/	propiedad.model.js	Modelo de Propiedades
-backend/src/models/	fotos.model.js	Modelo de Fotos
-backend/src/models/	arrendamiento.model.js	Modelo de Contratos
-backend/src/models/	resena.model.js	Modelo de Reseñas
-backend/src/models/	servicio.model.js	Modelo de Servicios
-backend/src/models/	servicioHasPropiedad.model.js	Relación servicios-propiedades
-backend/src/models/	administrador.model.js	Modelo de Administradores
-backend/src/models/	associations.js	Relaciones entre todos los modelos
-
-
-
-📁 Archivos Creados - Frontend
-Ubicación	Archivo	Descripción
-
-frontend/	package.json	Dependencias y scripts
-frontend/	vite.config.js	Configuración de Vite
-frontend/src/	main.jsx	Punto de entrada de React
-frontend/src/	App.jsx	Rutas principales del sistema
-frontend/src/styles/	global.css	Estilos globales
-frontend/src/services/	api.js	Cliente Axios
-frontend/src/services/	authService.js	Autenticación y registro
-frontend/src/services/	catalogosService.js	Escuelas y carreras
-frontend/src/services/	cpService.js	Búsqueda de CP
-frontend/src/services/	adminService.js	CRUD de admin
-frontend/src/components/common/	NavbarInicio.jsx	Barra navegación pública
-frontend/src/components/common/	NavbarRegistro.jsx	Barra navegación registro
-frontend/src/components/common/	FooterInicio.jsx	Pie público
-frontend/src/components/common/	FooterRegistro.jsx	Pie registro
-frontend/src/components/common/	NavbarAdmin.jsx	Barra admin
-frontend/src/components/common/	FooterAdmin.jsx	Pie admin
-frontend/src/components/common/	NavbarArrendador.jsx	Barra arrendador
-frontend/src/components/common/	FooterArrendador.jsx	Pie arrendador
-frontend/src/components/common/	NavbarArrendatario.jsx	Barra estudiante
-frontend/src/components/common/	FooterArrendatario.jsx	Pie estudiante
-frontend/src/components/common/	ProtectedAdminRoute.jsx	Protección rutas admin
-frontend/src/components/registro/	RegistroEstudiante.jsx	Formulario registro estudiante
-frontend/src/components/registro/	RegistroArrendador.jsx	Formulario registro arrendador
-frontend/src/components/ui/	SubirDocumento.jsx	Componente subida PDF
-frontend/src/components/admin/	FormEstudiante.jsx	Editar estudiante
-frontend/src/components/admin/	FormArrendador.jsx	Editar arrendador
-frontend/src/components/admin/	FormPropiedad.jsx	Editar propiedad
-frontend/src/components/admin/	FormRegistroEstudiante.jsx	Registrar estudiante (admin)
-frontend/src/components/admin/	FormRegistroArrendador.jsx	Registrar arrendador (admin)
-frontend/src/pages/publicas/	HomePage.jsx	Página principal
-frontend/src/pages/publicas/	RegistroUsuarioPage.jsx	Selección tipo usuario
-frontend/src/pages/publicas/	UsuariosInicioSesionPage.jsx	Login usuarios
-frontend/src/pages/publicas/	VerificarCorreoPage.jsx	Verificación de correo
-frontend/src/pages/admin/	AdminInicioSesionPage.jsx	Login admin
-frontend/src/pages/admin/	AdminArrendatariosPage.jsx	Gestión estudiantes
-frontend/src/pages/admin/	AdminArrendadoresPage.jsx	Gestión arrendadores
-frontend/src/pages/admin/	AdminPropiedadesPage.jsx	Gestión propiedades
-frontend/src/pages/arrendador/	ArrendadorDashboardPage.jsx	Dashboard arrendador
-frontend/src/pages/arrendatario/	ArrendatarioDashboardPage.jsx	Dashboard estudiante
+🎨 FRONTEND
+Archivo	Descripción
+package.json	Dependencias y scripts
+vite.config.js	Configuración de Vite
+src/main.jsx	Punto de entrada React
+src/App.jsx	Rutas principales
+src/styles/global.css	Estilos globales
+Servicios	
+src/services/api.js	Cliente Axios
+src/services/authService.js	Autenticación y registro
+src/services/adminService.js	CRUD de administración
+src/services/propiedadService.js	Propiedades y servicios
+src/services/arrendamientoService.js	Arrendamientos
+src/services/catalogosService.js	Escuelas y carreras
+src/services/cpService.js	Códigos postales
+src/services/legalContent.js	Aviso de privacidad y términos
+Componentes Common	
+src/components/common/NavbarInicio.jsx	Navegación pública
+src/components/common/NavbarRegistro.jsx	Navegación registro
+src/components/common/NavbarAdmin.jsx	Navegación admin
+src/components/common/NavbarArrendador.jsx	Navegación arrendador
+src/components/common/NavbarArrendatario.jsx	Navegación estudiante
+src/components/common/FooterInicio.jsx	Pie público
+src/components/common/FooterRegistro.jsx	Pie registro
+src/components/common/FooterAdmin.jsx	Pie admin
+src/components/common/ProtectedAdminRoute.jsx	Ruta protegida admin
+src/components/common/ProtectedArrendadorRoute.jsx	Ruta protegida arrendador
+src/components/common/ProtectedArrendatarioRoute.jsx	Ruta protegida estudiante
+src/components/common/ModalConfirmacion.jsx	Modal de confirmación
+src/components/common/ModalContacto.jsx	Modal de contacto
+Componentes Registro	
+src/components/registro/RegistroEstudiante.jsx	Formulario registro estudiante
+src/components/registro/RegistroArrendador.jsx	Formulario registro arrendador
+Componentes UI	
+src/components/ui/SubirDocumento.jsx	Componente subida PDF
+src/components/ui/LegalModal.jsx	Modal aviso/terminos
+Componentes Admin	
+src/components/admin/FormEstudiante.jsx	Editar estudiante
+src/components/admin/FormArrendador.jsx	Editar arrendador
+src/components/admin/FormPropiedad.jsx	Editar propiedad
+src/components/admin/FormRegistroEstudiante.jsx	Registrar estudiante
+src/components/admin/FormRegistroArrendador.jsx	Registrar arrendador
+Componentes Arrendador	
+src/components/arrendador/ModalDetalleArrendamiento.jsx	Detalle de arrendamiento
+src/components/arrendador/ModalDetalleVivienda.jsx	Detalle/edición de vivienda
+Páginas Públicas	
+src/pages/publicas/HomePage.jsx	Página principal
+src/pages/publicas/RegistroUsuarioPage.jsx	Selección tipo usuario
+src/pages/publicas/UsuariosInicioSesionPage.jsx	Login usuarios
+src/pages/publicas/VerificarCorreoPage.jsx	Verificar correo post-registro
+src/pages/publicas/VerificarCorreoLogin.jsx	Verificar correo post-login
+src/pages/publicas/VerificarExpiracion.jsx	Verificar expiración cuenta
+src/pages/publicas/Bienvenidapage.jsx	Bienvenida post-registro
+src/pages/publicas/FaqPage.jsx	Preguntas frecuentes
+src/pages/publicas/AvisoPrivacidadPage.jsx	Aviso de privacidad
+src/pages/publicas/TerminosUsoPage.jsx	Términos de uso
+Páginas Admin	
+src/pages/admin/AdminInicioSesionPage.jsx	Login admin
+src/pages/admin/AdminArrendatariosPage.jsx	Gestión estudiantes
+src/pages/admin/AdminArrendadoresPage.jsx	Gestión arrendadores
+src/pages/admin/AdminPropiedadesPage.jsx	Gestión propiedades
+Páginas Arrendador	
+src/pages/arrendador/CrearVivienda.jsx	Crear vivienda
+src/pages/arrendador/CrearArrendamiento.jsx	Crear arrendamiento
+src/pages/arrendador/MisViviendas.jsx	Mis viviendas
+src/pages/arrendador/MisArrendamientosArrendador.jsx	Mis arrendamientos
+src/pages/arrendador/PerfilArrendador.jsx	Perfil arrendador
+Páginas Arrendatario	
+src/pages/arrendatario/buscarVivienda.jsx	Buscar vivienda
 
 
 

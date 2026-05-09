@@ -79,11 +79,11 @@ const AdminArrendatariosPage = () => {
                 {arrendatarios.map((a) => (
                   <tr key={a.idArrendatario} style={{ borderBottom: '1px solid #eee' }}>
                     <td style={{ padding: '0.75rem' }}>{a.idArrendatario}</td>
-                    <td style={{ padding: '0.75rem' }}>{a.Usuario?.usuarioNom || '-'}</td>
-                    <td style={{ padding: '0.75rem' }}>{a.Usuario?.usuarioApePat} {a.Usuario?.usuarioApeMat || ''} {a.Usuario?.usuarioNom}</td>
+                    <td style={{ padding: '0.75rem' }}>{a.arrendatarioUser || '-'}</td>
+                    <td style={{ padding: '0.75rem' }}>{a.usuario?.usuarioApePat} {a.usuario?.usuarioApeMat || ''} {a.usuario?.usuarioNom}</td>
                     <td style={{ padding: '0.75rem' }}>{a.arrendatarioBoleta || '-'}</td>
-                    <td style={{ padding: '0.75rem' }}>{a.Usuario?.usuarioCorreo || '-'}</td>
-                    <td style={{ padding: '0.75rem' }}>{a.Usuario?.usuarioCurp || '-'}</td>
+                    <td style={{ padding: '0.75rem' }}>{a.usuario?.usuarioCorreo || '-'}</td>
+                    <td style={{ padding: '0.75rem' }}>{a.usuario?.usuarioCurp || '-'}</td>
                     <td style={{ padding: '0.75rem' }}>
                       <span style={{ backgroundColor: a.arrendatarioVerificado === 1 ? '#28a745' : '#ffc107', color: a.arrendatarioVerificado === 1 ? 'white' : '#333', padding: '0.2rem 0.5rem', borderRadius: '5px', fontSize: '0.8rem' }}>
                         {a.arrendatarioVerificado === 1 ? '✓ Verificado' : '⏳ Pendiente'}
@@ -119,15 +119,15 @@ const AdminArrendatariosPage = () => {
                 <div style={{ padding: '1.25rem', overflowY: 'auto' }}>
                   {[
                     ['ID', selectedArrendatario.idArrendatario],
-                    ['Username', selectedArrendatario.Usuario?.usuarioNom],
-                    ['Nombre', `${selectedArrendatario.Usuario?.usuarioApePat} ${selectedArrendatario.Usuario?.usuarioApeMat || ''} ${selectedArrendatario.Usuario?.usuarioNom}`],
+                    ['Username', selectedArrendatario.arrendatarioUser],
+                    ['Nombre', `${selectedArrendatario.usuario?.usuarioApePat} ${selectedArrendatario.usuario?.usuarioApeMat || ''} ${selectedArrendatario.usuario?.usuarioNom}`],
                     ['Boleta', selectedArrendatario.arrendatarioBoleta],
-                    ['Correo', selectedArrendatario.Usuario?.usuarioCorreo],
-                    ['Teléfono', selectedArrendatario.Usuario?.usuarioTel],
-                    ['CURP', selectedArrendatario.Usuario?.usuarioCurp],
-                    ['Fecha Nacimiento', selectedArrendatario.Usuario?.usuarioFechaNac],
-                    ['Escuela', selectedArrendatario.Carrera?.UnidadAcademica?.unidadAcademicaNombre],
-                    ['Carrera', selectedArrendatario.Carrera?.carreraNombre],
+                    ['Correo', selectedArrendatario.usuario?.usuarioCorreo],
+                    ['Teléfono', selectedArrendatario.usuario?.usuarioTel],
+                    ['CURP', selectedArrendatario.usuario?.usuarioCurp],
+                    ['Fecha Nacimiento', selectedArrendatario.usuario?.usuarioFechaNac],
+                    ['Escuela', selectedArrendatario.carrera?.unidadAcademica?.unidadAcademicaNombre],
+                    ['Carrera', selectedArrendatario.carrera?.carreraNombre],
                     ['Verificado', selectedArrendatario.arrendatarioVerificado === 1 ? 'Sí' : 'No'],
                   ].map(([k, v]) => (
                     <p key={k} style={{ margin: '0.4rem 0', fontSize: '0.875rem' }}><strong>{k}:</strong> {v || '-'}</p>
@@ -154,7 +154,7 @@ const AdminArrendatariosPage = () => {
                   <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem', color: '#6b7280' }}>×</button>
                 </div>
                 <div style={{ padding: '1.25rem' }}>
-                  <p style={{ fontSize: '0.875rem' }}>¿Eliminar a <strong>{selectedArrendatario.Usuario?.usuarioNom}</strong>? (Boleta: {selectedArrendatario.arrendatarioBoleta})</p>
+                  <p style={{ fontSize: '0.875rem' }}>¿Eliminar a <strong>{selectedArrendatario.usuario?.usuarioNom}</strong>? (Boleta: {selectedArrendatario.arrendatarioBoleta})</p>
                   <p style={{ color: '#dc2626', fontSize: '0.8rem' }}>⚠️ Esta acción no se puede deshacer. Las reseñas serán redirigidas al usuario por defecto.</p>
                 </div>
                 <div style={{ padding: '0.75rem 1.25rem', borderTop: '1px solid #e5e7eb', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>

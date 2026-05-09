@@ -31,7 +31,7 @@ router.get('/carreras/:idUnidadAcademica', async (req, res) => {
 router.get('/carreras', async (req, res) => {
   try {
     const carreras = await Carrera.findAll({
-      include: [{ model: UnidadAcademica, as: 'UnidadAcademica' }],
+      include: [{ model: UnidadAcademica, as: 'unidadAcademica' }],
       order: [['carreraNombre', 'ASC']]
     });
     res.json(carreras);

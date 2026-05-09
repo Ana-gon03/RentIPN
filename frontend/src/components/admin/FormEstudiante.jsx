@@ -44,18 +44,18 @@ const FormEstudiante = ({ arrendatario, onClose, onSuccess }) => {
   useEffect(() => {
     if (arrendatario) {
       setFormData({
-        usuarioNom: arrendatario.Usuario?.usuarioNom || '',
-        usuarioApePat: arrendatario.Usuario?.usuarioApePat || '',
-        usuarioApeMat: arrendatario.Usuario?.usuarioApeMat || '',
-        usuarioCorreo: arrendatario.Usuario?.usuarioCorreo || '',
-        usuarioTel: arrendatario.Usuario?.usuarioTel || '',
-        usuarioCurp: arrendatario.Usuario?.usuarioCurp || '',
-        usuarioFechaNac: arrendatario.Usuario?.usuarioFechaNac || '',
+        usuarioNom: arrendatario.usuario?.usuarioNom || '',
+        usuarioApePat: arrendatario.usuario?.usuarioApePat || '',
+        usuarioApeMat: arrendatario.usuario?.usuarioApeMat || '',
+        usuarioCorreo: arrendatario.usuario?.usuarioCorreo || '',
+        usuarioTel: arrendatario.usuario?.usuarioTel || '',
+        usuarioCurp: arrendatario.usuario?.usuarioCurp || '',
+        usuarioFechaNac: arrendatario.usuario?.usuarioFechaNac || '',
         arrendatarioBoleta: arrendatario.arrendatarioBoleta || '',
         carrera_idCarrera: arrendatario.carrera_idCarrera || '',
-        escuelaId: arrendatario.Carrera?.idUnidadAcademica || ''
+        escuelaId: arrendatario.carrera?.unidadAcademica?.idUnidadAcademica || ''
       })
-      if (arrendatario.Carrera?.idUnidadAcademica) cargarCarreras(arrendatario.Carrera.idUnidadAcademica)
+      if (arrendatario.carrera?.unidadAcademica?.idUnidadAcademica) cargarCarreras(arrendatario.carrera.unidadAcademica.idUnidadAcademica)
     }
   }, [arrendatario])
 
@@ -192,7 +192,7 @@ const FormEstudiante = ({ arrendatario, onClose, onSuccess }) => {
               </select>
             </div>
             <div style={fieldStyle}>
-              <label style={labelStyle}>Carrera</label>
+              <label style={labelStyle}>carrera</label>
               <select style={inputStyle} name="carrera_idCarrera" value={formData.carrera_idCarrera} onChange={handleChange} disabled={!formData.escuelaId || loading}>
                 <option value="">{loading ? 'Cargando...' : 'Selecciona'}</option>
                 {carreras.map(c => <option key={c.idCarrera} value={c.idCarrera}>{c.carreraNombre}</option>)}
