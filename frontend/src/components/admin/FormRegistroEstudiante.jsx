@@ -2,27 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { getUnidadesAcademicas, getCarrerasByUnidad } from '../../services/catalogosService'
 import { validarCampo } from '../../services/authService'
 import { createArrendatario } from '../../services/adminService'
-
-const inputStyle = {
-  width: '100%',
-  padding: '0.45rem 0.6rem',
-  border: '1px solid #d1d5db',
-  borderRadius: '6px',
-  fontSize: '0.875rem',
-  outline: 'none',
-  boxSizing: 'border-box',
-}
-
-const labelStyle = {
-  display: 'block',
-  fontSize: '0.8rem',
-  fontWeight: '600',
-  color: '#374151',
-  marginBottom: '0.25rem',
-}
-
-const fieldStyle = { marginBottom: '0.65rem' }
-const errorStyle = { color: '#dc2626', fontSize: '0.75rem', marginTop: '2px' }
+import './admin.css'
 
 const FormRegistroEstudiante = ({ onClose, onSuccess }) => {
   const [unidades, setUnidades] = useState([])
@@ -120,7 +100,6 @@ const FormRegistroEstudiante = ({ onClose, onSuccess }) => {
     if (formData.password !== formData.confirmPassword) errs.confirmPassword = 'Las contraseñas no coinciden'
     if (Object.keys(errs).length > 0) { setErrors(errs); return }
 
-    // Validar duplicados
     const checks = await Promise.all([
       validarCampoUnico('username', formData.username),
       validarCampoUnico('correo', formData.correo),
@@ -146,127 +125,167 @@ const FormRegistroEstudiante = ({ onClose, onSuccess }) => {
   }
 
   return (
-    <div style={{ fontFamily: 'system-ui, sans-serif' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', borderBottom: '1px solid #e5e7eb' }}>
-        <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: '700', color: '#111827' }}>Registrar Estudiante</h2>
-        <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem', color: '#6b7280', lineHeight: 1 }}>×</button>
+    <>
+      <div className="admin-modal-header">
+        <h2 className="admin-modal-title">Registrar Estudiante</h2>
+        <button className="admin-modal-close" onClick={onClose}>×</button>
       </div>
 
-      <div style={{ padding: '1rem 1.25rem', maxHeight: '65vh', overflowY: 'auto' }}>
+      <div className="admin-modal-body">
         <form onSubmit={handleSubmit} noValidate>
+          <p className="admin-form-section">Datos Personales</p>
 
-          <p style={{ margin: '0 0 0.75rem', fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Datos Personales</p>
-
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Username *</label>
-            <input style={inputStyle} name="username" value={formData.username} onChange={handleChange} onBlur={handleBlur} maxLength={30} />
-            {validando.username && <p style={{ ...errorStyle, color: '#6b7280' }}>Validando...</p>}
-            {errors.username && <p style={errorStyle}>{errors.username}</p>}
+          <div className="admin-form-field">
+            <label className="admin-form-label">Username *</label>
+            <input
+              className={`admin-form-input${errors.username ? ' is-error' : ''}`}
+              name="username" value={formData.username} onChange={handleChange} onBlur={handleBlur} maxLength={30}
+            />
+            {validando.username && <span className="admin-form-hint">Validando...</span>}
+            {errors.username && <span className="admin-form-error">{errors.username}</span>}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 0.75rem' }}>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Nombres *</label>
-              <input style={inputStyle} name="nombres" value={formData.nombres} onChange={handleChange} maxLength={80} />
-              {errors.nombres && <p style={errorStyle}>{errors.nombres}</p>}
+          <div className="grid-2">
+            <div className="admin-form-field">
+              <label className="admin-form-label">Nombres *</label>
+              <input
+                className={`admin-form-input${errors.nombres ? ' is-error' : ''}`}
+                name="nombres" value={formData.nombres} onChange={handleChange} maxLength={80}
+              />
+              {errors.nombres && <span className="admin-form-error">{errors.nombres}</span>}
             </div>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Ap. Paterno *</label>
-              <input style={inputStyle} name="apellidoPaterno" value={formData.apellidoPaterno} onChange={handleChange} maxLength={60} />
-              {errors.apellidoPaterno && <p style={errorStyle}>{errors.apellidoPaterno}</p>}
-            </div>
-          </div>
-
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Ap. Materno *</label>
-            <input style={inputStyle} name="apellidoMaterno" value={formData.apellidoMaterno} onChange={handleChange} maxLength={60} />
-            {errors.apellidoMaterno && <p style={errorStyle}>{errors.apellidoMaterno}</p>}
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 0.75rem' }}>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Correo *</label>
-              <input style={inputStyle} type="email" name="correo" value={formData.correo} onChange={handleChange} onBlur={handleBlur} maxLength={100} />
-              {validando.correo && <p style={{ ...errorStyle, color: '#6b7280' }}>Validando...</p>}
-              {errors.correo && <p style={errorStyle}>{errors.correo}</p>}
-            </div>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Teléfono * (10 dígitos)</label>
-              <input style={inputStyle} type="tel" name="telefono" value={formData.telefono} onChange={handleChange} maxLength={10} />
-              {errors.telefono && <p style={errorStyle}>{errors.telefono}</p>}
+            <div className="admin-form-field">
+              <label className="admin-form-label">Ap. Paterno *</label>
+              <input
+                className={`admin-form-input${errors.apellidoPaterno ? ' is-error' : ''}`}
+                name="apellidoPaterno" value={formData.apellidoPaterno} onChange={handleChange} maxLength={60}
+              />
+              {errors.apellidoPaterno && <span className="admin-form-error">{errors.apellidoPaterno}</span>}
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 0.75rem' }}>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>CURP * (18 car.)</label>
-              <input style={inputStyle} name="curp" value={formData.curp} onChange={handleChange} onBlur={handleBlur} maxLength={18} />
-              {validando.curp && <p style={{ ...errorStyle, color: '#6b7280' }}>Validando...</p>}
-              {errors.curp && <p style={errorStyle}>{errors.curp}</p>}
+          <div className="admin-form-field">
+            <label className="admin-form-label">Ap. Materno *</label>
+            <input
+              className={`admin-form-input${errors.apellidoMaterno ? ' is-error' : ''}`}
+              name="apellidoMaterno" value={formData.apellidoMaterno} onChange={handleChange} maxLength={60}
+            />
+            {errors.apellidoMaterno && <span className="admin-form-error">{errors.apellidoMaterno}</span>}
+          </div>
+
+          <div className="grid-2">
+            <div className="admin-form-field">
+              <label className="admin-form-label">Correo *</label>
+              <input
+                className={`admin-form-input${errors.correo ? ' is-error' : ''}`}
+                type="email" name="correo" value={formData.correo} onChange={handleChange} onBlur={handleBlur} maxLength={100}
+              />
+              {validando.correo && <span className="admin-form-hint">Validando...</span>}
+              {errors.correo && <span className="admin-form-error">{errors.correo}</span>}
             </div>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Fecha de Nacimiento *</label>
-              <input style={inputStyle} type="date" name="fechaNacimiento" value={formData.fechaNacimiento} onChange={handleChange} />
-              {errors.fechaNacimiento && <p style={errorStyle}>{errors.fechaNacimiento}</p>}
+            <div className="admin-form-field">
+              <label className="admin-form-label">Teléfono * (10 dígitos)</label>
+              <input
+                className={`admin-form-input${errors.telefono ? ' is-error' : ''}`}
+                type="tel" name="telefono" value={formData.telefono} onChange={handleChange} maxLength={10}
+              />
+              {errors.telefono && <span className="admin-form-error">{errors.telefono}</span>}
             </div>
           </div>
 
-          <p style={{ margin: '0.5rem 0 0.75rem', fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Datos Académicos</p>
+          <div className="grid-2">
+            <div className="admin-form-field">
+              <label className="admin-form-label">CURP * (18 car.)</label>
+              <input
+                className={`admin-form-input${errors.curp ? ' is-error' : ''}`}
+                name="curp" value={formData.curp} onChange={handleChange} onBlur={handleBlur} maxLength={18}
+              />
+              {validando.curp && <span className="admin-form-hint">Validando...</span>}
+              {errors.curp && <span className="admin-form-error">{errors.curp}</span>}
+            </div>
+            <div className="admin-form-field">
+              <label className="admin-form-label">Fecha de Nacimiento *</label>
+              <input
+                className={`admin-form-input${errors.fechaNacimiento ? ' is-error' : ''}`}
+                type="date" name="fechaNacimiento" value={formData.fechaNacimiento} onChange={handleChange}
+              />
+              {errors.fechaNacimiento && <span className="admin-form-error">{errors.fechaNacimiento}</span>}
+            </div>
+          </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 0.75rem' }}>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Escuela *</label>
-              <select style={inputStyle} name="escuela" value={formData.escuela} onChange={handleChange}>
+          <p className="admin-form-section">Datos Académicos</p>
+
+          <div className="grid-2">
+            <div className="admin-form-field">
+              <label className="admin-form-label">Escuela *</label>
+              <select
+                className={`admin-form-input${errors.escuela ? ' is-error' : ''}`}
+                name="escuela" value={formData.escuela} onChange={handleChange}
+              >
                 <option value="">Selecciona</option>
-                {unidades.map(u => <option key={u.idUnidadAcademica} value={u.idUnidadAcademica}>{u.unidadAcademicaNombre}</option>)}
+                {unidades.map(u => (
+                  <option key={u.idUnidadAcademica} value={u.idUnidadAcademica}>{u.unidadAcademicaNombre}</option>
+                ))}
               </select>
-              {errors.escuela && <p style={errorStyle}>{errors.escuela}</p>}
+              {errors.escuela && <span className="admin-form-error">{errors.escuela}</span>}
             </div>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Carrera *</label>
-              <select style={inputStyle} name="carreraId" value={formData.carreraId} onChange={handleChange} disabled={!formData.escuela || loading}>
+            <div className="admin-form-field">
+              <label className="admin-form-label">Carrera *</label>
+              <select
+                className={`admin-form-input${errors.carreraId ? ' is-error' : ''}`}
+                name="carreraId" value={formData.carreraId} onChange={handleChange}
+                disabled={!formData.escuela || loading}
+              >
                 <option value="">{loading ? 'Cargando...' : 'Selecciona'}</option>
-                {carreras.map(c => <option key={c.idCarrera} value={c.idCarrera}>{c.carreraNombre}</option>)}
+                {carreras.map(c => (
+                  <option key={c.idCarrera} value={c.idCarrera}>{c.carreraNombre}</option>
+                ))}
               </select>
-              {errors.carreraId && <p style={errorStyle}>{errors.carreraId}</p>}
+              {errors.carreraId && <span className="admin-form-error">{errors.carreraId}</span>}
             </div>
           </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Boleta *</label>
-            <input style={inputStyle} name="boleta" value={formData.boleta} onChange={handleChange} onBlur={handleBlur} maxLength={10} />
-            {validando.boleta && <p style={{ ...errorStyle, color: '#6b7280' }}>Validando...</p>}
-            {errors.boleta && <p style={errorStyle}>{errors.boleta}</p>}
+          <div className="admin-form-field">
+            <label className="admin-form-label">Boleta *</label>
+            <input
+              className={`admin-form-input${errors.boleta ? ' is-error' : ''}`}
+              name="boleta" value={formData.boleta} onChange={handleChange} onBlur={handleBlur} maxLength={10}
+            />
+            {validando.boleta && <span className="admin-form-hint">Validando...</span>}
+            {errors.boleta && <span className="admin-form-error">{errors.boleta}</span>}
           </div>
 
-          <p style={{ margin: '0.5rem 0 0.75rem', fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Contraseña</p>
+          <p className="admin-form-section">Contraseña</p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 0.75rem' }}>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Contraseña *</label>
-              <input style={inputStyle} type="password" name="password" value={formData.password} onChange={handleChange} maxLength={64} />
-              {errors.password && <p style={errorStyle}>{errors.password}</p>}
+          <div className="grid-2">
+            <div className="admin-form-field">
+              <label className="admin-form-label">Contraseña *</label>
+              <input
+                className={`admin-form-input${errors.password ? ' is-error' : ''}`}
+                type="password" name="password" value={formData.password} onChange={handleChange} maxLength={64}
+              />
+              {errors.password && <span className="admin-form-error">{errors.password}</span>}
             </div>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Confirmar *</label>
-              <input style={inputStyle} type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} maxLength={64} />
-              {errors.confirmPassword && <p style={errorStyle}>{errors.confirmPassword}</p>}
+            <div className="admin-form-field">
+              <label className="admin-form-label">Confirmar *</label>
+              <input
+                className={`admin-form-input${errors.confirmPassword ? ' is-error' : ''}`}
+                type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} maxLength={64}
+              />
+              {errors.confirmPassword && <span className="admin-form-error">{errors.confirmPassword}</span>}
             </div>
           </div>
-          <p style={{ fontSize: '0.72rem', color: '#9ca3af', margin: '-0.3rem 0 0.75rem' }}>Mínimo 8 caracteres, mayúscula, minúscula, número y símbolo (@$!%*?&)</p>
-
+          <span className="admin-form-hint">Mínimo 8 caracteres, mayúscula, minúscula, número y símbolo (@$!%*?&)</span>
         </form>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', padding: '0.75rem 1.25rem', borderTop: '1px solid #e5e7eb' }}>
-        <button type="button" onClick={onClose} style={{ padding: '0.45rem 1rem', background: 'none', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '0.875rem', cursor: 'pointer', color: '#374151' }}>
-          Cancelar
-        </button>
-        <button onClick={handleSubmit} disabled={enviando} style={{ padding: '0.45rem 1rem', backgroundColor: enviando ? '#86efac' : '#16a34a', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '0.875rem', fontWeight: '600', cursor: 'pointer' }}>
-          {enviando ? 'Registrando...' : 'Registrar'}
+      <div className="admin-modal-footer">
+        <button type="button" className="btn-cancel" onClick={onClose}>Cancelar</button>
+        <button className="btn-save" onClick={handleSubmit} disabled={enviando}>
+          {enviando ? 'Registrando...' : 'Registrar Estudiante'}
         </button>
       </div>
-    </div>
+    </>
   )
 }
 

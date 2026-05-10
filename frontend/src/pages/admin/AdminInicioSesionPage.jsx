@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { loginAdmin } from '../../services/authService'
-import NavbarRegistro from '../../components/common/NavbarRegistro'
+import '../../components/admin/admin.css'
 
 const AdminInicioSesionPage = () => {
   const navigate = useNavigate()
@@ -35,94 +35,97 @@ const AdminInicioSesionPage = () => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#1a3a4a' }}>
-      <NavbarRegistro />
-
-      <main style={{
-        flex: 1,
+    <div className="admin-login-bg">
+      {/* Mini navbar solo marca */}
+      <header style={{
         display: 'flex',
-        justifyContent: 'center',
         alignItems: 'center',
-        padding: '2rem'
+        gap: 10,
+        padding: '14px 40px',
+        background: 'rgba(255,255,255,0.85)',
+        backdropFilter: 'blur(16px)',
+        borderBottom: '1px solid #f0e6f5',
+        position: 'relative',
+        zIndex: 1,
       }}>
         <div style={{
-          backgroundColor: 'white',
-          padding: '2rem',
-          borderRadius: '10px',
-          width: '100%',
-          maxWidth: '400px',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+          width: 32, height: 32, borderRadius: 9,
+          background: 'linear-gradient(135deg, #7B2D6E, #6B3FA0)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: '0.9rem', color: '#fff',
+          boxShadow: '0 3px 10px rgba(123,45,110,0.25)',
+          flexShrink: 0,
         }}>
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h1 style={{ color: '#1a3a4a' }}>👑 Admin Burroomies</h1>
-            <p style={{ color: '#666' }}>Inicia sesión como administrador</p>
-          </div>
+          👑
+        </div>
+        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: '1rem', color: '#7B2D6E' }}>
+          Burroomies Admin
+        </span>
+      </header>
+
+      <main className="admin-login-main">
+        <div className="admin-login-card">
+          <div className="admin-login-icon">👑</div>
+          <h1 className="admin-login-title">Panel Administrador</h1>
+          <p className="admin-login-sub">Inicia sesión para gestionar Burroomies</p>
 
           <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                Usuario:
-              </label>
-              <input
-                type="text"
-                name="adminUser"
-                value={formData.adminUser}
-                onChange={handleChange}
-                placeholder="Ej: admin_root"
-                required
-                style={{ width: '100%', padding: '0.75rem', border: '1px solid #ddd', borderRadius: '5px', fontSize: '1rem', boxSizing: 'border-box' }}
-              />
+            <div>
+              <label className="admin-login-label">Usuario</label>
+              <div className="admin-login-input-wrap">
+                <input
+                  className="admin-login-input"
+                  type="text"
+                  name="adminUser"
+                  value={formData.adminUser}
+                  onChange={handleChange}
+                  placeholder="Ej: admin_root"
+                  required
+                />
+              </div>
             </div>
 
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                Contraseña:
-              </label>
-              <div style={{ position: 'relative' }}>
+            <div>
+              <label className="admin-login-label">Contraseña</label>
+              <div className="admin-login-input-wrap">
                 <input
+                  className="admin-login-input with-toggle"
                   type={mostrarPassword ? 'text' : 'password'}
                   name="adminContra"
                   value={formData.adminContra}
                   onChange={handleChange}
                   placeholder="Ingresa tu contraseña"
                   required
-                  style={{ width: '100%', padding: '0.75rem', paddingRight: '2.5rem', border: '1px solid #ddd', borderRadius: '5px', fontSize: '1rem', boxSizing: 'border-box' }}
                 />
                 <button
                   type="button"
+                  className="admin-login-toggle"
                   onClick={() => setMostrarPassword(!mostrarPassword)}
-                  style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', color: '#6b7280' }}
                 >
                   {mostrarPassword ? '🙈' : '👁️'}
                 </button>
               </div>
             </div>
 
-            {error && (
-              <div style={{ backgroundColor: '#fee', color: '#c00', padding: '0.75rem', borderRadius: '5px', marginBottom: '1rem', textAlign: 'center' }}>
-                {error}
-              </div>
-            )}
+            {error && <div className="admin-login-error">{error}</div>}
 
             <button
               type="submit"
+              className="admin-login-btn"
               disabled={cargando}
-              style={{ width: '100%', padding: '0.75rem', backgroundColor: '#1a3a4a', color: 'white', border: 'none', borderRadius: '5px', fontSize: '1rem', cursor: 'pointer', opacity: cargando ? 0.7 : 1 }}
             >
               {cargando ? 'Iniciando sesión...' : 'Iniciar Sesión'}
             </button>
           </form>
 
-          <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
-            <Link to="/" style={{ color: '#1a3a4a', textDecoration: 'none' }}>
-              ← Volver al inicio
-            </Link>
-          </div>
+          <Link to="/" className="admin-login-back">
+            ← Volver al inicio
+          </Link>
         </div>
       </main>
 
-      <footer style={{ backgroundColor: '#333', color: 'white', textAlign: 'center', padding: '1rem', marginTop: 'auto' }}>
-        Burroomies
+      <footer className="admin-login-footer">
+        Burroomies — Panel de Administración
       </footer>
     </div>
   )

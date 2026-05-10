@@ -1,28 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { buscarCP } from '../../services/cpService'
 import { updateArrendador } from '../../services/adminService'
-
-const inputStyle = {
-  width: '100%',
-  padding: '0.45rem 0.6rem',
-  border: '1px solid #d1d5db',
-  borderRadius: '6px',
-  fontSize: '0.875rem',
-  outline: 'none',
-  boxSizing: 'border-box',
-}
-
-const labelStyle = {
-  display: 'block',
-  fontSize: '0.8rem',
-  fontWeight: '600',
-  color: '#374151',
-  marginBottom: '0.25rem',
-}
-
-const fieldStyle = { marginBottom: '0.65rem' }
-const errorStyle = { color: '#dc2626', fontSize: '0.75rem', marginTop: '2px' }
-const disabledInput = { ...inputStyle, backgroundColor: '#f9fafb', color: '#6b7280' }
+import './admin.css'
 
 const FormArrendador = ({ arrendador, onClose, onSuccess }) => {
   const [saving, setSaving] = useState(false)
@@ -126,123 +105,140 @@ const FormArrendador = ({ arrendador, onClose, onSuccess }) => {
   }
 
   return (
-    <div style={{ fontFamily: 'system-ui, sans-serif' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', borderBottom: '1px solid #e5e7eb' }}>
-        <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: '700', color: '#111827' }}>Editar Arrendador</h2>
-        <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem', color: '#6b7280', lineHeight: 1 }}>×</button>
+    <>
+      <div className="admin-modal-header">
+        <h2 className="admin-modal-title">Editar Arrendador</h2>
+        <button className="admin-modal-close" onClick={onClose}>×</button>
       </div>
 
-      <div style={{ padding: '1rem 1.25rem', maxHeight: '65vh', overflowY: 'auto' }}>
-        {error && <p style={{ color: '#dc2626', background: '#fef2f2', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.875rem', margin: '0 0 0.75rem' }}>{error}</p>}
+      <div className="admin-modal-body">
+        {error && <div className="admin-form-notice error">{error}</div>}
         {isVerified && (
-          <p style={{ background: '#f0fdf4', color: '#166534', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', margin: '0 0 0.75rem' }}>
+          <div className="admin-form-notice verified">
             ✓ Arrendador verificado — CURP, RFC y correo no se pueden editar.
-          </p>
+          </div>
         )}
 
         <form onSubmit={handleSubmit} noValidate>
-          <p style={{ margin: '0 0 0.75rem', fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Datos Personales</p>
+          <p className="admin-form-section">Datos Personales</p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 0.75rem' }}>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Nombres *</label>
-              <input style={inputStyle} name="usuarioNom" value={formData.usuarioNom} onChange={handleChange} maxLength={80} />
-              {errors.usuarioNom && <p style={errorStyle}>{errors.usuarioNom}</p>}
+          <div className="grid-2">
+            <div className="admin-form-field">
+              <label className="admin-form-label">Nombres *</label>
+              <input
+                className={`admin-form-input${errors.usuarioNom ? ' is-error' : ''}`}
+                name="usuarioNom" value={formData.usuarioNom} onChange={handleChange} maxLength={80}
+              />
+              {errors.usuarioNom && <span className="admin-form-error">{errors.usuarioNom}</span>}
             </div>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Ap. Paterno *</label>
-              <input style={inputStyle} name="usuarioApePat" value={formData.usuarioApePat} onChange={handleChange} maxLength={60} />
-              {errors.usuarioApePat && <p style={errorStyle}>{errors.usuarioApePat}</p>}
-            </div>
-          </div>
-
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Ap. Materno</label>
-            <input style={inputStyle} name="usuarioApeMat" value={formData.usuarioApeMat} onChange={handleChange} maxLength={60} />
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 0.75rem' }}>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Correo</label>
-              <input style={disabledInput} value={formData.usuarioCorreo} disabled />
-              <p style={{ fontSize: '0.72rem', color: '#9ca3af', margin: '2px 0 0' }}>No modificable</p>
-            </div>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Teléfono (10 dígitos)</label>
-              <input style={inputStyle} type="tel" name="usuarioTel" value={formData.usuarioTel} onChange={handleChange} maxLength={10} />
-              {errors.usuarioTel && <p style={errorStyle}>{errors.usuarioTel}</p>}
+            <div className="admin-form-field">
+              <label className="admin-form-label">Ap. Paterno *</label>
+              <input
+                className={`admin-form-input${errors.usuarioApePat ? ' is-error' : ''}`}
+                name="usuarioApePat" value={formData.usuarioApePat} onChange={handleChange} maxLength={60}
+              />
+              {errors.usuarioApePat && <span className="admin-form-error">{errors.usuarioApePat}</span>}
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 0.75rem' }}>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>CURP (18 car.)</label>
-              <input style={isVerified ? disabledInput : inputStyle} name="usuarioCurp" value={formData.usuarioCurp} onChange={handleChange} disabled={isVerified} maxLength={18} />
-              {errors.usuarioCurp && <p style={errorStyle}>{errors.usuarioCurp}</p>}
+          <div className="admin-form-field">
+            <label className="admin-form-label">Ap. Materno</label>
+            <input className="admin-form-input" name="usuarioApeMat" value={formData.usuarioApeMat} onChange={handleChange} maxLength={60} />
+          </div>
+
+          <div className="grid-2">
+            <div className="admin-form-field">
+              <label className="admin-form-label">Correo</label>
+              <input className="admin-form-input" value={formData.usuarioCorreo} disabled />
+              <span className="admin-form-hint">No modificable</span>
             </div>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>RFC (12-13 car.)</label>
-              <input style={isVerified ? disabledInput : inputStyle} name="arrendadorRFC" value={formData.arrendadorRFC} onChange={handleChange} disabled={isVerified} maxLength={13} />
-              {errors.arrendadorRFC && <p style={errorStyle}>{errors.arrendadorRFC}</p>}
+            <div className="admin-form-field">
+              <label className="admin-form-label">Teléfono (10 dígitos)</label>
+              <input
+                className={`admin-form-input${errors.usuarioTel ? ' is-error' : ''}`}
+                type="tel" name="usuarioTel" value={formData.usuarioTel} onChange={handleChange} maxLength={10}
+              />
+              {errors.usuarioTel && <span className="admin-form-error">{errors.usuarioTel}</span>}
             </div>
           </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Fecha de Nacimiento</label>
-            <input style={{ ...inputStyle, width: 'auto' }} type="date" name="usuarioFechaNac" value={formData.usuarioFechaNac} onChange={handleChange} />
+          <div className="grid-2">
+            <div className="admin-form-field">
+              <label className="admin-form-label">CURP (18 car.)</label>
+              <input
+                className={`admin-form-input${errors.usuarioCurp ? ' is-error' : ''}`}
+                name="usuarioCurp" value={formData.usuarioCurp} onChange={handleChange} disabled={isVerified} maxLength={18}
+              />
+              {errors.usuarioCurp && <span className="admin-form-error">{errors.usuarioCurp}</span>}
+            </div>
+            <div className="admin-form-field">
+              <label className="admin-form-label">RFC (12-13 car.)</label>
+              <input
+                className={`admin-form-input${errors.arrendadorRFC ? ' is-error' : ''}`}
+                name="arrendadorRFC" value={formData.arrendadorRFC} onChange={handleChange} disabled={isVerified} maxLength={13}
+              />
+              {errors.arrendadorRFC && <span className="admin-form-error">{errors.arrendadorRFC}</span>}
+            </div>
           </div>
 
-          <p style={{ margin: '0.5rem 0 0.75rem', fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Domicilio</p>
+          <div className="admin-form-field">
+            <label className="admin-form-label">Fecha de Nacimiento</label>
+            <input
+              className="admin-form-input"
+              type="date" name="usuarioFechaNac" value={formData.usuarioFechaNac} onChange={handleChange}
+              style={{ width: 'auto' }}
+            />
+          </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr 80px 80px', gap: '0 0.75rem' }}>
-            <div style={{ ...fieldStyle, position: 'relative' }}>
-              <label style={labelStyle}>C.P.</label>
-              <input style={inputStyle} name="cp" value={formData.cp} onChange={handleCPChange} maxLength={5} />
-              {buscandoCP && <p style={{ ...errorStyle, color: '#6b7280' }}>Buscando...</p>}
+          <p className="admin-form-section">Domicilio</p>
+
+          <div className="grid-cp">
+            <div className="admin-form-field" style={{ position: 'relative' }}>
+              <label className="admin-form-label">C.P.</label>
+              <input className="admin-form-input" name="cp" value={formData.cp} onChange={handleCPChange} maxLength={5} />
+              {buscandoCP && <span className="admin-form-hint">Buscando...</span>}
               {mostrarSugerencias && sugerenciasCP.length > 0 && (
-                <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #d1d5db', borderRadius: '6px', maxHeight: '140px', overflowY: 'auto', zIndex: 1000, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                <div className="cp-dropdown">
                   {sugerenciasCP.map((s, i) => (
-                    <div key={i} onClick={() => seleccionarDireccion(s)} style={{ padding: '0.5rem 0.6rem', cursor: 'pointer', fontSize: '0.8rem', borderBottom: '1px solid #f3f4f6' }}>
+                    <div key={i} className="cp-dropdown-item" onClick={() => seleccionarDireccion(s)}>
                       {s.d_asenta}, {s.D_mnpio}
                     </div>
                   ))}
                 </div>
               )}
             </div>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Calle</label>
-              <input style={inputStyle} name="direccionCalle" value={formData.direccionCalle} onChange={handleChange} maxLength={100} />
+            <div className="admin-form-field">
+              <label className="admin-form-label">Calle</label>
+              <input className="admin-form-input" name="direccionCalle" value={formData.direccionCalle} onChange={handleChange} maxLength={100} />
             </div>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>No. Ext</label>
-              <input style={inputStyle} name="direccionNumExt" value={formData.direccionNumExt} onChange={handleChange} maxLength={10} />
+            <div className="admin-form-field">
+              <label className="admin-form-label">No. Ext</label>
+              <input className="admin-form-input" name="direccionNumExt" value={formData.direccionNumExt} onChange={handleChange} maxLength={10} />
             </div>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>No. Int</label>
-              <input style={inputStyle} name="direccionNumInt" value={formData.direccionNumInt} onChange={handleChange} maxLength={10} />
+            <div className="admin-form-field">
+              <label className="admin-form-label">No. Int</label>
+              <input className="admin-form-input" name="direccionNumInt" value={formData.direccionNumInt} onChange={handleChange} maxLength={10} />
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0 0.75rem' }}>
+          <div className="grid-3">
             {[['Colonia', 'colonia'], ['Municipio', 'municipio'], ['Estado', 'estado']].map(([lbl, key]) => (
-              <div key={key} style={fieldStyle}>
-                <label style={labelStyle}>{lbl}</label>
-                <input style={disabledInput} value={formData[key]} disabled />
+              <div key={key} className="admin-form-field">
+                <label className="admin-form-label">{lbl}</label>
+                <input className="admin-form-input" value={formData[key]} disabled />
               </div>
             ))}
           </div>
         </form>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', padding: '0.75rem 1.25rem', borderTop: '1px solid #e5e7eb' }}>
-        <button type="button" onClick={onClose} style={{ padding: '0.45rem 1rem', background: 'none', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '0.875rem', cursor: 'pointer', color: '#374151' }}>
-          Cancelar
-        </button>
-        <button onClick={handleSubmit} disabled={saving} style={{ padding: '0.45rem 1rem', backgroundColor: saving ? '#86efac' : '#16a34a', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '0.875rem', fontWeight: '600', cursor: 'pointer' }}>
-          {saving ? 'Guardando...' : 'Guardar'}
+      <div className="admin-modal-footer">
+        <button type="button" className="btn-cancel" onClick={onClose}>Cancelar</button>
+        <button className="btn-save" onClick={handleSubmit} disabled={saving}>
+          {saving ? 'Guardando...' : 'Guardar cambios'}
         </button>
       </div>
-    </div>
+    </>
   )
 }
 
