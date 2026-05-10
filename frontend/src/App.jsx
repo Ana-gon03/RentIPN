@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 // Páginas públicas
@@ -12,6 +12,7 @@ import Bienvenidapage from './pages/publicas/Bienvenidapage'
 import AvisoPrivacidadPage from './pages/publicas/AvisoPrivacidadPage'
 import TerminosUsoPage from './pages/publicas/TerminosUsoPage'
 import FaqPage from './pages/publicas/FaqPage'
+
 
 // Páginas de arrendador
 import MisArrendamientosArrendador from './pages/arrendador/MisArrendamientosArrendador'
