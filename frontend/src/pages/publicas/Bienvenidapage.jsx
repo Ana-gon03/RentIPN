@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import NavbarRegistro from '../../components/common/NavbarRegistro'
+import NavbarRegistro from '../../components/common/NavbarInicio'
 import FooterRegistro from '../../components/common/FooterRegistro'
 
 const BienvenidaPage = () => {
