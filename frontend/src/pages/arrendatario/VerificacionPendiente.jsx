@@ -181,17 +181,6 @@ const VerificacionPendiente = () => {
                 >
                   📤 Verificar mi identidad ahora
                 </button>
-                <button
-                  onClick={() => navigate('/arrendatario/buscar-vivienda')}
-                  style={{
-                    width: '100%', padding: '12px',
-                    backgroundColor: 'white', color: '#555',
-                    border: '1px solid #ddd', borderRadius: '6px',
-                    cursor: 'pointer', fontSize: '14px'
-                  }}
-                >
-                  Buscar vivienda sin verificar
-                </button>
               </div>
 
             </div>

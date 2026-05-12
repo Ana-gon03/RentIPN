@@ -1,4 +1,4 @@
-import  { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { getUnidadesAcademicas, getCarrerasByUnidad } from '../../services/catalogosService'
 import { validarCampo, registrarEstudiante } from '../../services/authService'
 import { useNavigate, Link } from 'react-router-dom'
@@ -790,7 +790,7 @@ const RegistroEstudiante = ({ volver }) => {
                 ¿Ya tienes cuenta? <Link to="/usuarios/inicio-sesion">Inicia sesión</Link>
               </span>
               <button type="submit" className="btn btn-primary" disabled={enviando}>
-                {enviando ? 'Registrando...' : 'Crear cuenta →'}
+                {enviando ? 'Registrando...' : 'Crear cuenta'}
               </button>
             </div>
 

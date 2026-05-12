@@ -1,28 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { getUnidadesAcademicas, getCarrerasByUnidad } from '../../services/catalogosService'
 import { updateArrendatario } from '../../services/adminService'
-
-const inputStyle = {
-  width: '100%',
-  padding: '0.45rem 0.6rem',
-  border: '1px solid #d1d5db',
-  borderRadius: '6px',
-  fontSize: '0.875rem',
-  outline: 'none',
-  boxSizing: 'border-box',
-}
-
-const labelStyle = {
-  display: 'block',
-  fontSize: '0.8rem',
-  fontWeight: '600',
-  color: '#374151',
-  marginBottom: '0.25rem',
-}
-
-const fieldStyle = { marginBottom: '0.65rem' }
-const errorStyle = { color: '#dc2626', fontSize: '0.75rem', marginTop: '2px' }
-const disabledInput = { ...inputStyle, backgroundColor: '#f9fafb', color: '#6b7280' }
+import './admin.css'
 
 const FormEstudiante = ({ arrendatario, onClose, onSuccess }) => {
   const [unidades, setUnidades] = useState([])
@@ -119,103 +98,128 @@ const FormEstudiante = ({ arrendatario, onClose, onSuccess }) => {
   }
 
   return (
-    <div style={{ fontFamily: 'system-ui, sans-serif' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', borderBottom: '1px solid #e5e7eb' }}>
-        <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: '700', color: '#111827' }}>
+    <>
+      <div className="admin-modal-header">
+        <h2 className="admin-modal-title">
           {arrendatario ? 'Editar Estudiante' : 'Registrar Estudiante'}
         </h2>
-        <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem', color: '#6b7280', lineHeight: 1 }}>×</button>
+        <button className="admin-modal-close" onClick={onClose}>×</button>
       </div>
 
-      <div style={{ padding: '1rem 1.25rem', maxHeight: '65vh', overflowY: 'auto' }}>
-        {error && <p style={{ color: '#dc2626', background: '#fef2f2', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.875rem', margin: '0 0 0.75rem' }}>{error}</p>}
+      <div className="admin-modal-body">
+        {error && <div className="admin-form-notice error">{error}</div>}
         {isVerified && (
-          <p style={{ background: '#f0fdf4', color: '#166534', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', margin: '0 0 0.75rem' }}>
+          <div className="admin-form-notice verified">
             ✓ Estudiante verificado — CURP, boleta, correo y username no se pueden editar.
-          </p>
+          </div>
         )}
 
         <form onSubmit={handleSubmit} noValidate>
-          <p style={{ margin: '0 0 0.75rem', fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Datos Personales</p>
+          <p className="admin-form-section">Datos Personales</p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 0.75rem' }}>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Nombres *</label>
-              <input style={inputStyle} name="usuarioNom" value={formData.usuarioNom} onChange={handleChange} maxLength={80} />
-              {errors.usuarioNom && <p style={errorStyle}>{errors.usuarioNom}</p>}
+          <div className="grid-2">
+            <div className="admin-form-field">
+              <label className="admin-form-label">Nombres *</label>
+              <input
+                className={`admin-form-input${errors.usuarioNom ? ' is-error' : ''}`}
+                name="usuarioNom" value={formData.usuarioNom} onChange={handleChange} maxLength={80}
+              />
+              {errors.usuarioNom && <span className="admin-form-error">{errors.usuarioNom}</span>}
             </div>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Ap. Paterno *</label>
-              <input style={inputStyle} name="usuarioApePat" value={formData.usuarioApePat} onChange={handleChange} maxLength={60} />
-              {errors.usuarioApePat && <p style={errorStyle}>{errors.usuarioApePat}</p>}
-            </div>
-          </div>
-
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Ap. Materno</label>
-            <input style={inputStyle} name="usuarioApeMat" value={formData.usuarioApeMat} onChange={handleChange} maxLength={60} />
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 0.75rem' }}>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Correo</label>
-              <input style={disabledInput} value={formData.usuarioCorreo} disabled />
-              <p style={{ fontSize: '0.72rem', color: '#9ca3af', margin: '2px 0 0' }}>No modificable</p>
-            </div>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Teléfono (10 dígitos)</label>
-              <input style={inputStyle} type="tel" name="usuarioTel" value={formData.usuarioTel} onChange={handleChange} maxLength={10} />
-              {errors.usuarioTel && <p style={errorStyle}>{errors.usuarioTel}</p>}
+            <div className="admin-form-field">
+              <label className="admin-form-label">Ap. Paterno *</label>
+              <input
+                className={`admin-form-input${errors.usuarioApePat ? ' is-error' : ''}`}
+                name="usuarioApePat" value={formData.usuarioApePat} onChange={handleChange} maxLength={60}
+              />
+              {errors.usuarioApePat && <span className="admin-form-error">{errors.usuarioApePat}</span>}
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 0.75rem' }}>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>CURP (18 car.)</label>
-              <input style={isVerified ? disabledInput : inputStyle} name="usuarioCurp" value={formData.usuarioCurp} onChange={handleChange} disabled={isVerified} maxLength={18} />
-              {errors.usuarioCurp && <p style={errorStyle}>{errors.usuarioCurp}</p>}
+          <div className="admin-form-field">
+            <label className="admin-form-label">Ap. Materno</label>
+            <input className="admin-form-input" name="usuarioApeMat" value={formData.usuarioApeMat} onChange={handleChange} maxLength={60} />
+          </div>
+
+          <div className="grid-2">
+            <div className="admin-form-field">
+              <label className="admin-form-label">Correo</label>
+              <input className="admin-form-input" value={formData.usuarioCorreo} disabled />
+              <span className="admin-form-hint">No modificable</span>
             </div>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Fecha de Nacimiento</label>
-              <input style={{ ...inputStyle, width: 'auto' }} type="date" name="usuarioFechaNac" value={formData.usuarioFechaNac} onChange={handleChange} />
+            <div className="admin-form-field">
+              <label className="admin-form-label">Teléfono (10 dígitos)</label>
+              <input
+                className={`admin-form-input${errors.usuarioTel ? ' is-error' : ''}`}
+                type="tel" name="usuarioTel" value={formData.usuarioTel} onChange={handleChange} maxLength={10}
+              />
+              {errors.usuarioTel && <span className="admin-form-error">{errors.usuarioTel}</span>}
             </div>
           </div>
 
-          <p style={{ margin: '0.5rem 0 0.75rem', fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Datos Académicos</p>
+          <div className="grid-2">
+            <div className="admin-form-field">
+              <label className="admin-form-label">CURP (18 car.)</label>
+              <input
+                className={`admin-form-input${errors.usuarioCurp ? ' is-error' : ''}`}
+                name="usuarioCurp" value={formData.usuarioCurp} onChange={handleChange} disabled={isVerified} maxLength={18}
+              />
+              {errors.usuarioCurp && <span className="admin-form-error">{errors.usuarioCurp}</span>}
+            </div>
+            <div className="admin-form-field">
+              <label className="admin-form-label">Fecha de Nacimiento</label>
+              <input
+                className="admin-form-input"
+                type="date" name="usuarioFechaNac" value={formData.usuarioFechaNac} onChange={handleChange}
+              />
+            </div>
+          </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 0.75rem' }}>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Escuela</label>
-              <select style={inputStyle} name="escuelaId" value={formData.escuelaId} onChange={handleChange}>
+          <p className="admin-form-section">Datos Académicos</p>
+
+          <div className="grid-2">
+            <div className="admin-form-field">
+              <label className="admin-form-label">Escuela</label>
+              <select className="admin-form-input" name="escuelaId" value={formData.escuelaId} onChange={handleChange}>
                 <option value="">Selecciona</option>
-                {unidades.map(u => <option key={u.idUnidadAcademica} value={u.idUnidadAcademica}>{u.unidadAcademicaNombre}</option>)}
+                {unidades.map(u => (
+                  <option key={u.idUnidadAcademica} value={u.idUnidadAcademica}>{u.unidadAcademicaNombre}</option>
+                ))}
               </select>
             </div>
-            <div style={fieldStyle}>
-              <label style={labelStyle}>carrera</label>
-              <select style={inputStyle} name="carrera_idCarrera" value={formData.carrera_idCarrera} onChange={handleChange} disabled={!formData.escuelaId || loading}>
+            <div className="admin-form-field">
+              <label className="admin-form-label">Carrera</label>
+              <select
+                className="admin-form-input"
+                name="carrera_idCarrera" value={formData.carrera_idCarrera} onChange={handleChange}
+                disabled={!formData.escuelaId || loading}
+              >
                 <option value="">{loading ? 'Cargando...' : 'Selecciona'}</option>
-                {carreras.map(c => <option key={c.idCarrera} value={c.idCarrera}>{c.carreraNombre}</option>)}
+                {carreras.map(c => (
+                  <option key={c.idCarrera} value={c.idCarrera}>{c.carreraNombre}</option>
+                ))}
               </select>
             </div>
           </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Boleta</label>
-            <input style={isVerified ? disabledInput : inputStyle} name="arrendatarioBoleta" value={formData.arrendatarioBoleta} onChange={handleChange} disabled={isVerified} maxLength={10} />
+          <div className="admin-form-field">
+            <label className="admin-form-label">Boleta</label>
+            <input
+              className="admin-form-input"
+              name="arrendatarioBoleta" value={formData.arrendatarioBoleta} onChange={handleChange}
+              disabled={isVerified} maxLength={10}
+            />
           </div>
         </form>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', padding: '0.75rem 1.25rem', borderTop: '1px solid #e5e7eb' }}>
-        <button type="button" onClick={onClose} style={{ padding: '0.45rem 1rem', background: 'none', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '0.875rem', cursor: 'pointer', color: '#374151' }}>
-          Cancelar
-        </button>
-        <button onClick={handleSubmit} disabled={saving} style={{ padding: '0.45rem 1rem', backgroundColor: saving ? '#86efac' : '#16a34a', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '0.875rem', fontWeight: '600', cursor: 'pointer' }}>
-          {saving ? 'Guardando...' : 'Guardar'}
+      <div className="admin-modal-footer">
+        <button type="button" className="btn-cancel" onClick={onClose}>Cancelar</button>
+        <button className="btn-save" onClick={handleSubmit} disabled={saving}>
+          {saving ? 'Guardando...' : 'Guardar cambios'}
         </button>
       </div>
-    </div>
+    </>
   )
 }
 

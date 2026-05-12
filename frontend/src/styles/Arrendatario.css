@@ -1,0 +1,1329 @@
+/* ═══════════════════════════════════════════════════════
+   Arrendatario.css — Módulo Arrendatario
+   Sistema de diseño: Homepage + Login + Registro
+   Variables de global.css (importado en main.jsx)
+═══════════════════════════════════════════════════════ */
+
+/* ── Layout base ───────────────────────────────────────── */
+.atr-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--gray-50);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--text-dark);
+}
+
+.atr-main {
+  flex: 1;
+  padding: 2rem 5vw;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.atr-main-wide {
+  flex: 1;
+  padding: 2rem 5vw;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ── Page header ──────────────────────────────────────── */
+.atr-page-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin: 0 0 1.75rem;
+  letter-spacing: -0.02em;
+}
+
+/* ── Botones ──────────────────────────────────────────── */
+.atr-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  background: var(--purple-600);
+  color: var(--white);
+  border: none;
+  border-radius: 50px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-btn);
+  transition: background 0.2s, transform 0.2s;
+  text-decoration: none;
+  width: 100%;
+  justify-content: center;
+}
+.atr-btn-primary:hover:not(:disabled) {
+  background: var(--purple-800);
+  transform: translateY(-1px);
+}
+.atr-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.atr-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 22px;
+  background: var(--white);
+  color: var(--text-mid);
+  border: 1.5px solid var(--gray-300);
+  border-radius: 50px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  text-decoration: none;
+  width: 100%;
+}
+.atr-btn-ghost:hover {
+  background: var(--gray-100);
+  border-color: var(--gray-500);
+}
+
+.atr-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 22px;
+  background: #DC2626;
+  color: var(--white);
+  border: none;
+  border-radius: 50px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 4px 16px rgba(220, 38, 38, 0.25);
+  width: 100%;
+}
+.atr-btn-danger:hover:not(:disabled) {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+.atr-btn-danger:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.atr-btn-success {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 22px;
+  background: #16A34A;
+  color: var(--white);
+  border: none;
+  border-radius: 50px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 4px 16px rgba(22, 163, 74, 0.25);
+  width: 100%;
+}
+.atr-btn-success:hover:not(:disabled) {
+  background: #15803d;
+  transform: translateY(-1px);
+}
+.atr-btn-success:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.atr-btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+/* ── Alertas / banners ────────────────────────────────── */
+.atr-alert {
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.atr-alert-icon { font-size: 1.75rem; flex-shrink: 0; }
+.atr-alert-body {}
+.atr-alert-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+.atr-alert-desc {
+  font-size: 0.85rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.atr-alert-warning {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  color: #856404;
+}
+.atr-alert-warning .atr-alert-title { color: #92400E; }
+
+.atr-alert-error {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #991B1B;
+}
+.atr-alert-error .atr-alert-title { color: #991B1B; }
+
+.atr-alert-success {
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  color: #166534;
+}
+.atr-alert-success .atr-alert-title { color: #166534; }
+
+.atr-alert-info {
+  background: var(--purple-50);
+  border: 1px solid var(--purple-100);
+  color: var(--purple-600);
+}
+.atr-alert-info .atr-alert-title { color: var(--purple-800); }
+
+/* ── Estado vacío ─────────────────────────────────────── */
+.atr-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+.atr-empty-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+.atr-empty-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+.atr-empty-sub {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  margin-bottom: 1.75rem;
+}
+
+.atr-loading {
+  text-align: center;
+  padding: 4rem;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+/* ── Card principal de arrendamiento ──────────────────── */
+.atr-card {
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+/* Imagen hero de la propiedad */
+.atr-card-hero {
+  height: 260px;
+  background: var(--gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.atr-card-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.atr-card-hero-placeholder { font-size: 3.5rem; }
+
+.atr-card-hero-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 5px 14px;
+  border-radius: 50px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.atr-card-hero-badge-active { background: #16A34A; color: var(--white); }
+
+/* Cuerpo de la card */
+.atr-card-body { padding: 1.75rem; }
+
+.atr-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.atr-card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 4px;
+}
+
+.atr-card-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin: 0;
+}
+
+.atr-card-price {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--purple-600);
+  line-height: 1;
+}
+.atr-card-price-label {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  margin-top: 2px;
+  text-align: right;
+}
+
+.atr-card-desc {
+  padding: 1rem;
+  background: var(--gray-50);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  color: var(--text-mid);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.atr-divider {
+  border: none;
+  height: 1px;
+  background: var(--gray-100);
+  margin: 1.25rem 0;
+}
+
+/* ── Sección de arrendador dentro de card ─────────────── */
+.atr-section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 1rem;
+}
+
+.atr-landlord-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.atr-landlord-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--purple-800), var(--purple-600));
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  letter-spacing: -0.5px;
+}
+
+.atr-landlord-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.atr-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-left: 0.5rem;
+}
+
+.atr-contact-item {
+  font-size: 0.875rem;
+  color: var(--text-mid);
+}
+
+/* ── Verificación — card contenedor ───────────────────── */
+.atr-verify-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 2rem 1.25rem;
+}
+
+.atr-verify-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  width: 100%;
+  max-width: 520px;
+}
+
+.atr-verify-card-bordered {
+  border: 2px solid var(--purple-600);
+}
+.atr-verify-card-success {
+  border: 2px solid #16A34A;
+}
+
+/* Header de verificación */
+.atr-verify-header {
+  padding: 2rem 2rem 1.75rem;
+  text-align: center;
+}
+.atr-verify-header-icon { font-size: 3rem; margin-bottom: 0.75rem; }
+.atr-verify-header-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin: 0 0 0.35rem;
+  color: var(--white);
+}
+.atr-verify-header-sub {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+.atr-verify-header-primary { background: var(--purple-600); }
+.atr-verify-header-success  { background: #16A34A; }
+.atr-verify-header-warning  { background: #D97706; }
+.atr-verify-header-danger   { background: #C62828; }
+
+/* Cuerpo de verificación */
+.atr-verify-body { padding: 1.75rem; }
+
+/* ── Contador de días ─────────────────────────────────── */
+.atr-days-box {
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.atr-days-label {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin-bottom: 0.4rem;
+}
+.atr-days-number {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+.atr-days-unit { font-size: 0.9rem; font-weight: 600; }
+
+/* Barra de progreso */
+.atr-progress-bar-track {
+  width: 100%;
+  height: 8px;
+  background: var(--gray-300);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+.atr-progress-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+.atr-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+.atr-progress-label { font-size: 0.7rem; color: var(--text-light); }
+
+/* ── Requisitos list ──────────────────────────────────── */
+.atr-req-list { margin-bottom: 1.5rem; }
+.atr-req-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.atr-req-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.atr-req-check { color: #16A34A; font-size: 0.85rem; flex-shrink: 0; margin-top: 1px; }
+.atr-req-text { font-size: 0.85rem; color: var(--text-mid); line-height: 1.4; }
+
+/* ── Instrucciones box ────────────────────────────────── */
+.atr-instructions-box {
+  background: var(--purple-50);
+  border: 1px solid var(--purple-100);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.atr-instructions-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--purple-600);
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Errores de verificación ──────────────────────────── */
+.atr-error-box {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.25rem;
+}
+.atr-error-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #C62828;
+  margin-bottom: 0.35rem;
+}
+.atr-error-list {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+.atr-error-list li {
+  font-size: 0.8rem;
+  color: #C62828;
+  margin-bottom: 2px;
+}
+
+/* ── Encuesta de finalización ─────────────────────────── */
+.atr-survey-intro {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+.atr-survey-intro-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: 0.35rem;
+}
+.atr-survey-intro-sub {
+  font-size: 0.875rem;
+  color: var(--text-light);
+}
+.atr-survey-intro-hint {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+.atr-survey-card {
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow-card);
+}
+.atr-survey-card-required {
+  border-color: var(--purple-400);
+  border-width: 2px;
+}
+
+.atr-survey-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-align: center;
+  margin-bottom: 0.35rem;
+}
+.atr-survey-card-required-label {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #DC2626;
+  margin-bottom: 1rem;
+}
+
+/* Estrellas */
+.atr-stars {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 0.35rem;
+}
+.atr-star {
+  font-size: 2.25rem;
+  cursor: pointer;
+  transition: transform 0.1s, color 0.1s;
+  user-select: none;
+  color: var(--gray-300);
+}
+.atr-star:hover,
+.atr-star.active { color: #F59E0B; }
+.atr-star:hover { transform: scale(1.2); }
+
+.atr-star-label {
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--purple-600);
+  margin-top: 0.35rem;
+  min-height: 1.2em;
+}
+
+/* Textarea de reseña */
+.atr-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  color: var(--text-dark);
+  resize: vertical;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  line-height: 1.5;
+}
+.atr-textarea:focus {
+  border-color: var(--purple-400);
+  box-shadow: 0 0 0 3px rgba(105, 96, 208, 0.12);
+}
+.atr-textarea::placeholder { color: var(--text-light); }
+
+/* ── Éxito de encuesta / verificación ─────────────────── */
+.atr-success-screen {
+  text-align: center;
+  padding: 2.5rem 2rem;
+}
+.atr-success-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+.atr-success-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #16A34A;
+  margin-bottom: 0.5rem;
+}
+.atr-success-desc {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+/* ── Modal de confirmación inline ─────────────────────── */
+.atr-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 22, 51, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.atr-modal {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 24px 64px rgba(83, 74, 183, 0.22);
+}
+
+.atr-modal-icon { font-size: 2.5rem; margin-bottom: 0.85rem; }
+.atr-modal-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.75rem;
+}
+.atr-modal-desc {
+  font-size: 0.875rem;
+  color: var(--text-mid);
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+.atr-modal-warning {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #DC2626;
+  margin-bottom: 1.5rem;
+}
+.atr-modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+.atr-modal-actions .atr-btn-primary,
+.atr-modal-actions .atr-btn-ghost,
+.atr-modal-actions .atr-btn-danger { width: auto; }
+
+/* ── Paginación ── */
+.atr-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.atr-pagination-btn {
+  padding: 8px 16px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.atr-pagination-btn:hover:not(:disabled) {
+  background: #EEEDFE;
+  border-color: #534AB7;
+}
+
+.atr-pagination-btn.active {
+  background: #534AB7;
+  color: white;
+  border-color: #534AB7;
+}
+
+.atr-pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* ── Footer note ──────────────────────────────────────── */
+.atr-footnote {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-light);
+  margin-top: 1rem;
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   NAVBAR ARRENDATARIO
+═══════════════════════════════════════════════════════ */
+
+.atr-nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid #D3D1E8;
+  box-shadow: 0 2px 20px rgba(83, 74, 183, 0.06);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.atr-nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 5vw;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.atr-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex: 1;  /* ← Ocupa espacio para empujar los enlaces */
+}
+
+.atr-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 2;  /* ← Ocupa más espacio y centra los enlaces */
+  justify-content: center;
+}
+
+.atr-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;  /* ← Ocupa espacio para empujar los botones a la derecha */
+  justify-content: flex-end;
+}
+
+.atr-nav-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.12));
+}
+
+.atr-nav-brand-name {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #534AB7;
+  letter-spacing: -0.3px;
+}
+
+
+.atr-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 16px;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4A4668;
+  text-decoration: none;
+  background: none;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.atr-nav-link:hover {
+  background: #EEEDFE;
+  color: #534AB7;
+  border-color: #CECBF6;
+}
+
+.atr-nav-link.active {
+  background: #EEEDFE;
+  color: #534AB7;
+  border-color: #CECBF6;
+}
+
+.atr-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.atr-nav-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px 5px 5px;
+  background: rgba(83, 74, 183, 0.05);
+  border: 1.5px solid #CECBF6;
+  border-radius: 50px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.atr-nav-profile:hover {
+  background: #EEEDFE;
+  border-color: #AFA9EC;
+}
+
+.atr-nav-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #534AB7, #7F77DD);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.atr-nav-profile-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #534AB7;
+}
+
+.atr-nav-logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #DC2626;
+  background: none;
+  border: 1.5px solid #FECDD3;
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.atr-nav-logout:hover {
+  background: rgba(239, 68, 68, 0.06);
+  border-color: #DC2626;
+}
+
+/* Responsive Navbar */
+@media (max-width: 768px) {
+  .atr-nav-links {
+    display: none;
+  }
+  
+  .atr-nav-profile-name {
+    display: none;
+  }
+  
+  .atr-nav-profile {
+    padding: 5px;
+  }
+}
+
+/* ── Responsive ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .atr-main, .atr-main-wide { padding: 1.5rem 1rem; }
+  .atr-card-hero { height: 200px; }
+  .atr-card-header { flex-direction: column; align-items: flex-start; }
+  .atr-card-price-label { text-align: left; }
+  .atr-modal-actions { flex-direction: column; }
+  .atr-modal-actions button { width: 100%; }
+}
+
+/* ── Detalle Propiedad ── */
+.atr-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  width: 100%;
+}
+
+.atr-btn-back {
+  padding: 8px 20px;
+  margin-bottom: 1.5rem;
+  background: transparent;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 40px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.atr-btn-back:hover {
+  background: #EEEDFE;
+  border-color: #534AB7;
+}
+
+.atr-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 1.5rem;
+}
+
+.atr-detail-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.atr-detail-gallery {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.atr-gallery-main {
+  height: 400px;
+  background: #f3f4f6;
+}
+
+.atr-gallery-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.atr-gallery-thumbs {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  overflow-x: auto;
+}
+
+.atr-gallery-thumb {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 3px solid transparent;
+  border-radius: 8px;
+  opacity: 0.6;
+  transition: all 0.2s;
+}
+
+.atr-gallery-thumb.active {
+  border-color: #534AB7;
+  opacity: 1;
+}
+
+.atr-gallery-placeholder {
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  font-size: 4rem;
+}
+
+.atr-detail-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 1.75rem;
+}
+
+.atr-detail-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1633;
+  margin: 0 0 1rem;
+}
+
+.atr-detail-badges {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.atr-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.atr-badge-primary {
+  background: #534AB7;
+  color: white;
+}
+
+.atr-badge-success {
+  background: #16A34A;
+  color: white;
+}
+
+.atr-badge-warning {
+  background: #F59E0B;
+  color: white;
+}
+
+.atr-detail-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.atr-detail-price {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #534AB7;
+}
+
+.atr-detail-price-period {
+  font-size: 0.8rem;
+  color: #7a7899;
+}
+
+.atr-detail-meta {
+  text-align: right;
+  font-size: 0.85rem;
+  color: #4a4668;
+}
+
+.atr-detail-section {
+  margin-bottom: 1.5rem;
+}
+
+.atr-detail-section h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1633;
+  margin-bottom: 0.75rem;
+}
+
+.atr-detail-section p {
+  font-size: 0.875rem;
+  color: #4a4668;
+  line-height: 1.6;
+}
+
+.atr-service-category {
+  margin-bottom: 1.25rem;
+}
+
+.atr-service-category h4 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.atr-service-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.atr-service-tag {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.atr-service-tag.basic {
+  background: #e3f2fd;
+  color: #1a237e;
+}
+
+.atr-service-tag.entertainment {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.atr-service-tag.additional {
+  background: #e0f7fa;
+  color: #00838f;
+}
+
+.atr-reviews-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 1.75rem;
+}
+
+.atr-reviews-card h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+
+.atr-reviews-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.atr-review-stat-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #534AB7;
+}
+
+.atr-review-stat-label {
+  font-size: 0.7rem;
+  color: #7a7899;
+}
+
+.atr-reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.atr-review-item {
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.atr-review-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.atr-review-header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.atr-review-text {
+  font-size: 0.85rem;
+  color: #4a4668;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.atr-review-stars {
+  color: #F59E0B;
+  font-size: 0.85rem;
+}
+
+.atr-review-sentiment {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 2px 8px;
+  background: #f3f4f6;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  color: #4a4668;
+}
+
+.atr-reviews-empty {
+  text-align: center;
+  color: #7a7899;
+  padding: 2rem;
+}
+
+.atr-detail-sidebar {
+  position: sticky;
+  top: 90px;
+  align-self: start;
+}
+
+.atr-landlord-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 1.5rem;
+}
+
+.atr-landlord-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+
+.atr-landlord-info {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.atr-landlord-avatar-lg {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 0.75rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #534AB7, #7F77DD);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.atr-landlord-name-lg {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1633;
+}
+
+.atr-contact-info h4 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #7a7899;
+  margin-bottom: 0.75rem;
+}
+
+.atr-contact-item {
+  margin-bottom: 0.75rem;
+}
+
+.atr-contact-label {
+  font-size: 0.7rem;
+  color: #7a7899;
+  margin-bottom: 0.2rem;
+}
+
+.atr-contact-value {
+  font-size: 0.85rem;
+  color: #1a1633;
+  word-break: break-all;
+}
+
+.atr-text-muted {
+  color: #7a7899;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .atr-detail-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .atr-detail-sidebar {
+    position: static;
+  }
+  
+  .atr-reviews-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .atr-detail-container {
+    padding: 1rem;
+  }
+  
+  .atr-detail-price-row {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .atr-detail-meta {
+    text-align: center;
+  }
+  
+  .atr-reviews-stats {
+    grid-template-columns: 1fr;
+  }
+}

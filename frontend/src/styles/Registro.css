@@ -7,20 +7,18 @@
 .registro-page {
   min-height: 100vh;
   background: var(--gray-50);
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;  /* ← Mantén esto */
+  display: block;  /* ← Cambia de flex a block */
 }
 
 /* ── Navbar de registro (simplificada) ── */
 .registro-nav {
-  height: 60px;
+  height: 70px;
   background: var(--white);
-  border-bottom: 1px solid var(--gray-200);
+  border-bottom: 2px solid var(--purple-100);
   display: flex;
   align-items: center;
-  justify-content: space-between;  /* ← Esto pone logo a la izquierda y botón a la derecha */
-  padding: 0 2rem;
+  justify-content: space-between;
+  padding: 0 5vw;
   position: sticky;
   top: 0;
   z-index: 50;
@@ -41,24 +39,25 @@
 .registro-nav-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-weight: 800;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: var(--purple-600);
   text-decoration: none;
 }
 
 .registro-nav-brand img {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
 }
+
 
 .registro-nav-login {
   background: transparent;
   color: var(--purple-600);
   text-decoration: none;
-  padding: 8px 20px;
+  padding: 8px 22px;
   border-radius: 40px;
   font-size: 0.85rem;
   font-weight: 600;
@@ -76,11 +75,9 @@
    FORMULARIOS DE REGISTRO (layout de 2 columnas)
 ════════════════════════════════════════════════ */
 .registro-layout {
-  flex: 1;
-  display: flex;  /* ← Cambia de grid a flex */
-  min-height: 100vh;
+  display: flex;
+  width: 100%;
 }
-
 
 /* ── Panel izquierdo ── */
 /* Botón Regresar dentro del sidebar - justo abajo del logo */
@@ -91,18 +88,13 @@
   flex-direction: column;
   align-items: center;
   gap: 2rem;
+  width: 300px;
   position: sticky;
-  top: 60px;
-  width: 300px;  /* ← Ancho fijo */
-  min-height: 100vh;  /* ← Altura mínima */
-  overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  top: 70px;  /* ← Misma altura que el navbar */
+  height: calc(100vh - 70px);  /* ← Altura completa */
+  overflow-y: auto;  /* ← Scroll interno si es necesario */
 }
 
-.registro-sidebar::-webkit-scrollbar {
-  display: none;
-}
 
 .btn-regresar-sidebar {
   background: rgba(255, 255, 255, 0.9);
@@ -118,7 +110,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .btn-regresar-sidebar:hover {
@@ -135,7 +127,6 @@
   flex-direction: column;
   align-items: center;
   gap: 2rem;
-  position: sticky;
   top: 60px;
   height: auto;  /* ← Cambia de calc(100vh - 60px) a auto */
   overflow-y: visible;  /* ← Cambia de auto a visible */
@@ -250,9 +241,7 @@
 .registro-main {
   background: var(--white);
   padding: 2rem 2rem;
-  flex: 1;  /* ← Ocupa el espacio restante */
-  overflow-y: visible;
-  min-height: 100vh;
+  flex: 1;
 }
 
 /* Cabecera del formulario */
@@ -728,5 +717,14 @@
     display: flex;
     justify-content: flex-start;
   }
+}
+
+.login-password-toggle {
+  color: #9ca3af;
+  transition: color 0.2s;
+}
+
+.login-password-toggle:hover {
+  color: #534AB7;
 }
 

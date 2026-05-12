@@ -1,147 +1,56 @@
-import React, { useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import React from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import logoImg from '../../assets/burro.png'
+import '../../styles/Arrendatario.css'
 
 const NavbarArrendatario = () => {
   const navigate = useNavigate()
-  const [menuOpen, setMenuOpen] = useState(false)
+  const location = useLocation()
 
-  const handleLogout = () => {
+  const isActive = (path) => location.pathname === path
+
+  const handleCerrarSesion = () => {
     localStorage.clear()
-    navigate('/usuarios/inicio-sesion')
+    navigate('/')
   }
 
+  const nombre = localStorage.getItem('usuarioNom') || 'Estudiante'
+
   return (
-    <nav style={{
-      backgroundColor: '#1a237e',
-      padding: '0 20px',
-      color: 'white'
-    }}>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        maxWidth: '1400px',
-        margin: '0 auto',
-        height: '60px'
-      }}>
-        {/* Logo/Home */}
-        <NavLink 
-          to="/arrendatario/buscar-vivienda" 
-          style={{ 
-            color: 'white', 
-            textDecoration: 'none', 
-            fontSize: '20px', 
-            fontWeight: 'bold',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}
-        >
-          🏠 Burroomies
-        </NavLink>
+    <nav className="atr-nav">
+      <div className="atr-nav-inner">
+        <Link to="/arrendatario/buscar-vivienda" className="atr-nav-brand">
+          <img src={logoImg} alt="Burroomies" className="atr-nav-logo" />
+          <span className="atr-nav-brand-name">Burroomies</span>
+        </Link>
 
-        {/* Botón móvil */}
-        <button 
-          onClick={() => setMenuOpen(!menuOpen)}
-          style={{
-            display: 'none',
-            background: 'none',
-            border: 'none',
-            color: 'white',
-            fontSize: '24px',
-            cursor: 'pointer'
-          }}
-          className="menu-toggle"
-        >
-          {menuOpen ? '✕' : '☰'}
-        </button>
-
-        {/* Menú */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '5px'
-        }}>
-          <NavLink 
+        <div className="atr-nav-links">
+          <Link
             to="/arrendatario/buscar-vivienda"
-            style={({ isActive }) => ({
-              color: 'white',
-              textDecoration: 'none',
-              padding: '8px 15px',
-              borderRadius: '5px',
-              backgroundColor: isActive ? 'rgba(255,255,255,0.2)' : 'transparent',
-              fontSize: '14px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px'
-            })}
+            className={`atr-nav-link${isActive('/arrendatario/buscar-vivienda') ? ' active' : ''}`}
           >
             🔍 Buscar Vivienda
-          </NavLink>
-          
-          <NavLink 
+          </Link>
+          <Link
             to="/arrendatario/mi-arrendamiento"
-            style={({ isActive }) => ({
-              color: 'white',
-              textDecoration: 'none',
-              padding: '8px 15px',
-              borderRadius: '5px',
-              backgroundColor: isActive ? 'rgba(255,255,255,0.2)' : 'transparent',
-              fontSize: '14px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px'
-            })}
+            className={`atr-nav-link${isActive('/arrendatario/mi-arrendamiento') ? ' active' : ''}`}
           >
             📋 Mi Arrendamiento
-          </NavLink>
-          
-          <NavLink 
-            to="/arrendatario/perfil"
-            style={({ isActive }) => ({
-              color: 'white',
-              textDecoration: 'none',
-              padding: '8px 15px',
-              borderRadius: '5px',
-              backgroundColor: isActive ? 'rgba(255,255,255,0.2)' : 'transparent',
-              fontSize: '14px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px'
-            })}
-          >
-            👤 Perfil
-          </NavLink>
-          
-          <button 
-            onClick={handleLogout}
-            style={{
-              padding: '8px 15px',
-              marginLeft: '10px',
-              backgroundColor: 'rgba(255,255,255,0.1)',
-              color: 'white',
-              border: '1px solid rgba(255,255,255,0.3)',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontSize: '14px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px'
-            }}
-          >
-            🚪 Cerrar Sesión
+          </Link>
+        </div>
+
+        <div className="atr-nav-right">
+          <Link to="/arrendatario/perfil" className="atr-nav-profile">
+            <div className="atr-nav-avatar">
+              {nombre.charAt(0).toUpperCase()}
+            </div>
+            <span className="atr-nav-profile-name">Mi Perfil</span>
+          </Link>
+          <button className="atr-nav-logout" onClick={handleCerrarSesion}>
+            Cerrar Sesión
           </button>
         </div>
       </div>
-
-      {/* Estilos para responsive */}
-      <style>{`
-        @media (max-width: 768px) {
-          .menu-toggle {
-            display: block !important;
-          }
-        }
-      `}</style>
     </nav>
   )
 }

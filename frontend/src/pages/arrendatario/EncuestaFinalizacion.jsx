@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import NavbarArrendatario from '../../components/common/NavbarArrendatario'
 import FooterInicio from '../../components/common/FooterInicio'
+import '../../styles/Arrendatario.css'
 
 const EncuestaFinalizacion = () => {
   const { idArrendamiento } = useParams()
@@ -12,14 +13,12 @@ const EncuestaFinalizacion = () => {
   const [enviando, setEnviando] = useState(false)
   const [completado, setCompletado] = useState(false)
   
-  // Datos del arrendamiento
   const [serviciosPropiedad, setServiciosPropiedad] = useState({
     basicos: false,
     entretenimiento: false,
     adicionales: false
   })
   
-  // Calificaciones
   const [calServiciosBasicos, setCalServiciosBasicos] = useState(0)
   const [calEntretenimiento, setCalEntretenimiento] = useState(0)
   const [calAdicionales, setCalAdicionales] = useState(0)
@@ -32,33 +31,29 @@ const EncuestaFinalizacion = () => {
 
   const cargarArrendamiento = async () => {
     try {
-        const token = localStorage.getItem('token') || localStorage.getItem('burroomies_token')
-        const response = await fetch(`http://localhost:5000/api/arrendamientos/${idArrendamiento}`, {
+      const token = localStorage.getItem('token') || localStorage.getItem('burroomies_token')
+      const response = await fetch(`http://localhost:5000/api/arrendamientos/${idArrendamiento}`, {
         headers: { Authorization: `Bearer ${token}` }
-        })
+      })
 
-        if (!response.ok) throw new Error('Error al cargar')
+      if (!response.ok) throw new Error('Error al cargar')
 
-        const data = await response.json()
-        
-        // ✅ minúscula, como devuelve Sequelize
-        const servicios = data.propiedad?.servicios || []
-        setServiciosPropiedad({
+      const data = await response.json()
+      const servicios = data.propiedad?.servicios || []
+      setServiciosPropiedad({
         basicos: servicios.some(s => s.servicioCategoria === 'Basico'),
         entretenimiento: servicios.some(s => s.servicioCategoria === 'Entretenimiento'),
         adicionales: servicios.some(s => s.servicioCategoria === 'Adicional')
-        })
-        
+      })
     } catch (error) {
-        setError('No se pudo cargar la información')
-        console.error('Error:', error)
+      setError('No se pudo cargar la información')
+      console.error('Error:', error)
     } finally {
-        setLoading(false)
+      setLoading(false)
     }
-    }
+  }
   
   const handleEnviarEncuesta = async () => {
-    // Validar calificación general (obligatoria)
     if (calGeneral === 0) {
       alert('La calificación general es obligatoria')
       return
@@ -74,7 +69,6 @@ const EncuestaFinalizacion = () => {
         resenaDuracionRenta: null
       }
 
-      // Solo enviar calificaciones de servicios que existen
       if (serviciosPropiedad.basicos) {
         datos.resenaCalSerBasic = calServiciosBasicos || null
       }
@@ -111,20 +105,12 @@ const EncuestaFinalizacion = () => {
 
   const renderEstrellas = (valor, onChange) => {
     return (
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '5px' }}>
+      <div className="atr-stars">
         {[1, 2, 3, 4, 5].map(num => (
           <span
             key={num}
             onClick={() => onChange(num)}
-            style={{
-              fontSize: '35px',
-              cursor: 'pointer',
-              color: num <= valor ? '#ffc107' : '#e0e0e0',
-              transition: 'transform 0.1s',
-              userSelect: 'none'
-            }}
-            onMouseEnter={(e) => e.target.style.transform = 'scale(1.2)'}
-            onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+            className={`atr-star ${num <= valor ? 'active' : ''}`}
           >
             ★
           </span>
@@ -135,10 +121,12 @@ const EncuestaFinalizacion = () => {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <div className="atr-page">
         <NavbarArrendatario />
-        <div style={{ flex: 1, textAlign: 'center', padding: '60px' }}>
-          <p>Cargando...</p>
+        <div className="atr-main">
+          <div className="atr-loading">
+            <p>Cargando...</p>
+          </div>
         </div>
         <FooterInicio />
       </div>
@@ -147,29 +135,37 @@ const EncuestaFinalizacion = () => {
 
   if (completado) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <div className="atr-page">
         <NavbarArrendatario />
-        <div style={{ flex: 1, maxWidth: '600px', margin: '0 auto', padding: '40px 20px', textAlign: 'center' }}>
-          <p style={{ fontSize: '60px', marginBottom: '20px' }}>✅</p>
-          <h2 style={{ color: '#28a745', marginBottom: '15px' }}>¡Encuesta enviada con éxito!</h2>
-          <p style={{ color: '#666', marginBottom: '25px', fontSize: '14px' }}>
-            Tu arrendamiento ha sido finalizado. Gracias por tu opinión.
-          </p>
-          <button 
-            onClick={() => navigate('/arrendatario/mi-arrendamiento')}
-            style={{
-              padding: '12px 30px',
-              backgroundColor: '#1a237e',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: 'bold'
-            }}
-          >
-            Volver a Mi Arrendamiento
-          </button>
+        <div className="atr-verify-wrapper">
+          <div className="atr-verify-card atr-verify-card-success">
+            <div className="atr-verify-header atr-verify-header-success">
+              <div className="atr-verify-header-icon">✅</div>
+              <div className="atr-verify-header-title">¡Encuesta enviada con éxito!</div>
+              <div className="atr-verify-header-sub">
+                Tu arrendamiento ha sido finalizado
+              </div>
+            </div>
+            <div className="atr-verify-body">
+              <div className="atr-alert atr-alert-success">
+                <div className="atr-alert-icon">🎉</div>
+                <div className="atr-alert-body">
+                  <div className="atr-alert-title">¡Gracias por tu opinión!</div>
+                  <div className="atr-alert-desc">
+                    Tu arrendamiento ha sido finalizado exitosamente.
+                  </div>
+                </div>
+              </div>
+              <div className="atr-btn-group">
+                <button 
+                  onClick={() => navigate('/arrendatario/mi-arrendamiento')}
+                  className="atr-btn-primary"
+                >
+                  Volver a Mi Arrendamiento
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
         <FooterInicio />
       </div>
@@ -177,128 +173,86 @@ const EncuestaFinalizacion = () => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div className="atr-page">
       <NavbarArrendatario />
 
-      <div style={{ flex: 1, maxWidth: '700px', margin: '0 auto', padding: '20px', width: '100%' }}>
-        <h1 style={{ fontSize: '24px', marginBottom: '5px', textAlign: 'center' }}>📝 Encuesta de Finalización</h1>
-        <p style={{ textAlign: 'center', color: '#666', fontSize: '14px', marginBottom: '30px' }}>
+      <div className="atr-main">
+        <h1 className="atr-page-title" style={{ textAlign: 'center' }}>📝 Encuesta de Finalización</h1>
+        <p style={{ textAlign: 'center', color: '#7a7899', fontSize: '14px', marginBottom: '30px' }}>
           Califica del 1 al 5 tu experiencia<br />
-          <span style={{ fontSize: '12px', color: '#999' }}>
-            (1 = Muy malo · 5 = Excelente)
-          </span>
+          <span style={{ fontSize: '12px' }}>(1 = Muy malo · 5 = Excelente)</span>
         </p>
 
         {/* CALIFICACIÓN GENERAL (OBLIGATORIA) */}
-        <div style={{
-          backgroundColor: 'white',
-          border: '2px solid #1a237e',
-          borderRadius: '8px',
-          padding: '25px',
-          marginBottom: '20px'
-        }}>
-          <h3 style={{ textAlign: 'center', fontSize: '16px', marginBottom: '15px', color: '#333' }}>
+        <div className="atr-survey-card atr-survey-card-required">
+          <div className="atr-survey-card-title">
             ⭐ ¿En general, qué calificación le darías a tu experiencia arrendando esta vivienda?
-          </h3>
-          <p style={{ textAlign: 'center', color: '#dc3545', fontSize: '12px', marginBottom: '15px' }}>
-            * Obligatorio
-          </p>
+          </div>
+          <div className="atr-survey-card-required-label">* Obligatorio</div>
           {renderEstrellas(calGeneral, setCalGeneral)}
           {calGeneral > 0 && (
-            <p style={{ textAlign: 'center', fontSize: '14px', color: '#1a237e', fontWeight: 'bold', marginTop: '10px' }}>
+            <div className="atr-star-label">
               {['', 'Muy malo', 'Malo', 'Regular', 'Bueno', 'Excelente'][calGeneral]}
-            </p>
+            </div>
           )}
         </div>
 
         {/* SERVICIOS BÁSICOS (condicional) */}
         {serviciosPropiedad.basicos && (
-          <div style={{
-            backgroundColor: 'white',
-            border: '1px solid #e0e0e0',
-            borderRadius: '8px',
-            padding: '25px',
-            marginBottom: '20px'
-          }}>
-            <h3 style={{ textAlign: 'center', fontSize: '16px', marginBottom: '15px', color: '#333' }}>
+          <div className="atr-survey-card">
+            <div className="atr-survey-card-title">
               🔌 ¿Qué tal te parecieron los servicios básicos que te proporcionó la vivienda?
-            </h3>
+            </div>
             {renderEstrellas(calServiciosBasicos, setCalServiciosBasicos)}
             {calServiciosBasicos > 0 && (
-              <p style={{ textAlign: 'center', fontSize: '14px', color: '#1a237e', fontWeight: 'bold', marginTop: '10px' }}>
+              <div className="atr-star-label">
                 {['', 'Muy malo', 'Malo', 'Regular', 'Bueno', 'Excelente'][calServiciosBasicos]}
-              </p>
+              </div>
             )}
           </div>
         )}
 
         {/* ENTRETENIMIENTO (condicional) */}
         {serviciosPropiedad.entretenimiento && (
-          <div style={{
-            backgroundColor: 'white',
-            border: '1px solid #e0e0e0',
-            borderRadius: '8px',
-            padding: '25px',
-            marginBottom: '20px'
-          }}>
-            <h3 style={{ textAlign: 'center', fontSize: '16px', marginBottom: '15px', color: '#333' }}>
+          <div className="atr-survey-card">
+            <div className="atr-survey-card-title">
               🎮 ¿Qué tal te parecieron los servicios de entretenimiento?
-            </h3>
+            </div>
             {renderEstrellas(calEntretenimiento, setCalEntretenimiento)}
             {calEntretenimiento > 0 && (
-              <p style={{ textAlign: 'center', fontSize: '14px', color: '#1a237e', fontWeight: 'bold', marginTop: '10px' }}>
+              <div className="atr-star-label">
                 {['', 'Muy malo', 'Malo', 'Regular', 'Bueno', 'Excelente'][calEntretenimiento]}
-              </p>
+              </div>
             )}
           </div>
         )}
 
         {/* ADICIONALES (condicional) */}
         {serviciosPropiedad.adicionales && (
-          <div style={{
-            backgroundColor: 'white',
-            border: '1px solid #e0e0e0',
-            borderRadius: '8px',
-            padding: '25px',
-            marginBottom: '20px'
-          }}>
-            <h3 style={{ textAlign: 'center', fontSize: '16px', marginBottom: '15px', color: '#333' }}>
+          <div className="atr-survey-card">
+            <div className="atr-survey-card-title">
               ✨ ¿Qué tal te parecieron los servicios adicionales?
-            </h3>
+            </div>
             {renderEstrellas(calAdicionales, setCalAdicionales)}
             {calAdicionales > 0 && (
-              <p style={{ textAlign: 'center', fontSize: '14px', color: '#1a237e', fontWeight: 'bold', marginTop: '10px' }}>
+              <div className="atr-star-label">
                 {['', 'Muy malo', 'Malo', 'Regular', 'Bueno', 'Excelente'][calAdicionales]}
-              </p>
+              </div>
             )}
           </div>
         )}
 
         {/* RESEÑA ESCRITA */}
-        <div style={{
-          backgroundColor: 'white',
-          border: '1px solid #e0e0e0',
-          borderRadius: '8px',
-          padding: '25px',
-          marginBottom: '20px'
-        }}>
-          <h3 style={{ fontSize: '16px', marginBottom: '15px', color: '#333' }}>
+        <div className="atr-survey-card">
+          <div className="atr-survey-card-title">
             💬 ¿Quieres dejar una reseña sobre tu experiencia?
-          </h3>
+          </div>
           <textarea
             value={resena}
             onChange={(e) => setResena(e.target.value)}
             placeholder="Cuéntanos tu experiencia viviendo aquí..."
             rows={4}
-            style={{
-              width: '100%',
-              padding: '12px',
-              borderRadius: '5px',
-              border: '1px solid #ddd',
-              fontSize: '14px',
-              resize: 'vertical',
-              boxSizing: 'border-box'
-            }}
+            className="atr-textarea"
           />
         </div>
 
@@ -306,18 +260,8 @@ const EncuestaFinalizacion = () => {
         <button 
           onClick={handleEnviarEncuesta}
           disabled={enviando}
-          style={{
-            width: '100%',
-            padding: '15px',
-            backgroundColor: enviando ? '#ccc' : '#1a237e',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: enviando ? 'not-allowed' : 'pointer',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            marginBottom: '30px'
-          }}
+          className="atr-btn-primary"
+          style={{ marginBottom: '30px' }}
         >
           {enviando ? 'Enviando...' : '✅ Finalizar Encuesta'}
         </button>

@@ -208,11 +208,10 @@ const PerfilArrendatario = () => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <NavbarArrendatario />
-
-      <div style={{ flex: 1, maxWidth: '700px', margin: '0 auto', padding: '20px', width: '100%' }}>
-        <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>👤 Mi Perfil</h1>
+  <div className="atr-page">
+    <NavbarArrendatario />
+    <div className="atr-main">
+      <h1 className="atr-page-title">👤 Mi Perfil</h1>
 
         {/* Mensaje de éxito */}
         {mensajeExito && (

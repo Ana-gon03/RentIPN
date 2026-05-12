@@ -332,7 +332,7 @@ const RegistroArrendador = ({ volver }) => {
             {[
               { title: 'Publica tus propiedades', desc: 'Llega a cientos de estudiantes' },
               { title: 'Verificación de identidad', desc: 'Seguridad para ambas partes' },
-              { title: 'Contratos digitales', desc: 'Plantillas profesionales' },
+              { title: 'Contratos digitales', desc: 'Plantillas guía' },
               { title: 'Calificaciones', desc: 'Construye confianza' },
             ].map(p => (
               <div className="sidebar-perk" key={p.title}>
@@ -350,7 +350,7 @@ const RegistroArrendador = ({ volver }) => {
         <main className="registro-main">
           {/* Tabs */}
           <div className="tipo-tabs">
-            <span className="tipo-tab active">🏠 Arrendador</span>
+            <span className="tipo-tab active"> Arrendador</span>
           </div>
 
           {/* Cabecera */}
@@ -416,14 +416,14 @@ const RegistroArrendador = ({ volver }) => {
                 <div className="form-group">
                   <label className="form-label">CURP <span>*</span></label>
                   <input className="form-input" type="text" name="curp" value={formData.curp} onChange={handleChange} placeholder="Ej: HERS850101MDFRRN09" />
-                  <span className="form-hint">18 caracteres: 4 letras, 6 números, 6 letras, 2 alfanuméricos</span>
+                  <span className="form-hint">18 caracteres</span>
                   {errors.curp && <div className="form-error">{errors.curp}</div>}
                   <IndicadorUnicidad campo="curp" />
                 </div>
                 <div className="form-group">
                   <label className="form-label">RFC <span>*</span></label>
                   <input className="form-input" type="text" name="rfc" value={formData.rfc} onChange={handleChange} placeholder="Ej: HERS850101XXX" />
-                  <span className="form-hint">13 caracteres: 4 letras, 6 números, 3 alfanuméricos</span>
+                  <span className="form-hint">13 caracteres</span>
                   {errors.rfc && <div className="form-error">{errors.rfc}</div>}
                   <IndicadorUnicidad campo="rfc" />
                 </div>
@@ -594,7 +594,7 @@ const RegistroArrendador = ({ volver }) => {
                 ¿Ya tienes cuenta? <Link to="/usuarios/inicio-sesion">Inicia sesión</Link>
               </span>
               <button type="submit" className="btn btn-primary" disabled={enviando}>
-                {enviando ? 'Registrando...' : 'Crear cuenta →'}
+                {enviando ? 'Registrando...' : 'Crear cuenta'}
               </button>
             </div>
           </form>

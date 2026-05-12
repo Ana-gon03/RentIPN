@@ -4,6 +4,7 @@ import FooterAdmin from '../../components/common/FooterAdmin'
 import { getArrendatarios, deleteArrendatario } from '../../services/adminService'
 import FormEstudiante from '../../components/admin/FormEstudiante'
 import FormRegistroEstudiante from '../../components/admin/FormRegistroEstudiante'
+import '../../components/admin/admin.css'
 
 const AdminArrendatariosPage = () => {
   const [arrendatarios, setArrendatarios] = useState([])
@@ -13,6 +14,7 @@ const AdminArrendatariosPage = () => {
   const [selectedArrendatario, setSelectedArrendatario] = useState(null)
   const [modalType, setModalType] = useState('')
   const [error, setError] = useState('')
+  const [alerta, setAlerta] = useState({ open: false, mensaje: '' })
 
   const loadArrendatarios = async () => {
     setLoading(true)
@@ -32,67 +34,90 @@ const AdminArrendatariosPage = () => {
   const handleView = (a) => { setSelectedArrendatario(a); setModalType('view'); setShowModal(true) }
   const handleEdit = (a) => { setSelectedArrendatario(a); setModalType('edit'); setShowModal(true) }
   const handleDelete = (a) => {
-    if (a.tieneRentasActivas) { alert('❌ No se puede eliminar: tiene rentas activas'); return }
+    if (a.tieneRentasActivas) { setAlerta({ open: true, mensaje: 'No se puede eliminar: este estudiante tiene rentas activas.' }); return }
     setSelectedArrendatario(a); setModalType('delete'); setShowModal(true)
   }
   const confirmDelete = async () => {
     try { await deleteArrendatario(selectedArrendatario.idArrendatario); setShowModal(false); loadArrendatarios() }
-    catch (error) { alert(error.response?.data?.error || 'Error al eliminar') }
+    catch (error) { setShowModal(false); setAlerta({ open: true, mensaje: error.response?.data?.error || 'Error al eliminar' }) }
   }
 
-  const modalWidth = (modalType === 'edit' || modalType === 'create') ? '860px' : '480px'
+  const modalWidth = (modalType === 'edit' || modalType === 'create') ? '860px' : '520px'
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div className="admin-layout">
       <NavbarAdmin />
-      <main style={{ flex: 1, padding: '2rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-          <h1>Gestión de Estudiantes (Arrendatarios)</h1>
-          <button onClick={() => { setSelectedArrendatario(null); setModalType('create'); setShowModal(true) }}>
+
+      <main className="admin-main">
+        <div className="admin-page-header">
+          <h1 className="admin-page-title">Estudiantes (Arrendatarios)</h1>
+          <button
+            className="btn-add"
+            onClick={() => { setSelectedArrendatario(null); setModalType('create'); setShowModal(true) }}
+          >
             + Agregar Estudiante
           </button>
         </div>
 
-        <div style={{ marginBottom: '1.5rem' }}>
-          <input type="text" placeholder="🔍 Buscar por boleta, username, correo o CURP..." value={search}
+        <div className="admin-search-wrap">
+          <input
+            className="admin-search-input"
+            type="text"
+            placeholder="Buscar por boleta, username, correo o CURP..."
+            value={search}
             onChange={(e) => setSearch(e.target.value)}
-            style={{ width: '100%', padding: '0.75rem', border: '1px solid #ddd', borderRadius: '5px', fontSize: '1rem' }} />
+          />
         </div>
 
-        {loading ? <p>Cargando...</p> : error ? <p style={{ color: 'red' }}>{error}</p> :
-          arrendatarios.length === 0 ? <p>No hay estudiantes registrados</p> : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#fff' }}>
+        {loading ? (
+          <p className="admin-state">Cargando estudiantes...</p>
+        ) : error ? (
+          <p className="admin-state-error">{error}</p>
+        ) : arrendatarios.length === 0 ? (
+          <p className="admin-state">No hay estudiantes registrados.</p>
+        ) : (
+          <div className="admin-table-card" style={{ overflowX: 'auto' }}>
+            <table className="admin-table">
               <thead>
-                <tr style={{ backgroundColor: '#f0f0f0', borderBottom: '2px solid #ddd' }}>
-                  <th style={{ padding: '0.75rem', textAlign: 'left' }}>ID</th>
-                  <th style={{ padding: '0.75rem', textAlign: 'left' }}>Username</th>
-                  <th style={{ padding: '0.75rem', textAlign: 'left' }}>Nombre Completo</th>
-                  <th style={{ padding: '0.75rem', textAlign: 'left' }}>Boleta</th>
-                  <th style={{ padding: '0.75rem', textAlign: 'left' }}>Correo</th>
-                  <th style={{ padding: '0.75rem', textAlign: 'left' }}>CURP</th>
-                  <th style={{ padding: '0.75rem', textAlign: 'left' }}>Verificado</th>
-                  <th style={{ padding: '0.75rem', textAlign: 'center' }}>Acciones</th>
+                <tr>
+                  <th>ID</th>
+                  <th>Username</th>
+                  <th>Nombre Completo</th>
+                  <th>Boleta</th>
+                  <th>Correo</th>
+                  <th>CURP</th>
+                  <th className="center">Verificado</th>
+                  <th className="center">Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {arrendatarios.map((a) => (
-                  <tr key={a.idArrendatario} style={{ borderBottom: '1px solid #eee' }}>
-                    <td style={{ padding: '0.75rem' }}>{a.idArrendatario}</td>
-                    <td style={{ padding: '0.75rem' }}>{a.arrendatarioUser || '-'}</td>
-                    <td style={{ padding: '0.75rem' }}>{a.usuario?.usuarioApePat} {a.usuario?.usuarioApeMat || ''} {a.usuario?.usuarioNom}</td>
-                    <td style={{ padding: '0.75rem' }}>{a.arrendatarioBoleta || '-'}</td>
-                    <td style={{ padding: '0.75rem' }}>{a.usuario?.usuarioCorreo || '-'}</td>
-                    <td style={{ padding: '0.75rem' }}>{a.usuario?.usuarioCurp || '-'}</td>
-                    <td style={{ padding: '0.75rem' }}>
-                      <span style={{ backgroundColor: a.arrendatarioVerificado === 1 ? '#28a745' : '#ffc107', color: a.arrendatarioVerificado === 1 ? 'white' : '#333', padding: '0.2rem 0.5rem', borderRadius: '5px', fontSize: '0.8rem' }}>
+                  <tr key={a.idArrendatario}>
+                    <td className="muted">{a.idArrendatario}</td>
+                    <td>{a.arrendatarioUser || '-'}</td>
+                    <td style={{ fontWeight: 500 }}>
+                      {a.usuario?.usuarioApePat} {a.usuario?.usuarioApeMat || ''} {a.usuario?.usuarioNom}
+                    </td>
+                    <td>{a.arrendatarioBoleta || '-'}</td>
+                    <td>{a.usuario?.usuarioCorreo || '-'}</td>
+                    <td className="muted">{a.usuario?.usuarioCurp || '-'}</td>
+                    <td className="center">
+                      <span className={`admin-badge ${a.arrendatarioVerificado === 1 ? 'badge-success' : 'badge-warning'}`}>
                         {a.arrendatarioVerificado === 1 ? '✓ Verificado' : '⏳ Pendiente'}
                       </span>
                     </td>
-                    <td style={{ padding: '0.75rem', textAlign: 'center' }}>
-                      <button onClick={() => handleView(a)} style={{ marginRight: '0.5rem', padding: '0.3rem 0.6rem', backgroundColor: '#17a2b8', color: 'white', border: 'none', borderRadius: '3px', cursor: 'pointer' }}>👁️ Ver</button>
-                      <button onClick={() => handleEdit(a)} style={{ marginRight: '0.5rem', padding: '0.3rem 0.6rem', backgroundColor: '#ffc107', color: '#333', border: 'none', borderRadius: '3px', cursor: 'pointer' }}>✏️ Editar</button>
-                      <button onClick={() => handleDelete(a)} disabled={a.tieneRentasActivas} style={{ padding: '0.3rem 0.6rem', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '3px', cursor: 'pointer' }}>🗑️ Eliminar</button>
+                    <td className="center">
+                      <div className="admin-actions">
+                        <button className="btn-action btn-view" onClick={() => handleView(a)}>👁 Ver</button>
+                        <button className="btn-action btn-edit" onClick={() => handleEdit(a)}>✏️ Editar</button>
+                        <button
+                          className="btn-action btn-delete"
+                          onClick={() => handleDelete(a)}
+                          disabled={a.tieneRentasActivas}
+                        >
+                          🗑 Eliminar
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -101,68 +126,135 @@ const AdminArrendatariosPage = () => {
           </div>
         )}
       </main>
+
       <FooterAdmin />
 
       {showModal && (
         <div
+          className="admin-modal-overlay"
           onClick={(e) => { if (e.target === e.currentTarget) setShowModal(false) }}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}
         >
-          <div style={{ backgroundColor: 'white', borderRadius: '10px', width: '100%', maxWidth: modalWidth, maxHeight: '95vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <div className="admin-modal" style={{ maxWidth: modalWidth }}>
 
             {modalType === 'view' && selectedArrendatario && (
               <>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', borderBottom: '1px solid #e5e7eb' }}>
-                  <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: '700' }}>Información del Estudiante</h2>
-                  <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem', color: '#6b7280' }}>×</button>
+                <div className="admin-modal-header">
+                  <h2 className="admin-modal-title">Información del Estudiante</h2>
+                  <button className="admin-modal-close" onClick={() => setShowModal(false)}>×</button>
                 </div>
-                <div style={{ padding: '1.25rem', overflowY: 'auto' }}>
-                  {[
-                    ['ID', selectedArrendatario.idArrendatario],
-                    ['Username', selectedArrendatario.arrendatarioUser],
-                    ['Nombre', `${selectedArrendatario.usuario?.usuarioApePat} ${selectedArrendatario.usuario?.usuarioApeMat || ''} ${selectedArrendatario.usuario?.usuarioNom}`],
-                    ['Boleta', selectedArrendatario.arrendatarioBoleta],
-                    ['Correo', selectedArrendatario.usuario?.usuarioCorreo],
-                    ['Teléfono', selectedArrendatario.usuario?.usuarioTel],
-                    ['CURP', selectedArrendatario.usuario?.usuarioCurp],
-                    ['Fecha Nacimiento', selectedArrendatario.usuario?.usuarioFechaNac],
-                    ['Escuela', selectedArrendatario.carrera?.unidadAcademica?.unidadAcademicaNombre],
-                    ['Carrera', selectedArrendatario.carrera?.carreraNombre],
-                    ['Verificado', selectedArrendatario.arrendatarioVerificado === 1 ? 'Sí' : 'No'],
-                  ].map(([k, v]) => (
-                    <p key={k} style={{ margin: '0.4rem 0', fontSize: '0.875rem' }}><strong>{k}:</strong> {v || '-'}</p>
-                  ))}
+                <div className="admin-modal-body">
+                  <div className="admin-info-grid">
+                    <div className="admin-info-item">
+                      <div className="admin-info-label">ID</div>
+                      <div className="admin-info-value">{selectedArrendatario.idArrendatario}</div>
+                    </div>
+                    <div className="admin-info-item">
+                      <div className="admin-info-label">Username</div>
+                      <div className="admin-info-value">{selectedArrendatario.arrendatarioUser || '-'}</div>
+                    </div>
+                    <div className="admin-info-item admin-info-full">
+                      <div className="admin-info-label">Nombre Completo</div>
+                      <div className="admin-info-value">
+                        {selectedArrendatario.usuario?.usuarioApePat} {selectedArrendatario.usuario?.usuarioApeMat || ''} {selectedArrendatario.usuario?.usuarioNom}
+                      </div>
+                    </div>
+                    <div className="admin-info-item">
+                      <div className="admin-info-label">Boleta</div>
+                      <div className="admin-info-value">{selectedArrendatario.arrendatarioBoleta || '-'}</div>
+                    </div>
+                    <div className="admin-info-item">
+                      <div className="admin-info-label">Correo</div>
+                      <div className="admin-info-value">{selectedArrendatario.usuario?.usuarioCorreo || '-'}</div>
+                    </div>
+                    <div className="admin-info-item">
+                      <div className="admin-info-label">Teléfono</div>
+                      <div className="admin-info-value">{selectedArrendatario.usuario?.usuarioTel || '-'}</div>
+                    </div>
+                    <div className="admin-info-item">
+                      <div className="admin-info-label">CURP</div>
+                      <div className="admin-info-value">{selectedArrendatario.usuario?.usuarioCurp || '-'}</div>
+                    </div>
+                    <div className="admin-info-item">
+                      <div className="admin-info-label">Fecha de Nacimiento</div>
+                      <div className="admin-info-value">{selectedArrendatario.usuario?.usuarioFechaNac || '-'}</div>
+                    </div>
+                    <div className="admin-info-item">
+                      <div className="admin-info-label">Escuela</div>
+                      <div className="admin-info-value">{selectedArrendatario.carrera?.unidadAcademica?.unidadAcademicaNombre || '-'}</div>
+                    </div>
+                    <div className="admin-info-item">
+                      <div className="admin-info-label">Carrera</div>
+                      <div className="admin-info-value">{selectedArrendatario.carrera?.carreraNombre || '-'}</div>
+                    </div>
+                    <div className="admin-info-item">
+                      <div className="admin-info-label">Verificado</div>
+                      <div className="admin-info-value">
+                        <span className={`admin-badge ${selectedArrendatario.arrendatarioVerificado === 1 ? 'badge-success' : 'badge-warning'}`}>
+                          {selectedArrendatario.arrendatarioVerificado === 1 ? '✓ Sí' : '⏳ No'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div style={{ padding: '0.75rem 1.25rem', borderTop: '1px solid #e5e7eb', display: 'flex', justifyContent: 'flex-end' }}>
-                  <button onClick={() => setShowModal(false)} style={{ padding: '0.45rem 1rem', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.875rem' }}>Cerrar</button>
+                <div className="admin-modal-footer">
+                  <button className="btn-close-modal" onClick={() => setShowModal(false)}>Cerrar</button>
                 </div>
               </>
             )}
 
             {modalType === 'edit' && selectedArrendatario && (
-              <FormEstudiante arrendatario={selectedArrendatario} onClose={() => setShowModal(false)} onSuccess={() => { setShowModal(false); loadArrendatarios() }} />
+              <FormEstudiante
+                arrendatario={selectedArrendatario}
+                onClose={() => setShowModal(false)}
+                onSuccess={() => { setShowModal(false); loadArrendatarios() }}
+              />
             )}
 
             {modalType === 'create' && (
-              <FormRegistroEstudiante onClose={() => setShowModal(false)} onSuccess={() => { setShowModal(false); loadArrendatarios() }} />
+              <FormRegistroEstudiante
+                onClose={() => setShowModal(false)}
+                onSuccess={() => { setShowModal(false); loadArrendatarios() }}
+              />
             )}
 
             {modalType === 'delete' && selectedArrendatario && (
               <>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', borderBottom: '1px solid #e5e7eb' }}>
-                  <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: '700', color: '#dc2626' }}>Eliminar Estudiante</h2>
-                  <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem', color: '#6b7280' }}>×</button>
+                <div className="admin-modal-header">
+                  <h2 className="admin-modal-title danger">Eliminar Estudiante</h2>
+                  <button className="admin-modal-close" onClick={() => setShowModal(false)}>×</button>
                 </div>
-                <div style={{ padding: '1.25rem' }}>
-                  <p style={{ fontSize: '0.875rem' }}>¿Eliminar a <strong>{selectedArrendatario.usuario?.usuarioNom}</strong>? (Boleta: {selectedArrendatario.arrendatarioBoleta})</p>
-                  <p style={{ color: '#dc2626', fontSize: '0.8rem' }}>⚠️ Esta acción no se puede deshacer. Las reseñas serán redirigidas al usuario por defecto.</p>
+                <div className="admin-modal-body">
+                  <p style={{ fontSize: '0.9rem', color: 'var(--text-dark)', marginBottom: 0 }}>
+                    ¿Eliminar a <strong>{selectedArrendatario.usuario?.usuarioNom} {selectedArrendatario.usuario?.usuarioApePat}</strong>?{' '}
+                    <span style={{ color: 'var(--text-light)' }}>(Boleta: {selectedArrendatario.arrendatarioBoleta})</span>
+                  </p>
+                  <div className="admin-delete-warning">
+                    <span>⚠️</span>
+                    <span>Esta acción no se puede deshacer. Las reseñas serán redirigidas al usuario por defecto.</span>
+                  </div>
                 </div>
-                <div style={{ padding: '0.75rem 1.25rem', borderTop: '1px solid #e5e7eb', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-                  <button onClick={() => setShowModal(false)} style={{ padding: '0.45rem 1rem', background: 'none', border: '1px solid #d1d5db', borderRadius: '6px', cursor: 'pointer', fontSize: '0.875rem' }}>Cancelar</button>
-                  <button onClick={confirmDelete} style={{ padding: '0.45rem 1rem', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.875rem', fontWeight: '600' }}>Sí, eliminar</button>
+                <div className="admin-modal-footer">
+                  <button className="btn-cancel" onClick={() => setShowModal(false)}>Cancelar</button>
+                  <button className="btn-danger" onClick={confirmDelete}>Sí, eliminar</button>
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+      {alerta.open && (
+        <div className="admin-modal-overlay" onClick={() => setAlerta({ open: false, mensaje: '' })}>
+          <div className="admin-modal" style={{ maxWidth: '420px' }} onClick={e => e.stopPropagation()}>
+            <div className="admin-modal-header">
+              <h2 className="admin-modal-title">Aviso</h2>
+              <button className="admin-modal-close" onClick={() => setAlerta({ open: false, mensaje: '' })}>×</button>
+            </div>
+            <div className="admin-modal-body">
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-dark)', margin: 0 }}>{alerta.mensaje}</p>
+            </div>
+            <div className="admin-modal-footer">
+              <button className="btn-save" onClick={() => setAlerta({ open: false, mensaje: '' })}>Entendido</button>
+            </div>
           </div>
         </div>
       )}
