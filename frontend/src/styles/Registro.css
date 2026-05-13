@@ -728,3 +728,21 @@
   color: #534AB7;
 }
 
+/* ── Móvil pequeño (< 600 px): ocultar sidebar ── */
+@media (max-width: 600px) {
+  .registro-layout {
+    display: flex;
+    flex-direction: column;
+  }
+  .registro-sidebar {
+    display: none;
+  }
+  .registro-main {
+    padding: 1.25rem 1rem;
+  }
+  .form-grid-2,
+  .form-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+

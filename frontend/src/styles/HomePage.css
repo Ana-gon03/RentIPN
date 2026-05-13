@@ -615,3 +615,47 @@ body {
     display: none !important;
   }
 }
+
+/* ── Hamburger / Menú móvil NavbarInicio ─────────────── */
+.nav-hamburger {
+  display: none;
+  background: none;
+  border: 1.5px solid #AFA9EC;
+  border-radius: 8px;
+  color: #534AB7;
+  cursor: pointer;
+  padding: 6px 10px;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: background 0.2s;
+}
+.nav-hamburger:hover { background: #EEEDFE; }
+
+.nav-mobile-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 2rem 0.75rem;
+  border-top: 1px solid #EEEDFE;
+  background: rgba(255, 255, 255, 0.98);
+  gap: 0.1rem;
+  position: sticky;
+  top: 64px;
+  z-index: 99;
+}
+
+.nav-mobile-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  color: #4A4668;
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-mobile-link:hover { background: #EEEDFE; color: #534AB7; }
+
+@media (max-width: 900px) {
+  .nav-hamburger { display: flex; align-items: center; }
+}

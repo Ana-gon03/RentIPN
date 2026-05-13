@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import logoImg from '../../assets/burro.png'
 import '../../styles/Arrendador.css'
@@ -6,6 +6,7 @@ import '../../styles/Arrendador.css'
 const NavbarArrendador = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const [menuAbierto, setMenuAbierto] = useState(false)
 
   const isActive = (path) => location.pathname === path
 
@@ -14,12 +15,14 @@ const NavbarArrendador = () => {
     navigate('/')
   }
 
+  const cerrarMenu = () => setMenuAbierto(false)
+
   const nombre = localStorage.getItem('usuarioNom') || 'Arrendador'
 
   return (
     <nav className="arr-nav">
       <div className="arr-nav-inner">
-        <Link to="/" className="arr-nav-brand">
+        <Link to="/" className="arr-nav-brand" onClick={cerrarMenu}>
           <img src={logoImg} alt="RentIPN" className="arr-nav-logo" />
           <span className="arr-nav-brand-name">RentIPN</span>
         </Link>
@@ -40,7 +43,7 @@ const NavbarArrendador = () => {
         </div>
 
         <div className="arr-nav-right">
-          <Link to="/arrendador/perfil" className="arr-nav-profile">
+          <Link to="/arrendador/perfil" className="arr-nav-profile" onClick={cerrarMenu}>
             <div className="arr-nav-avatar">
               {nombre.charAt(0).toUpperCase()}
             </div>
@@ -49,8 +52,40 @@ const NavbarArrendador = () => {
           <button className="arr-nav-logout" onClick={handleCerrarSesion}>
             Cerrar Sesión
           </button>
+          <button
+            className="arr-nav-hamburger"
+            onClick={() => setMenuAbierto(!menuAbierto)}
+            aria-label="Menú"
+          >
+            {menuAbierto ? '✕' : '☰'}
+          </button>
         </div>
       </div>
+
+      {menuAbierto && (
+        <div className="arr-nav-mobile-menu">
+          <Link
+            to="/arrendador/mis-viviendas"
+            className={`arr-nav-mobile-link${isActive('/arrendador/mis-viviendas') ? ' active' : ''}`}
+            onClick={cerrarMenu}
+          >
+            🏠 Mis Viviendas
+          </Link>
+          <Link
+            to="/arrendador/mis-arrendamientos"
+            className={`arr-nav-mobile-link${isActive('/arrendador/mis-arrendamientos') ? ' active' : ''}`}
+            onClick={cerrarMenu}
+          >
+            📋 Mis Arrendamientos
+          </Link>
+          <Link to="/arrendador/perfil" className="arr-nav-mobile-link" onClick={cerrarMenu}>
+            👤 Mi Perfil
+          </Link>
+          <button className="arr-nav-mobile-btn" onClick={() => { cerrarMenu(); handleCerrarSesion(); }}>
+            🚪 Cerrar Sesión
+          </button>
+        </div>
+      )}
     </nav>
   )
 }

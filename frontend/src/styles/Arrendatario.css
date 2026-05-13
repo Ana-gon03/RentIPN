@@ -898,19 +898,80 @@
   border-color: #DC2626;
 }
 
+/* ── Hamburger / Menú móvil arrendatario ─────────────── */
+.atr-nav-hamburger {
+  display: none;
+  background: none;
+  border: 1.5px solid #CECBF6;
+  border-radius: 8px;
+  color: #534AB7;
+  cursor: pointer;
+  padding: 5px 9px;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.atr-nav-hamburger:hover { background: #EEEDFE; }
+
+.atr-nav-mobile-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 1rem 0.75rem;
+  border-top: 1px solid #F1F0F9;
+  background: #ffffff;
+  gap: 0.1rem;
+}
+
+.atr-nav-mobile-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  color: #4A4668;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.atr-nav-mobile-link:hover,
+.atr-nav-mobile-link.active { background: #EEEDFE; color: #534AB7; }
+
+.atr-nav-mobile-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  color: #DC2626;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  width: 100%;
+  text-align: left;
+  transition: background 0.15s;
+}
+.atr-nav-mobile-btn:hover { background: #FEF2F2; }
+
 /* Responsive Navbar */
 @media (max-width: 768px) {
   .atr-nav-links {
     display: none;
   }
-  
+
   .atr-nav-profile-name {
     display: none;
   }
-  
+
   .atr-nav-profile {
     padding: 5px;
   }
+
+  .atr-nav-hamburger { display: flex; align-items: center; }
 }
 
 /* ── Responsive ───────────────────────────────────────── */
@@ -921,6 +982,77 @@
   .atr-card-price-label { text-align: left; }
   .atr-modal-actions { flex-direction: column; }
   .atr-modal-actions button { width: 100%; }
+}
+
+/* ── Buscar Vivienda ─────────────────────────────────── */
+.atr-search-layout {
+  flex: 1;
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 30px;
+  gap: 30px;
+  box-sizing: border-box;
+}
+
+.atr-search-sidebar {
+  width: 280px;
+  min-width: 280px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  height: fit-content;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+.atr-search-results {
+  flex: 1;
+  min-width: 0;
+}
+
+.atr-property-card {
+  display: flex;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.atr-property-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.atr-property-img {
+  width: 260px;
+  min-width: 260px;
+  height: 200px;
+  background-color: #f3f4f6;
+  position: relative;
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .atr-search-layout {
+    flex-direction: column;
+    padding: 15px;
+    gap: 15px;
+  }
+  .atr-search-sidebar {
+    width: 100%;
+    min-width: unset;
+  }
+  .atr-property-card {
+    flex-direction: column;
+  }
+  .atr-property-img {
+    width: 100%;
+    min-width: unset;
+    height: 200px;
+  }
 }
 
 /* ── Detalle Propiedad ── */

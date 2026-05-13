@@ -956,10 +956,69 @@ textarea.admin-form-input {
   border-color: #DC2626;
 }
 
+/* ── Hamburger / Menú móvil admin ────────────────────── */
+.admin-nav-hamburger {
+  display: none;
+  background: none;
+  border: 1.5px solid var(--purple-200);
+  border-radius: var(--radius-sm);
+  color: var(--purple-600);
+  cursor: pointer;
+  padding: 5px 9px;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.admin-nav-hamburger:hover { background: var(--purple-50); }
+
+.admin-nav-mobile-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 1rem 0.75rem;
+  border-top: 1px solid var(--gray-100);
+  background: var(--white);
+  gap: 0.1rem;
+}
+
+.admin-nav-mobile-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-mid);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.admin-nav-mobile-link:hover { background: var(--purple-50); color: var(--purple-600); }
+
+.admin-nav-mobile-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  color: #DC2626;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  width: 100%;
+  text-align: left;
+  transition: background 0.15s;
+}
+.admin-nav-mobile-btn:hover { background: #FEF2F2; }
+
 @media (max-width: 600px) {
   .admin-nav { padding: 10px 16px; height: auto; }
   .admin-nav-title { font-size: 0.9rem; }
-  .admin-nav-link { padding: 6px 10px; font-size: 0.8rem; }
+  .admin-nav-links { display: none; }
+  .admin-nav-hamburger { display: flex; align-items: center; }
 }
 
 /* ── FooterAdmin Dark ─────────────────────────────────────── */
@@ -1038,5 +1097,8 @@ textarea.admin-form-input {
 
   .admin-actions {
     flex-wrap: wrap;
+  }
+  .admin-table-card {
+    overflow-x: auto;
   }
 }

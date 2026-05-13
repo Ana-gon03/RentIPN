@@ -127,10 +127,10 @@ const BuscarVivienda = () => {
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <NavbarArrendatario />
 
-      <div style={{ flex: 1, display: 'flex', maxWidth: '1400px', margin: '0 auto', width: '100%', padding: '30px', gap: '30px' }}>
-        
+      <div className="atr-search-layout">
+
         {/* ============ SIDEBAR DE FILTROS ============ */}
-        <div style={{ width: '280px', minWidth: '280px', backgroundColor: '#fff', padding: '20px', borderRadius: '16px', height: 'fit-content', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+        <div className="atr-search-sidebar">
           <h2 style={{ fontSize: '18px', marginBottom: '20px', color: '#1a1633' }}>🔎 Filtros</h2>
 
           {/* ORDENAR POR */}
@@ -226,7 +226,7 @@ const BuscarVivienda = () => {
         </div>
 
         {/* ============ RESULTADOS ============ */}
-        <div style={{ flex: 1 }}>
+        <div className="atr-search-results">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '20px' }}>
             <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#1a1633', margin: 0 }}>Buscar Vivienda</h1>
             <p style={{ color: '#7a7899', fontSize: '14px' }}>{totalPropiedades} {totalPropiedades === 1 ? 'vivienda encontrada' : 'viviendas encontradas'}</p>
@@ -250,15 +250,13 @@ const BuscarVivienda = () => {
             <>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {propiedades.map(propiedad => (
-                  <div 
-                    key={propiedad.id} 
+                  <div
+                    key={propiedad.id}
                     onClick={() => navigate(`/arrendatario/propiedad/${propiedad.id}`)}
-                    style={{ display: 'flex', backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '16px', overflow: 'hidden', cursor: 'pointer', transition: 'box-shadow 0.2s' }}
-                    onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)'}
-                    onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}
+                    className="atr-property-card"
                   >
                     {/* Imagen */}
-                    <div style={{ width: '260px', minWidth: '260px', height: '200px', backgroundColor: '#f3f4f6', position: 'relative' }}>
+                    <div className="atr-property-img">
                       {propiedad.fotoPrincipal ? (
                         <img src={`http://localhost:5000${propiedad.fotoPrincipal}`} alt={propiedad.titulo} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
