@@ -1,7 +1,7 @@
-// src/components/common/NavbarRegistro.jsx
 import React from 'react'
 import { Link } from 'react-router-dom'
 import burroLogo from '../../assets/burro.png'
+import '../../styles/Registro.css'
 
 const NavbarRegistro = () => {
   return (
@@ -10,7 +10,6 @@ const NavbarRegistro = () => {
         <img src={burroLogo} alt="Burroomies" />
         <span>Burroomies</span>
       </Link>
-      
       <Link to="/usuarios/inicio-sesion" className="registro-nav-login">
         Iniciar Sesión
       </Link>

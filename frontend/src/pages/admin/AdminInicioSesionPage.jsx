@@ -36,18 +36,18 @@ const AdminInicioSesionPage = () => {
   return (
     <div className="login-page">
       <header className="admin-login-header">
-        <img src={burroLogo} alt="RentIPN" className="admin-nav-logo" onError={e => { e.target.style.display = 'none' }} />
-        <span className="admin-nav-title">RentIPN</span>
+        <img src={burroLogo} alt="Burroomies" className="admin-nav-logo" onError={e => { e.target.style.display = 'none' }} />
+        <span className="admin-nav-title">Burroomies</span>
       </header>
 
       <div className="login-container">
         <div className="login-card">
           <div className="login-header">
-            <div className="login-icon" style={{ width: '88px', height: '88px', borderRadius: '24px' }}>
-              <img src={burroLogo} alt="RentIPN" style={{ width: '60px', height: '60px', objectFit: 'contain' }} />
+            <div className="login-icon">
+              <img src={burroLogo} alt="Burroomies" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
             </div>
             <h2>Panel Administrador</h2>
-            <p>Inicia sesión para gestionar RentIPN</p>
+            <p>Inicia sesión para gestionar Burroomies</p>
           </div>
 
           <div className="login-body">
@@ -124,7 +124,7 @@ const AdminInicioSesionPage = () => {
       </div>
 
       <footer className="admin-login-footer">
-        RentIPN — Panel de Administración
+        Burroomies — Panel de Administración
       </footer>
     </div>
   )

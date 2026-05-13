@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import NavbarRegistro from '../../components/common/NavbarInicio'
+import NavbarRegistro from '../../components/common/NavbarRegistro'
 import FooterRegistro from '../../components/common/FooterRegistro'
 
 const BienvenidaPage = () => {
@@ -75,7 +75,7 @@ const BienvenidaPage = () => {
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                backgroundColor: '#2563eb',
+                backgroundColor: '#7F77DD',
                 color: '#fff',
                 border: 'none',
                 borderRadius: '8px',
@@ -115,7 +115,7 @@ const BienvenidaPage = () => {
         }}>
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
           <h2 style={{ fontSize: '1.6rem', fontWeight: 700, marginBottom: '0.5rem' }}>
-            ¡Bienvenid@ a RentIPN!
+            ¡Bienvenid@!
           </h2>
           <p style={{ color: '#4b5563', marginBottom: '1.5rem' }}>
             Tu cuenta ha sido creada y verificada exitosamente.

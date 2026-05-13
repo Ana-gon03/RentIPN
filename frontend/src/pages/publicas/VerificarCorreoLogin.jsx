@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import NavbarInicio from '../../components/common/NavbarInicio'
+import NavbarSimple from '../../components/common/NavbarRegistro'
 import FooterInicio from '../../components/common/FooterInicio'
 import { verificarCodigoLogin, reenviarCodigo, actualizarCorreo, validarCampo } from '../../services/authService'
+import '../../styles/VerificarCorreo.css'
 
 const VerificarCorreoLogin = () => {
   const location = useLocation()
@@ -65,13 +66,12 @@ const VerificarCorreoLogin = () => {
           return
         }
         if (rol === 'arrendatario') {
-        const verificadoIdentidad = data.arrendatarioVerificado === 1 || arrendatarioVerificadoInicial === 1
-        if (verificadoIdentidad) {
+          const verificadoIdentidad = data.arrendatarioVerificado === 1 || arrendatarioVerificadoInicial === 1
+          if (verificadoIdentidad) {
             navigate('/arrendatario/buscar-vivienda')
             return
-        }
-        // Dejar que el backend decida si expiró o no
-        navigate('/verificar-expiracion', { state: { userId } })
+          }
+          navigate('/verificar-expiracion', { state: { userId } })
         }
       }, 1500)
     } catch (err) {
@@ -129,106 +129,106 @@ const VerificarCorreoLogin = () => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <NavbarInicio />
-      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-        <div style={{ width: '100%', maxWidth: '420px' }}>
-          <h2>Verificación de Correo</h2>
-          <p style={{ marginBottom: '1rem', color: '#555' }}>
-            Ingresa el código de 8 dígitos que enviamos a <strong>{correo}</strong>
-          </p>
-
-          <div style={{ marginBottom: '1.5rem', padding: '0.75rem', backgroundColor: '#f5f5f5', borderRadius: '4px' }}>
-            {!modoEdicion ? (
-              <button
-                type="button"
-                onClick={() => { setModoEdicion(true); setError(''); setMensaje('') }}
-                style={{ background: 'none', border: 'none', color: '#0066cc', cursor: 'pointer', textDecoration: 'underline', padding: 0, fontSize: '0.85rem' }}
-              >
-                ¿Correo incorrecto o no te llega? Actualizar correo
-              </button>
-            ) : (
-              <form onSubmit={handleActualizarCorreo}>
-                <label style={{ fontSize: '0.85rem' }}>Nuevo correo:</label><br />
-                <input
-                  type="email"
-                  value={nuevoCorreo}
-                  onChange={(e) => setNuevoCorreo(e.target.value)}
-                  placeholder="nuevo@correo.com"
-                  style={{ width: '100%', padding: '0.5rem', marginTop: '0.25rem', marginBottom: '0.5rem' }}
-                  required
-                />
-                <button type="submit" disabled={cargando} style={{ marginRight: '0.5rem', padding: '0.4rem 0.75rem' }}>
-                  {cargando ? 'Actualizando...' : 'Actualizar'}
-                </button>
+    <div className="verificar-page">
+      <NavbarSimple />
+      
+      <div className="verificar-container">
+        <div className="verificar-card">
+          <div className="verificar-header">
+            <div className="verificar-icon">🔐</div>
+            <h2>Verifica tu correo</h2>
+            <p>Ingresa el código que enviamos para continuar</p>
+          </div>
+          
+          <div className="verificar-body">
+            <div className="verificar-info">
+              <label>Correo registrado</label>
+              <div className="verificar-email">{correo}</div>
+              {!modoEdicion ? (
                 <button
                   type="button"
-                  onClick={() => { setModoEdicion(false); setNuevoCorreo(correo); setError('') }}
-                  style={{ padding: '0.4rem 0.75rem' }}
+                  className="verificar-update-btn"
+                  onClick={() => { setModoEdicion(true); setError(''); setMensaje('') }}
                 >
-                  Cancelar
+                  ¿Correo incorrecto? Actualizar →
                 </button>
-              </form>
-            )}
-          </div>
-
-          <form onSubmit={handleVerificar}>
-            <div style={{ marginBottom: '1rem' }}>
-              <label>Código de verificación:</label><br />
-              <input
-                type="text"
-                value={codigo}
-                onChange={(e) => setCodigo(e.target.value.replace(/[^0-9]/g, '').slice(0, 8))}
-                placeholder="12345678"
-                style={{ width: '100%', padding: '0.75rem', fontSize: '1.3rem', textAlign: 'center', marginTop: '0.25rem', letterSpacing: '0.3rem' }}
-                required
-              />
+              ) : (
+                <form onSubmit={handleActualizarCorreo} className="verificar-update-form">
+                  <input
+                    type="email"
+                    className="verificar-input"
+                    value={nuevoCorreo}
+                    onChange={(e) => setNuevoCorreo(e.target.value)}
+                    placeholder="Ingresa tu correo correcto"
+                    required
+                  />
+                  <div className="verificar-button-group">
+                    <button type="submit" className="verificar-btn-primary-small" disabled={cargando}>
+                      {cargando ? 'Actualizando...' : 'Actualizar'}
+                    </button>
+                    <button
+                      type="button"
+                      className="verificar-btn-secondary-small"
+                      onClick={() => { setModoEdicion(false); setNuevoCorreo(correo); setError('') }}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
 
-            {error && (
-              <div style={{ color: 'red', marginBottom: '1rem', padding: '0.5rem', border: '1px solid red', borderRadius: '4px' }}>
-                {error}
+            <form onSubmit={handleVerificar}>
+              <div className="verificar-code-group">
+                <label className="verificar-code-label">Código de verificación (8 dígitos)</label>
+                <input
+                  type="text"
+                  className="verificar-code-input"
+                  value={codigo}
+                  onChange={(e) => setCodigo(e.target.value.replace(/[^0-9]/g, '').slice(0, 8))}
+                  placeholder="12345678"
+                  required
+                />
               </div>
-            )}
-            {mensaje && (
-              <div style={{ color: 'green', marginBottom: '1rem', padding: '0.5rem', border: '1px solid green', borderRadius: '4px' }}>
-                {mensaje}
-              </div>
-            )}
 
-            <button
-              type="submit"
-              disabled={cargando || codigo.length !== 8}
-              style={{ width: '100%', padding: '0.75rem', marginBottom: '0.5rem', cursor: (cargando || codigo.length !== 8) ? 'not-allowed' : 'pointer' }}
-            >
-              {cargando ? 'Verificando...' : 'Verificar Código'}
-            </button>
+              {error && (
+                <div className="verificar-error">
+                  <span>⚠️</span> {error}
+                </div>
+              )}
+              {mensaje && (
+                <div className="verificar-success">
+                  <span>✓</span> {mensaje}
+                </div>
+              )}
 
-            <button
-              type="button"
-              onClick={handleReenviar}
-              disabled={cargando || tiempoReenvio > 0}
-              style={{ width: '100%', padding: '0.75rem', cursor: (cargando || tiempoReenvio > 0) ? 'not-allowed' : 'pointer' }}
-            >
-              {tiempoReenvio > 0 ? `Reenviar código en ${tiempoReenvio}s` : 'Reenviar código'}
-            </button>
-          </form>
+              <button
+                type="submit"
+                className="verificar-btn verificar-btn-primary"
+                disabled={cargando || codigo.length !== 8}
+              >
+                {cargando ? 'Verificando...' : 'Verificar Código'}
+              </button>
 
-          <p style={{ marginTop: '1rem', fontSize: '0.8rem', color: '#888', textAlign: 'center' }}>
-            Revisa tu bandeja de entrada y spam. El código expira en 24 horas.
-          </p>
+              <button
+                type="button"
+                className="verificar-btn verificar-btn-secondary"
+                onClick={handleReenviar}
+                disabled={cargando || tiempoReenvio > 0}
+              >
+                {tiempoReenvio > 0
+                  ? `Reenviar código en ${tiempoReenvio}s`
+                  : 'Reenviar código'}
+              </button>
+            </form>
 
-          <p style={{ marginTop: '0.5rem', textAlign: 'center', fontSize: '0.85rem' }}>
-            <button
-              type="button"
-              onClick={() => navigate('/usuarios/inicio-sesion')}
-              style={{ background: 'none', border: 'none', color: '#0066cc', cursor: 'pointer', textDecoration: 'underline', padding: 0 }}
-            >
-              Volver al inicio de sesión
-            </button>
-          </p>
+            <div className="verificar-hint">
+              Revisa tu bandeja de entrada y spam. El código expira en 24 horas.
+            </div>
+          </div>
         </div>
-      </main>
+      </div>
+      
       <FooterInicio />
     </div>
   )

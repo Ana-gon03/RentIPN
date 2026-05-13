@@ -9,8 +9,9 @@ import '../../styles/Registro.css'
 // ── Beneficios por tipo ──────────────────────────────────────────────────────
 const ARRENDADOR_CHECKS = [
   "Perfil verificado con CURP oficial",
-  "Publica inmuebles ampliamente",
+  "Publica inmuebles",
   "Construye reputación con reseñas",
+  "Acceso a plantilla de contrato",
 ]
 
 const ARRENDATARIO_CHECKS = [
@@ -159,7 +160,7 @@ const ProfileCard = ({ variant, icon, tag, title, description, checks, onSelect 
             e.currentTarget.style.transform = "translateY(0)";
           }}
         >
-          {variant === 'arrendador' ? 'Registrarme como Arrendador →' : 'Registrarme como Estudiante →'}
+          {variant === 'arrendador' ? 'Registrarme como Arrendador' : 'Registrarme como Estudiante'}
         </div>
       </div>
     </div>
@@ -192,7 +193,7 @@ const SeleccionTipo = ({ onSeleccionar }) => {
             icon="🏠"
             tag="Arrendador"
             title="Publica y gestiona tus propiedades"
-            description="Si tienes un inmueble cerca de la UPALM·IPN y deseas rentarlo a estudiantes, Burroomies es tu plataforma. Regístrate, verifica tu identidad con CURP y comparte tu anuncio para que estudiantes verificados puedan contactarte directamente."
+            description="Si tienes un inmueble cerca de la UPALM·IPN y deseas rentarlo a estudiantes. Regístrate, verifica tu identidad con CURP y comparte tu anuncio para que estudiantes verificados puedan contactarte directamente."
             checks={ARRENDADOR_CHECKS}
             onSelect={onSeleccionar}
           />
@@ -201,7 +202,7 @@ const SeleccionTipo = ({ onSeleccionar }) => {
             icon="🎓"
             tag="Estudiante"
             title="Encuentra tu hogar estudiantil"
-            description="Como estudiante del IPN en la UPALM, busca viviendas cercanas adaptadas a tu presupuesto. Valida tu estatus con tu constancia de estudios y accede a propiedades con reseñas de otros estudiantes."
+            description="Como estudiante del IPN en la UPALM, busca viviendas cercanas adaptadas a tu presupuesto. Verifica tu estatus con tu constancia de estudios y accede a propiedades con reseñas de otros estudiantes."
             checks={ARRENDATARIO_CHECKS}
             onSelect={onSeleccionar}
           />
