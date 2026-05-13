@@ -31,7 +31,7 @@ const FooterInicio = () => {
         onMouseEnter={(e) => (e.currentTarget.style.color = "#AFA9EC")}
         onMouseLeave={(e) => (e.currentTarget.style.color = "#ffffff")}
       >
-        Burroomies
+        RentIPN
       </Link>
 
       {/* Links legales */}
@@ -89,7 +89,7 @@ const FooterInicio = () => {
 
       {/* Copyright */}
       <div style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.78rem" }}>
-        © 2025 Burroomies · Todos los derechos reservados
+        © 2025 RentIPN · Todos los derechos reservados
       </div>
     </footer>
   );

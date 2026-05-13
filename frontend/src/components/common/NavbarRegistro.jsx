@@ -7,8 +7,8 @@ const NavbarRegistro = () => {
   return (
     <nav className="registro-nav">
       <Link to="/" className="registro-nav-brand">
-        <img src={burroLogo} alt="Burroomies" />
-        <span>Burroomies</span>
+        <img src={burroLogo} alt="RentIPN" />
+        <span>RentIPN</span>
       </Link>
       <Link to="/usuarios/inicio-sesion" className="registro-nav-login">
         Iniciar Sesión

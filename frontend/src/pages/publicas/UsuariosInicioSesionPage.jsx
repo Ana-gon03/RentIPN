@@ -97,7 +97,7 @@ const UsuariosInicioSesionPage = () => {
               <div className="login-icon">
                 <img 
                   src={burroLogo} 
-                  alt="Burroomies" 
+                  alt="RentIPN"
                   style={{ width: '40px', height: '40px', objectFit: 'contain' }}
                 />
               </div>

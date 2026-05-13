@@ -15,7 +15,7 @@ const FooterRegistro = () => {
         marginTop: 'auto',
       }}>
         <div style={{ marginBottom: '0.6rem', fontSize: '0.9rem', fontWeight: 600 }}>
-          Burroomies
+          RentIPN
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0.3rem 1.25rem' }}>
           <Link to="/legal/aviso-privacidad" style={{ color: '#cbd5e1', fontSize: '0.78rem', textDecoration: 'none' }}>

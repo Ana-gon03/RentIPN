@@ -30,7 +30,7 @@ const VerificacionExitosa = () => {
               <div className="atr-alert-body">
                 <div className="atr-alert-title">¡Felicidades!</div>
                 <div className="atr-alert-desc">
-                  Tu constancia fue validada exitosamente. Ya tienes acceso completo a la plataforma Burroomies.
+                  Tu constancia fue validada exitosamente. Ya tienes acceso completo a la plataforma RentIPN.
                 </div>
               </div>
             </div>

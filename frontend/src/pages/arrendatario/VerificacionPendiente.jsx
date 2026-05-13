@@ -187,7 +187,7 @@ const VerificacionPendiente = () => {
           </div>
 
           <p style={{ textAlign: 'center', fontSize: '12px', color: '#999', marginTop: '15px' }}>
-            Tu información es tratada de forma segura y solo se usa para verificar tu identidad estudiantil en Burroomies.
+            Tu información es tratada de forma segura y solo se usa para verificar tu identidad estudiantil en RentIPN.
           </p>
 
         </div>

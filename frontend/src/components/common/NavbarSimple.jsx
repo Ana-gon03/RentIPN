@@ -6,8 +6,8 @@ const NavbarSimple = () => {
   return (
     <nav className="navbar-simple">
       <Link to="/" className="navbar-simple-brand">
-        <img src={burroLogo} alt="Burroomies" />
-        <span>Burroomies</span>
+        <img src={burroLogo} alt="RentIPN" />
+        <span>RentIPN</span>
       </Link>
       
       <div className="navbar-simple-right">

@@ -236,7 +236,7 @@ function Hero() {
 
       <div className="hero-visual">
         <div className="hero-orb">
-          <img src={burroSaludo} alt="Mascota Burroomies" className="hero-mascot" />
+          <img src={burroSaludo} alt="Mascota RentIPN" className="hero-mascot" />
 
           <div className="hero-chip chip-top">
             <div className="chip-avatar">👤</div>
@@ -276,7 +276,7 @@ function QuienesSomos() {
               {
                 num: "01",
                 title: "Plataforma para la UPALM·IPN",
-                body: "Burroomies es un sistema web desarrollado para apoyar a los estudiantes de la UPALM·IPN en la búsqueda de vivienda en renta cercana al campus.",
+                body: "RentIPN es un sistema web desarrollado para apoyar a los estudiantes de la UPALM·IPN en la búsqueda de vivienda en renta cercana al campus.",
               },
               {
                 num: "02",
@@ -363,7 +363,7 @@ function Perfiles() {
       <div className="fade-in" ref={ref} style={{ textAlign: "center", marginBottom: "0.5rem" }}>
         <span className="section-label">Perfiles de Usuario</span>
         <h2 className="section-title">
-          ¿Cómo quieres usar <em>Burroomies?</em>
+          ¿Cómo quieres usar <em>RentIPN?</em>
         </h2>
       </div>
       <div className="profiles-grid">
@@ -373,7 +373,7 @@ function Perfiles() {
           icon="🏠"
           tag="Arrendador"
           title="Publica y gestiona tus propiedades"
-          description="Si tienes un inmueble cerca de la UPALM·IPN y deseas rentarlo a estudiantes, Burroomies es tu plataforma. Regístrate, verifica tu identidad con CURP y comparte tu anuncio para que estudiantes verificados puedan contactarte directamente."
+          description="Si tienes un inmueble cerca de la UPALM·IPN y deseas rentarlo a estudiantes, RentIPN es tu plataforma. Regístrate, verifica tu identidad con CURP y comparte tu anuncio para que estudiantes verificados puedan contactarte directamente."
           checks={ARRENDADOR_CHECKS}
         />
         <ProfileCard

@@ -20,8 +20,8 @@ const NavbarArrendatario = () => {
     <nav className="atr-nav">
       <div className="atr-nav-inner">
         <Link to="/arrendatario/buscar-vivienda" className="atr-nav-brand">
-          <img src={logoImg} alt="Burroomies" className="atr-nav-logo" />
-          <span className="atr-nav-brand-name">Burroomies</span>
+          <img src={logoImg} alt="RentIPN" className="atr-nav-logo" />
+          <span className="atr-nav-brand-name">RentIPN</span>
         </Link>
 
         <div className="atr-nav-links">
