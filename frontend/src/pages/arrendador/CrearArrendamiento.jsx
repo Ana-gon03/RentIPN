@@ -78,7 +78,14 @@ const CrearArrendamiento = () => {
     const errs = {}
     if (!arrendatarioSeleccionado) errs.arrendatario_idArrendatario = 'Debes seleccionar un arrendatario verificado'
     if (!formData.propiedad_idPropiedad) errs.propiedad_idPropiedad = 'Debes seleccionar una vivienda'
-    if (!formData.arrendamientoFechaInicio) errs.arrendamientoFechaInicio = 'La fecha de inicio es obligatoria'
+    if (!formData.arrendamientoFechaInicio) {
+      errs.arrendamientoFechaInicio = 'La fecha de inicio es obligatoria'
+    } else {
+      const hoy = new Date()
+      hoy.setHours(0, 0, 0, 0)
+      const fechaSeleccionada = new Date(formData.arrendamientoFechaInicio + 'T00:00:00')
+      if (fechaSeleccionada < hoy) errs.arrendamientoFechaInicio = 'La fecha de inicio no puede ser una fecha pasada'
+    }
     if (!formData.arrendamientoRenta) errs.arrendamientoRenta = 'La renta es obligatoria'
     else if (isNaN(formData.arrendamientoRenta) || parseFloat(formData.arrendamientoRenta) <= 0) errs.arrendamientoRenta = 'La renta debe ser un número mayor a 0'
     if (!formData.arrendamientoDescrip || formData.arrendamientoDescrip.trim().length < 10) errs.arrendamientoDescrip = 'La descripción es obligatoria (mínimo 10 caracteres)'
@@ -121,7 +128,7 @@ const CrearArrendamiento = () => {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           {/* 1. Seleccionar Arrendatario */}
           <div className="arr-form-card">
             <div className="arr-form-card-header">
@@ -271,6 +278,7 @@ const CrearArrendamiento = () => {
                   name="arrendamientoFechaInicio"
                   value={formData.arrendamientoFechaInicio}
                   onChange={handleChange}
+                  min={(() => { const h = new Date(); return `${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,'0')}-${String(h.getDate()).padStart(2,'0')}` })()}
                   className={`arr-form-input${errors.arrendamientoFechaInicio ? ' is-error' : ''}`}
                 />
                 {errors.arrendamientoFechaInicio && <span className="arr-form-error">{errors.arrendamientoFechaInicio}</span>}

@@ -531,6 +531,16 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'El arrendatario ya tiene un arrendamiento activo. No puede estar ligado a más de un arrendamiento al mismo tiempo.' });
     }
 
+    if (arrendamientoFechaInicio) {
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0);
+      const fechaInicio = new Date(arrendamientoFechaInicio);
+      fechaInicio.setHours(0, 0, 0, 0);
+      if (fechaInicio < hoy) {
+        return res.status(400).json({ error: 'La fecha de inicio no puede ser una fecha pasada' });
+      }
+    }
+
     const propiedad = await Propiedad.findByPk(propiedad_idPropiedad);
     if (!propiedad) return res.status(404).json({ error: 'Propiedad no encontrada' });
 
