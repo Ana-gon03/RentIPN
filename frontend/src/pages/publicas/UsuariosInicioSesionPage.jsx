@@ -52,6 +52,7 @@ const UsuariosInicioSesionPage = () => {
         localStorage.setItem('arrendatarioId', data.arrendatarioId)
         localStorage.setItem('fechaRegistro', data.fechaRegistro)
         localStorage.setItem('arrendatarioVerificado', data.arrendatarioVerificado)
+        localStorage.setItem('arrendatarioFechaVerificacion', data.arrendatarioFechaVerificacion || null)
 
         if (!data.correoVerificado) {
           await reenviarCodigo(data.correo)

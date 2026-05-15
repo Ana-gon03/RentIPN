@@ -1,56 +1,76 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import NavbarArrendatario from '../../components/common/NavbarArrendatario'
 import FooterInicio from '../../components/common/FooterInicio'
 
 const VerificacionExitosa = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+  const esRenovacion = location.state?.esRenovacion || false
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <NavbarArrendatario />
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '30px 20px' }}>
-        <div style={{ width: '100%', maxWidth: '480px', textAlign: 'center' }}>
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '10px',
-            border: '2px solid #28a745',
-            padding: '40px 30px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+      
+      <div style={{ 
+        flex: 1, 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        padding: '40px 20px'
+      }}>
+        <div style={{
+          maxWidth: '500px',
+          width: '100%',
+          textAlign: 'center',
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          padding: '40px 30px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+          border: '1px solid #e0e0e0'
+        }}>
+          <p style={{ fontSize: '60px', marginBottom: '20px' }}>
+            {esRenovacion ? '🔄' : '✅'}
+          </p>
+          
+          <h1 style={{ 
+            fontSize: '22px', 
+            color: esRenovacion ? '#e65100' : '#28a745',
+            marginBottom: '15px'
           }}>
-            <p style={{ fontSize: '60px', margin: '0 0 15px 0' }}>🎉</p>
-            <h1 style={{ color: '#28a745', fontSize: '22px', marginBottom: '10px' }}>
-              ¡Identidad verificada!
-            </h1>
-            <p style={{ color: '#555', fontSize: '14px', marginBottom: '25px', lineHeight: '1.6' }}>
-              Tu constancia fue validada exitosamente. Ya tienes acceso completo a la plataforma Burroomies.
-            </p>
-            <button
-              onClick={() => navigate('/arrendatario/buscar-vivienda')}
-              style={{
-                width: '100%', padding: '14px',
-                backgroundColor: '#28a745', color: 'white',
-                border: 'none', borderRadius: '6px',
-                cursor: 'pointer', fontSize: '15px', fontWeight: 'bold',
-                marginBottom: '10px'
-              }}
-            >
-              🏠 Buscar vivienda
-            </button>
-            <button
-              onClick={() => navigate('/arrendatario/mi-arrendamiento')}
-              style={{
-                width: '100%', padding: '12px',
-                backgroundColor: 'white', color: '#555',
-                border: '1px solid #ddd', borderRadius: '6px',
-                cursor: 'pointer', fontSize: '14px'
-              }}
-            >
-              Ver mi arrendamiento
-            </button>
-          </div>
+            {esRenovacion ? '¡Verificación renovada!' : '¡Verificación exitosa!'}
+          </h1>
+          
+          <p style={{ 
+            color: '#666', 
+            fontSize: '14px', 
+            lineHeight: '1.6',
+            marginBottom: '30px'
+          }}>
+            {esRenovacion 
+              ? 'Tu verificación ha sido renovada por 6 meses más. Ya puedes ver los datos de contacto de los arrendadores.'
+              : 'Tu identidad ha sido verificada correctamente. Ahora puedes ver los datos de contacto de los arrendadores.'
+            }
+          </p>
+
+          <button
+            onClick={() => navigate('/arrendatario/buscar-vivienda')}
+            style={{
+              padding: '14px 40px',
+              backgroundColor: esRenovacion ? '#e65100' : '#1a237e',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '15px',
+              fontWeight: 'bold'
+            }}
+          >
+            🔍 Buscar vivienda
+          </button>
         </div>
       </div>
+
       <FooterInicio />
     </div>
   )

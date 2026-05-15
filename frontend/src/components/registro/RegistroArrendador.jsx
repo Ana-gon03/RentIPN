@@ -386,7 +386,7 @@ const RegistroArrendador = ({ volver }) => {
         <div style={{ marginBottom: '1rem' }}>
           <label>CURP:</label><br />
           <input type="text" name="curp" value={formData.curp} onChange={handleChange}
-            placeholder="Ej: MAGC030829MMNGRMA4" style={{ width: '100%', padding: '0.5rem' }} />
+            placeholder="Ej: MAGC090228MMNGTLK9" style={{ width: '100%', padding: '0.5rem' }} />
           <small>18 caracteres: 4 letras, 6 números, 6 letras, 2 alfanuméricos</small>
           {errors.curp && <div style={{ color: 'red', fontSize: '0.8rem' }}>{errors.curp}</div>}
           <IndicadorUnicidad campo="curp" />

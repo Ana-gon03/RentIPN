@@ -167,9 +167,11 @@ INSERT INTO `usuario` (`idUsuario`, `usuarioNom`, `usuarioApePat`, `usuarioApeMa
 (11, 'Andrés', 'Gómez', 'Silva', 'andres.gomez@gmail.com', '5511111111', 'GOSA971111HDFRRN11', '$2b$10$/tQlbx1TZgQMQ7Vt4LWwJOzqk66L0OaZ3Oh9a8odhLTZ/L.1i3Ibi', '1997-11-11', '2026-04-15 08:45:00', '2026-04-15 10:55:00', 'EFG12345', 1, '2026-04-15 08:50:00'),
 (12, 'Isabella', 'Orozco', 'Pineda', 'isabella.orozco@outlook.com', '5522222222', 'ORPI981212MDFRRN12', '$2b$10$/tQlbx1TZgQMQ7Vt4LWwJOzqk66L0OaZ3Oh9a8odhLTZ/L.1i3Ibi', '1998-12-12', '2026-04-12 17:00:00', '2025-12-12 19:10:00', 'HIJ67890', 1, '2024-12-12 17:05:00'),
 
+-- CASO 5: Correo si verificado, identidad si (fecha expirada de los 6 meses para renovar identidad)
 (13, 'Alejandro', 'Ramírez', 'Díaz', 'alejandro.ramirez@hotmail.com', '5533333333', 'RADA940101HDFRRN13', '$2b$10$/tQlbx1TZgQMQ7Vt4LWwJOzqk66L0OaZ3Oh9a8odhLTZ/L.1i3Ibi', '1994-01-01', '2025-01-15 11:30:00', '2025-01-15 13:40:00', 'KLM12345', 1, '2025-01-15 11:35:00'),
 (14, 'Fernanda', 'Delgado', 'Castro', 'fernanda.delgado@gmail.com', '5544444444', 'DECF960202MDFRRN14', '$2b$10$/tQlbx1TZgQMQ7Vt4LWwJOzqk66L0OaZ3Oh9a8odhLTZ/L.1i3Ibi', '1996-02-02', '2025-02-20 14:15:00', '2025-02-20 16:25:00', 'NOP67890', 1, '2025-02-20 14:20:00'),
 (15, 'Ricardo', 'Mendoza', 'Reyes', 'ricardo.mendoza@outlook.com', '5555555555', 'MERI930303HDFRRN15', '$2b$10$/tQlbx1TZgQMQ7Vt4LWwJOzqk66L0OaZ3Oh9a8odhLTZ/L.1i3Ibi', '1993-03-03', '2025-03-10 09:00:00', '2025-03-10 11:10:00', 'QRS12345', 1, '2025-03-10 09:05:00'),
+
 (16, 'Daniela', 'Cruz', 'Aguilar', 'daniela.cruz@gmail.com', '5566666666', 'CUAD000404MDFRRN16', '$2b$10$/tQlbx1TZgQMQ7Vt4LWwJOzqk66L0OaZ3Oh9a8odhLTZ/L.1i3Ibi', '2000-04-04', '2025-04-05 12:30:00', '2025-04-05 14:40:00', 'TUV67890', 1, '2025-04-05 12:35:00'),
 (17, 'Javier', 'Núñez', 'Soto', 'javier.nunez@hotmail.com', '5577777777', 'NUSJ950505HDFRRN17', '$2b$10$/tQlbx1TZgQMQ7Vt4LWwJOzqk66L0OaZ3Oh9a8odhLTZ/L.1i3Ibi', '1995-05-05', '2025-05-01 16:45:00', '2025-05-01 18:55:00', 'WXA12345', 1, '2025-05-01 16:50:00'),
 (18, 'Paulina', 'Vargas', 'León', 'paulina.vargas@gmail.com', '5588888888', 'VALP980606MDFRRN18', '$2b$10$/tQlbx1TZgQMQ7Vt4LWwJOzqk66L0OaZ3Oh9a8odhLTZ/L.1i3Ibi', '1998-06-06', '2025-06-10 10:15:00', '2025-06-10 12:25:00', 'BCD12345', 1, '2025-06-10 10:20:00'),
@@ -220,11 +222,11 @@ INSERT INTO `arrendatario` (`idArrendatario`, `arrendatarioBoleta`, `arrendatari
 (13, '2024030013', 1, '2025-02-20 11:00:00', 'alejandro_ram', 13, 7),
 (14, '2024040014', 1, '2025-03-01 09:30:00', 'fer_delgado', 14, 10),
 (15, '2023010015', 1, '2025-04-01 10:00:00', 'ricardo_mendoza', 15, 2),
-(16, '2024030016', 1, '2025-04-10 13:15:00', 'daniela_cruz', 16, 5),
-(17, '2024020017', 1, '2025-05-01 14:00:00', 'javier_nunez', 17, 8),
-(18, '2024010018', 1, '2025-05-05 15:45:00', 'paulina_vargas', 18, 11),
-(19, '2024030019', 1, '2025-06-01 08:00:00', 'oscar_guerrero', 19, 3),
-(20, '2024040020', 1, '2025-07-01 09:00:00', 'regina_molina', 20, 6);
+(16, '2024030016', 1, '2026-04-10 13:15:00', 'daniela_cruz', 16, 5),
+(17, '2024020017', 1, '2026-05-01 14:00:00', 'javier_nunez', 17, 8),
+(18, '2024010018', 1, '2026-05-05 15:45:00', 'paulina_vargas', 18, 11),
+(19, '2024030019', 1, '2026-03-01 08:00:00', 'oscar_guerrero', 19, 3),
+(20, '2024040020', 1, '2026-02-01 09:00:00', 'regina_molina', 20, 6);
 
 -- =====================================================
 -- TABLA arrendador

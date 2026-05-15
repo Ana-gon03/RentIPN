@@ -104,7 +104,7 @@ const VerificarExpiracion = () => {
                 🏠 Buscar vivienda
               </button>
               <button
-                onClick={() => navigate('/arrendatario/perfil')}
+                onClick={() => navigate('/arrendatario/verificar-identidad')}
                 style={{ padding: '0.75rem 2rem', cursor: 'pointer', backgroundColor: '#f59e0b', color: 'white', border: 'none', borderRadius: '5px', fontSize: '1rem' }}
               >
                 📤 Verificar ahora

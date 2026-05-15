@@ -13,6 +13,9 @@ const PerfilArrendador = () => {
   const [editando, setEditando] = useState(false)
   const [guardando, setGuardando] = useState(false)
 
+  // Estado para modales
+  const [modal, setModal] = useState({ isOpen: false, type: '', message: '', title: '' })
+
   const [perfil, setPerfil] = useState({
     usuario: {
       usuarioNom: '',
@@ -53,6 +56,14 @@ const PerfilArrendador = () => {
   useEffect(() => {
     cargarPerfil()
   }, [])
+
+  const mostrarModal = (type, title, message) => {
+    setModal({ isOpen: true, type, title, message })
+  }
+
+  const cerrarModal = () => {
+    setModal({ isOpen: false, type: '', message: '', title: '' })
+  }
 
   const cargarPerfil = async () => {
     try {
@@ -159,7 +170,7 @@ const PerfilArrendador = () => {
       const arrendadorId = localStorage.getItem('arrendadorId')
 
       if (!userId || !arrendadorId) {
-        alert('No has iniciado sesión')
+        mostrarModal('error', 'Error', 'No has iniciado sesión')
         return
       }
 
@@ -175,16 +186,22 @@ const PerfilArrendador = () => {
       const data = await response.json()
 
       if (response.ok) {
-        alert(data.message || 'Cuenta eliminada exitosamente')
-        localStorage.clear()
-        navigate('/')
+        mostrarModal('success', 'Cuenta eliminada', data.message || 'Cuenta eliminada exitosamente')
+        setTimeout(() => {
+          localStorage.clear()
+          navigate('/')
+        }, 2000)
       } else {
-        alert(data.error || 'Error al eliminar la cuenta')
+        mostrarModal('error', 'Error', data.error || 'Error al eliminar la cuenta')
       }
     } catch (error) {
       console.error('Error:', error)
-      alert('Error al eliminar la cuenta')
+      mostrarModal('error', 'Error', 'Error al eliminar la cuenta')
     }
+  }
+
+  const confirmarEliminarCuenta = () => {
+    mostrarModal('confirm', '⚠️ Eliminar Cuenta', '¿Estás seguro de eliminar tu cuenta?\n\nEsta acción no se puede deshacer. Se eliminarán tus propiedades, arrendamientos y datos personales.')
   }
 
   if (loading) {
@@ -311,11 +328,7 @@ const PerfilArrendador = () => {
               {/* Botón Eliminar Cuenta */}
               <div style={{ marginTop: '15px', borderTop: '1px solid #e0e0e0', paddingTop: '15px' }}>
                 <button 
-                  onClick={() => {
-                    if (window.confirm('⚠️ ¿Estás seguro de eliminar tu cuenta?\n\nEsta acción no se puede deshacer. Se eliminarán tus propiedades, arrendamientos y datos personales.')) {
-                      handleEliminarCuenta()
-                    }
-                  }}
+                  onClick={confirmarEliminarCuenta}
                   style={{
                     width: '100%',
                     padding: '12px',
@@ -412,6 +425,109 @@ const PerfilArrendador = () => {
           )}
         </div>
       </div>
+
+      {/* ===== MODAL PERSONALIZADO ===== */}
+      {modal.isOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.6)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '10px',
+            padding: '30px',
+            maxWidth: '450px',
+            width: '90%',
+            textAlign: 'center',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
+          }}>
+            <p style={{ fontSize: '40px', marginBottom: '15px' }}>
+              {modal.type === 'confirm' ? '⚠️' : modal.type === 'success' ? '✅' : '❌'}
+            </p>
+            
+            <h3 style={{ 
+              marginBottom: '15px', 
+              color: modal.type === 'confirm' ? '#e65100' : modal.type === 'success' ? '#28a745' : '#dc3545',
+              fontSize: '18px'
+            }}>
+              {modal.title}
+            </h3>
+            
+            <p style={{ 
+              color: '#555', 
+              fontSize: '14px', 
+              marginBottom: '25px', 
+              lineHeight: '1.6',
+              whiteSpace: 'pre-line'
+            }}>
+              {modal.message}
+            </p>
+            
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+              {modal.type === 'confirm' ? (
+                <>
+                  <button 
+                    onClick={cerrarModal}
+                    style={{
+                      padding: '10px 25px',
+                      backgroundColor: '#f0f0f0',
+                      border: '1px solid #ddd',
+                      borderRadius: '5px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    Cancelar
+                  </button>
+                  <button 
+                    onClick={() => {
+                      cerrarModal()
+                      handleEliminarCuenta()
+                    }}
+                    style={{
+                      padding: '10px 25px',
+                      backgroundColor: '#dc3545',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '5px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    Sí, eliminar
+                  </button>
+                </>
+              ) : (
+                <button 
+                  onClick={cerrarModal}
+                  style={{
+                    padding: '10px 25px',
+                    backgroundColor: '#1a237e',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  Entendido
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       <FooterInicio />
     </div>

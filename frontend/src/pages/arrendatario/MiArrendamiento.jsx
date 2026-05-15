@@ -16,53 +16,59 @@ const MiArrendamiento = () => {
   }, [])
 
   const cargarArrendamiento = async () => {
-  try {
-    setLoading(true)
-    
-    const userId = localStorage.getItem('userId')
+    try {
+      setLoading(true)
+      
+      const userId = localStorage.getItem('userId')
+      const arrendatarioVerificado = localStorage.getItem('arrendatarioVerificado')
+      const fechaVerificacion = localStorage.getItem('arrendatarioFechaVerificacion')
 
-    const arrendatarioVerificado = localStorage.getItem('arrendatarioVerificado')
-    if (arrendatarioVerificado === 'false' || arrendatarioVerificado === '0') {
-      navigate('/arrendatario/verificacion-pendiente')
-      return
-    }
-    const arrendatarioId = localStorage.getItem('arrendatarioId')
-    
-    if (!userId) {
-      setError('No has iniciado sesión')
-      setLoading(false)
-      return
-    }
+      // NUNCA verificado: no tiene fecha Y el estado es false
+      const nuncaVerificado = (arrendatarioVerificado === 'false' || arrendatarioVerificado === '0') 
+        && (!fechaVerificacion || fechaVerificacion === 'null' || fechaVerificacion === 'undefined')
 
-    const response = await fetch('http://localhost:5000/api/arrendamientos/mi-arrendamiento', {
-      headers: { 
-        'Content-Type': 'application/json',
-        'x-user-id': userId,
-        'x-arrendatario-id': arrendatarioId
+      if (nuncaVerificado) {
+        navigate('/arrendatario/verificacion-pendiente')
+        return
       }
-    })
+      
+      const arrendatarioId = localStorage.getItem('arrendatarioId')
+      
+      if (!userId) {
+        setError('No has iniciado sesión')
+        setLoading(false)
+        return
+      }
 
-    if (response.status === 404) {
-      setArrendamiento(null)
+      const response = await fetch('http://localhost:5000/api/arrendamientos/mi-arrendamiento', {
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-user-id': userId,
+          'x-arrendatario-id': arrendatarioId
+        }
+      })
+
+      if (response.status === 404) {
+        setArrendamiento(null)
+        setLoading(false)
+        return
+      }
+
+      if (!response.ok) throw new Error('Error al cargar')
+
+      const data = await response.json()
+      setArrendamiento(data)
+      
+      if (data.arrendamientoValEstudiante === 1) {
+        setEsperandoArrendador(true)
+      }
+    } catch (error) {
+      setError('No se pudo cargar tu arrendamiento')
+      console.error('Error:', error)
+    } finally {
       setLoading(false)
-      return
     }
-
-    if (!response.ok) throw new Error('Error al cargar')
-
-    const data = await response.json()
-    setArrendamiento(data)
-    
-    if (data.arrendamientoValEstudiante === 1) {
-      setEsperandoArrendador(true)
-    }
-  } catch (error) {
-    setError('No se pudo cargar tu arrendamiento')
-    console.error('Error:', error)
-  } finally {
-    setLoading(false)
   }
-}
 
   const handleFinalizarClick = () => {
     setMostrarModal(true)
@@ -73,8 +79,33 @@ const MiArrendamiento = () => {
     navigate(`/arrendatario/encuesta-finalizacion/${arrendamiento.idArrendamiento}`)
   }
 
-  const handleDescargarContrato = () => {
-    window.open(`http://localhost:5000/api/arrendamientos/${arrendamiento.idArrendamiento}/pdf`, '_blank')
+  const handleDescargarContrato = async () => {
+    try {
+      const token = localStorage.getItem('token') || localStorage.getItem('burroomies_token')
+      
+      // Hacer la petición como blob
+      const response = await fetch(`http://localhost:5000/api/arrendamientos/${arrendamiento.idArrendamiento}/pdf`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      
+      if (!response.ok) throw new Error('Error al obtener el PDF')
+      
+      // Convertir a blob
+      const blob = await response.blob()
+      
+      // Crear URL temporal
+      const url = URL.createObjectURL(blob)
+      
+      // Abrir en nueva pestaña
+      window.open(url, '_blank')
+      
+      // Liberar memoria después de un tiempo
+      setTimeout(() => URL.revokeObjectURL(url), 1000)
+      
+    } catch (error) {
+      console.error('Error al abrir contrato:', error)
+      alert('No se pudo abrir el contrato')
+    }
   }
 
   const propiedad = arrendamiento?.propiedad
@@ -103,6 +134,59 @@ const MiArrendamiento = () => {
 
       <div style={{ flex: 1, maxWidth: '900px', margin: '0 auto', padding: '20px', width: '100%' }}>
         <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>📋 Mi Arrendamiento</h1>
+
+        {/* ✅ MENSAJE DE VERIFICACIÓN EXPIRADA */}
+        {(() => {
+          const arrendatarioVerificado = localStorage.getItem('arrendatarioVerificado')
+          const fechaVerificacion = localStorage.getItem('arrendatarioFechaVerificacion')
+          
+          if (fechaVerificacion && fechaVerificacion !== 'null' && fechaVerificacion !== 'undefined') {
+            const ahora = new Date()
+            const fechaVer = new Date(fechaVerificacion)
+            const mesesTranscurridos = (ahora - fechaVer) / (1000 * 60 * 60 * 24 * 30)
+            
+            if (mesesTranscurridos >= 6) {
+              return (
+                <div style={{
+                  padding: '15px 20px',
+                  backgroundColor: '#fff3e0',
+                  border: '1px solid #ffb74d',
+                  borderRadius: '8px',
+                  marginBottom: '20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px'
+                }}>
+                  <span style={{ fontSize: '24px' }}>⚠️</span>
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontWeight: 'bold', color: '#e65100', margin: '0 0 5px 0', fontSize: '14px' }}>
+                      Tu verificación de identidad ha expirado
+                    </p>
+                    <p style={{ color: '#e65100', fontSize: '13px', margin: '0 0 10px 0' }}>
+                      Debes renovar tu verificación para poder ver los datos de contacto de nuevos arrendadores.
+                    </p>
+                    <button
+                      onClick={() => navigate('/arrendatario/renovar-identidad')}
+                      style={{
+                        padding: '8px 18px',
+                        backgroundColor: '#e65100',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        fontSize: '13px',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      🔄 Renovar verificación
+                    </button>
+                  </div>
+                </div>
+              )
+            }
+          }
+          return null
+        })()}
 
         {/* MENSAJE DE ESPERA */}
         {esperandoArrendador && (
@@ -251,7 +335,7 @@ const MiArrendamiento = () => {
                     marginBottom: '20px'
                   }}
                 >
-                  📄 Descargar Contrato
+                  📄 Ver Contrato
                 </button>
 
                 <hr style={{ margin: '0 0 20px 0' }} />

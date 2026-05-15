@@ -38,6 +38,7 @@ import PerfilArrendatario from './pages/arrendatario/PerfilArrendatario'
 import VerificacionPendiente from './pages/arrendatario/VerificacionPendiente'
 import VerificarIdentidad from './pages/arrendatario/VerificarIdentidad'
 import VerificacionExitosa from './pages/arrendatario/VerificacionExitosa'
+import RenovarIdentidad from './pages/arrendatario/RenovarIdentidad'
 
 function App() {
   return (
@@ -101,6 +102,10 @@ function App() {
 
         <Route path="/arrendatario/verificacion-exitosa" element={
           <ProtectedArrendatarioRoute><VerificacionExitosa /></ProtectedArrendatarioRoute>
+        } />
+
+        <Route path="/arrendatario/renovar-identidad" element={
+          <ProtectedArrendatarioRoute><RenovarIdentidad /></ProtectedArrendatarioRoute>
         } />
 
         {/* Rutas de admin */}

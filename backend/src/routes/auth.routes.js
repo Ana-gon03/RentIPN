@@ -8,6 +8,9 @@ const { enviarCodigoVerificacion, reenviarCodigoVerificacion } = require('../con
 const upload = require('../middlewares/upload');
 const { extraerQRDePDF, validarConstancia, validarCURPDocumento } = require('../services/pdfco.service');
 
+// Helper: fecha y hora actual en zona horaria de México
+const ahoraMX = () => new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
+
 // Validar si ya existe un campo (username, correo, curp, boleta)
 router.post('/validar-campo', async (req, res) => {
   const { campo, valor } = req.body;
@@ -237,7 +240,6 @@ router.post('/login-admin', async (req, res) => {
 });
 
 // ============ LOGIN USUARIO (ARRENDATARIO/ARRENDADOR) ============
-// ============ LOGIN USUARIO (ARRENDATARIO/ARRENDADOR) ============
 router.post('/login-usuario', async (req, res) => {
   const { correo, password } = req.body;
   
@@ -264,11 +266,12 @@ router.post('/login-usuario', async (req, res) => {
     });
     
     if (arrendador) {
+      await usuario.update({ usuarioFechaUIS: new Date() });
       return res.json({
         userId: usuario.idUsuario,
         rol: 'arrendador',
         correo: usuario.usuarioCorreo,
-        correoVerificado: usuario.usuarioCorreoVerificado === 1,  // ← Correo verificado
+        correoVerificado: usuario.usuarioCorreoVerificado === 1,
         arrendadorId: arrendador.idArrendador
       });
     }
@@ -279,14 +282,17 @@ router.post('/login-usuario', async (req, res) => {
     });
     
     if (arrendatario) {
+      await usuario.update({ usuarioFechaUIS: new Date() });
       return res.json({
         userId: usuario.idUsuario,
         rol: 'arrendatario',
         correo: usuario.usuarioCorreo,
-        correoVerificado: usuario.usuarioCorreoVerificado === 1,           // ← Correo verificado
+        correoVerificado: usuario.usuarioCorreoVerificado === 1,
         arrendatarioId: arrendatario.idArrendatario,
-        fechaRegistro: usuario.usuarioFechaRegis,                           // ← Para calcular 60 días
-        arrendatarioVerificado: arrendatario.arrendatarioVerificado === 1  // ← Identidad verificada
+        fechaRegistro: usuario.usuarioFechaRegis,
+        arrendatarioVerificado: arrendatario.arrendatarioVerificado === 1,
+        // ✅ NUEVO: Incluir fecha de verificación para calcular vigencia
+        arrendatarioFechaVerificacion: arrendatario.arrendatarioFechaVerificación
       });
     }
     
@@ -506,9 +512,9 @@ router.put('/perfil-arrendador/:idUsuario', async (req, res) => {
   }
 });
 
-// ============ VERIFICAR IDENTIDAD POST-REGISTRO ============
+// ============ VERIFICAR IDENTIDAD (CONSTANCIA) - MODIFICADO ============
 router.post('/verificar-identidad', upload.single('constancia'), async (req, res) => {
-  const { userId } = req.body;
+  const { userId, esRenovacion } = req.body; // ✅ NUEVO: recibir esRenovacion
 
   if (!userId) return res.status(400).json({ error: 'userId requerido' });
   if (!req.file) return res.status(400).json({ error: 'Debes subir tu constancia en PDF' });
@@ -520,11 +526,12 @@ router.post('/verificar-identidad', upload.single('constancia'), async (req, res
     const arrendatario = await Arrendatario.findOne({ where: { usuario_idUsuario: userId } });
     if (!arrendatario) return res.status(400).json({ error: 'No es arrendatario' });
 
-    if (arrendatario.arrendatarioVerificado === 1) {
+    // ✅ NUEVO: Si es renovación, no importa si ya está verificado
+    if (esRenovacion !== 'true' && arrendatario.arrendatarioVerificado === 1) {
       return res.status(400).json({ error: 'Tu identidad ya está verificada' });
     }
 
-    // Extraer y validar QR igual que en el registro
+    // Extraer y validar QR
     const qrData = await extraerQRDePDF(req.file.buffer, 'constancia');
     if (!qrData) return res.status(400).json({ error: 'No se pudo leer el QR de la constancia.' });
 
@@ -543,17 +550,132 @@ router.post('/verificar-identidad', upload.single('constancia'), async (req, res
       });
     }
 
-    // Marcar como verificado
+    // ✅ NUEVO: Actualizar según el flujo
+    if (esRenovacion === 'true') {
+      // FLUJO 2: Renovación - Solo actualizar fecha
+      await arrendatario.update({
+        arrendatarioFechaVerificación: new Date()
+      });
+      
+      return res.json({ 
+        message: 'Verificación renovada exitosamente por 6 meses más', 
+        verificado: true,
+        esRenovacion: true
+      });
+    } else {
+      // FLUJO 1: Primera vez - Activar verificación completa
+      await arrendatario.update({
+        arrendatarioVerificado: 1,
+        arrendatarioFechaVerificación: new Date()
+      });
+      
+      return res.json({ 
+        message: 'Identidad verificada exitosamente', 
+        verificado: true,
+        esRenovacion: false
+      });
+    }
+
+  } catch (error) {
+    console.error('Error al verificar identidad:', error);
+    res.status(500).json({ error: 'Error al procesar la verificación' });
+  }
+});
+
+// ============ ESTADO DE VERIFICACIÓN (NUEVA RUTA) ============
+router.get('/estado-verificacion', async (req, res) => {
+  try {
+    const userId = req.headers['x-user-id'];
+    
+    if (!userId) {
+      return res.status(401).json({ error: 'No autorizado' });
+    }
+
+    const arrendatario = await Arrendatario.findOne({
+      where: { usuario_idUsuario: parseInt(userId) },
+      attributes: ['arrendatarioVerificado', 'arrendatarioFechaVerificación']
+    });
+
+    if (!arrendatario) {
+      return res.status(404).json({ error: 'Arrendatario no encontrado' });
+    }
+
+    const fechaVerificacion = arrendatario.arrendatarioFechaVerificación;
+    let mesesTranscurridos = null;
+    let vigente = false;
+    let expirado = false;
+
+    if (arrendatario.arrendatarioVerificado === 1 && fechaVerificacion) {
+      const ahora = new Date();
+      const fechaVer = new Date(fechaVerificacion);
+      mesesTranscurridos = (ahora - fechaVer) / (1000 * 60 * 60 * 24 * 30);
+      
+      vigente = mesesTranscurridos < 6;
+      expirado = mesesTranscurridos >= 6;
+    }
+
+    res.json({
+      success: true,
+      verificado: arrendatario.arrendatarioVerificado === 1,
+      fechaVerificacion: fechaVerificacion,
+      mesesTranscurridos: mesesTranscurridos ? Math.floor(mesesTranscurridos) : null,
+      vigente: vigente,
+      expirado: expirado
+    });
+
+  } catch (error) {
+    console.error('Error al obtener estado:', error);
+    res.status(500).json({ error: 'Error al obtener estado de verificación' });
+  }
+});
+
+// ============ RENOVAR IDENTIDAD (NUEVA RUTA) ============
+router.post('/renovar-identidad', upload.single('constancia'), async (req, res) => {
+  const { userId } = req.body;
+
+  if (!userId) return res.status(400).json({ error: 'userId requerido' });
+  if (!req.file) return res.status(400).json({ error: 'Debes subir tu constancia en PDF' });
+
+  try {
+    const usuario = await Usuario.findByPk(userId);
+    if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+    const arrendatario = await Arrendatario.findOne({ where: { usuario_idUsuario: userId } });
+    if (!arrendatario) return res.status(400).json({ error: 'No es arrendatario' });
+
+    // Extraer y validar QR
+    const qrData = await extraerQRDePDF(req.file.buffer, 'constancia');
+    if (!qrData) return res.status(400).json({ error: 'No se pudo leer el QR de la constancia.' });
+
+    const errores = validarConstancia({
+      nombres: usuario.usuarioNom,
+      apellidoPaterno: usuario.usuarioApePat,
+      apellidoMaterno: usuario.usuarioApeMat,
+      curp: usuario.usuarioCurp,
+      boleta: arrendatario.arrendatarioBoleta
+    }, qrData);
+
+    if (errores.length > 0) {
+      return res.status(400).json({
+        error: 'Los datos del documento no coinciden con tu registro',
+        detalles: errores
+      });
+    }
+
+    // Solo actualizar fecha de verificación
     await arrendatario.update({
       arrendatarioVerificado: 1,
       arrendatarioFechaVerificación: new Date()
     });
 
-    res.json({ message: 'Identidad verificada exitosamente', verificado: true });
+    res.json({ 
+      message: 'Verificación renovada exitosamente por 6 meses más', 
+      verificado: true 
+    });
 
   } catch (error) {
-    console.error('Error al verificar identidad:', error);
-    res.status(500).json({ error: 'Error al procesar la verificación' });
+    console.error('Error al renovar identidad:', error);
+    res.status(500).json({ error: 'Error al procesar la renovación' });
   }
 });
 

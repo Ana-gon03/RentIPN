@@ -3,6 +3,7 @@ const router = express.Router();
 const PDFDocument = require('pdfkit');
 const { Arrendamiento, Arrendatario, Usuario, Propiedad, Direccion, CP, Arrendador } = require('../models/associations');
 const { Op } = require('sequelize');
+const { analizarSentimiento } = require('../utils/sentimiento');
 
 // =====================================================
 // RUTAS ESPECÍFICAS PRIMERO
@@ -83,7 +84,7 @@ router.get('/:id/pdf', async (req, res) => {
 
     const doc = new PDFDocument({ size: 'A4', margin: ML, bufferPages: true });
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename=contrato_arrendamiento_${id}.pdf`);
+    res.setHeader('Content-Disposition', `inline; filename=contrato_arrendamiento_${id}.pdf`);
     doc.pipe(res);
 
     // ── HELPERS ──────────────────────────────────────────────────────────────
@@ -145,7 +146,6 @@ router.get('/:id/pdf', async (req, res) => {
                       propiedad.propiedadPrecioPor === 'Persona' ? ' (Por persona)' :
                       propiedad.propiedadPrecioPor === 'Habitación' ? ' (Por Habitación)' : '';
     fila('Renta mensual', `$${arrendamiento.arrendamientoRenta} MXN${tipoPrecio}`);
-    fila('Descripción', arrendamiento.arrendamientoDescrip || 'Sin descripción adicional');
 
     // ── 2. DATOS DEL ARRENDADOR ──────────────────────────────────────────────
     seccion('2', 'DATOS DEL ARRENDADOR');
@@ -176,7 +176,6 @@ router.get('/:id/pdf', async (req, res) => {
     fila('Título', propiedad.propiedadTitulo);
     fila('Tipo de inmueble', propiedad.propiedadTipo);
     fila('Dirección', direccionCompleta);
-    fila('Lugares totales', propiedad.propiedadLugares);
 
     // ── 5. CLÁUSULAS ─────────────────────────────────────────────────────────
     seccion('5', 'CLÁUSULAS DEL CONTRATO');
@@ -242,11 +241,14 @@ router.get('/:id/pdf', async (req, res) => {
       doc.moveDown(0.3);
     });
 
+    seccion('6', 'NOTAS ADICIONALES DEL ARRENDAMIENTO');
+    fila('Notas:', arrendamiento.arrendamientoDescrip || 'Sin descripción adicional');
+
     // ── FIRMAS ───────────────────────────────────────────────────────────────
     if (doc.y > 600) doc.addPage();
     doc.moveDown(0.5);
 
-    seccion('6', 'FIRMAS DE CONFORMIDAD');
+    seccion('7', 'FIRMAS DE CONFORMIDAD');
 
     doc.moveDown(0.3);
     doc.fontSize(8.5).font('Helvetica').fillColor(GRIS)
@@ -411,8 +413,7 @@ router.put('/:id/finalizar-estudiante', async (req, res) => {
       resenaCalSerBasic, 
       resenaCalSerComEnt, 
       resenaCalSerAdicio, 
-      resenaDescrip,
-      resenaSentimiento 
+      resenaDescrip
     } = req.body;
 
     const arrendamiento = await Arrendamiento.findByPk(id, {
@@ -441,7 +442,7 @@ router.put('/:id/finalizar-estudiante', async (req, res) => {
       resenaCalSerComEnt: resenaCalSerComEnt || null,
       resenaCalSerAdicio: resenaCalSerAdicio || null,
       resenaDescrip: resenaDescrip || '',
-      resenaSentimiento: resenaSentimiento || null,
+      resenaSentimiento: (resenaDescrip && resenaDescrip !== 'Sin comentarios') ? analizarSentimiento(resenaDescrip) : null,
       resenaDuracionRenta: mesesRenta,  // ← agregar esto
       resenaFechaCreacion: new Date(),
       propiedad_idPropiedad: arrendamiento.propiedad_idPropiedad,
@@ -487,10 +488,10 @@ router.get('/:id', async (req, res) => {
           attributes: ['idPropiedad', 'propiedadTitulo', 'propiedadTipo', 'propiedadLugares', 'propiedadPrecio'],
           include: [
             {
-              model: require('../models/associations').Servicio, // ← nuevo
-              as: 'servicios',                                   // ← nuevo
-              attributes: ['idServicio', 'servicioCategoria'],   // ← nuevo
-              required: false                                    // ← nuevo
+              model: require('../models/associations').Servicio, 
+              as: 'servicios',                                   
+              attributes: ['idServicio', 'servicioNombre', 'servicioCategoria'],   
+              required: false                                    
             },
             {
               model: Direccion,

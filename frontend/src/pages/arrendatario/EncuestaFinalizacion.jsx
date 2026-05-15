@@ -3,22 +3,30 @@ import { useParams, useNavigate } from 'react-router-dom'
 import NavbarArrendatario from '../../components/common/NavbarArrendatario'
 import FooterInicio from '../../components/common/FooterInicio'
 
+const GROSERIAS = [
+  'pendejo', 'pendeja', 'puta', 'puto', 'chinga', 'chingada', 'chingado',
+  'mierda', 'cabron', 'cabrona', 'pinche', 'culero', 'culera', 'idiota',
+  'estupido', 'estupida', 'mamadas', 'verga', 'culo', 'hdp', 'hijo de puta',
+  'perra', 'perro', 'joto', 'wey', 'buey', 'chido', 'chingar'
+]
+
 const EncuestaFinalizacion = () => {
   const { idArrendamiento } = useParams()
   const navigate = useNavigate()
-  
+
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [enviando, setEnviando] = useState(false)
   const [completado, setCompletado] = useState(false)
-  
+
   // Datos del arrendamiento
   const [serviciosPropiedad, setServiciosPropiedad] = useState({
     basicos: false,
     entretenimiento: false,
     adicionales: false
   })
-  
+  const [listaServicios, setListaServicios] = useState([])
+
   // Calificaciones
   const [calServiciosBasicos, setCalServiciosBasicos] = useState(0)
   const [calEntretenimiento, setCalEntretenimiento] = useState(0)
@@ -26,55 +34,73 @@ const EncuestaFinalizacion = () => {
   const [calGeneral, setCalGeneral] = useState(0)
   const [resena, setResena] = useState('')
 
+  // Estado para el modal
+  const [modal, setModal] = useState({ isOpen: false, message: '' })
+
   useEffect(() => {
     cargarArrendamiento()
   }, [])
 
+  const mostrarModal = (message) => {
+    setModal({ isOpen: true, message })
+  }
+
+  const cerrarModal = () => {
+    setModal({ isOpen: false, message: '' })
+  }
+
   const cargarArrendamiento = async () => {
     try {
-        const token = localStorage.getItem('token') || localStorage.getItem('burroomies_token')
-        const response = await fetch(`http://localhost:5000/api/arrendamientos/${idArrendamiento}`, {
+      const token = localStorage.getItem('token') || localStorage.getItem('burroomies_token')
+      const response = await fetch(`http://localhost:5000/api/arrendamientos/${idArrendamiento}`, {
         headers: { Authorization: `Bearer ${token}` }
-        })
+      })
 
-        if (!response.ok) throw new Error('Error al cargar')
+      if (!response.ok) throw new Error('Error al cargar')
 
-        const data = await response.json()
-        
-        // ✅ minúscula, como devuelve Sequelize
-        const servicios = data.propiedad?.servicios || []
-        setServiciosPropiedad({
+      const data = await response.json()
+
+      const servicios = data.propiedad?.servicios || []
+      setServiciosPropiedad({
         basicos: servicios.some(s => s.servicioCategoria === 'Basico'),
         entretenimiento: servicios.some(s => s.servicioCategoria === 'Entretenimiento'),
         adicionales: servicios.some(s => s.servicioCategoria === 'Adicional')
-        })
-        
+      })
+      setListaServicios(servicios)
+
     } catch (error) {
-        setError('No se pudo cargar la información')
-        console.error('Error:', error)
+      setError('No se pudo cargar la información')
+      console.error('Error:', error)
     } finally {
-        setLoading(false)
+      setLoading(false)
     }
-    }
-  
+  }
+
   const handleEnviarEncuesta = async () => {
-    // Validar calificación general (obligatoria)
     if (calGeneral === 0) {
-      alert('La calificación general es obligatoria')
+      mostrarModal('La calificación general es obligatoria')
       return
+    }
+
+    // Filtro de groserías
+    if (resena.trim()) {
+      const resenaLower = resena.toLowerCase()
+      if (GROSERIAS.some(g => resenaLower.includes(g))) {
+        mostrarModal('Tu reseña contiene palabras inapropiadas. Por favor, expresa tu experiencia con respeto.')
+        return
+      }
     }
 
     try {
       setEnviando(true)
       const token = localStorage.getItem('token') || localStorage.getItem('burroomies_token')
-      
+
       const datos = {
         resenaCalGen: calGeneral,
         resenaDescrip: resena || 'Sin comentarios',
         resenaDuracionRenta: null
       }
 
-      // Solo enviar calificaciones de servicios que existen
       if (serviciosPropiedad.basicos) {
         datos.resenaCalSerBasic = calServiciosBasicos || null
       }
@@ -99,14 +125,19 @@ const EncuestaFinalizacion = () => {
       if (response.ok) {
         setCompletado(true)
       } else {
-        alert(result.message || 'Error al enviar la encuesta')
+        mostrarModal(result.message || 'Error al enviar la encuesta')
       }
     } catch (error) {
-      alert('Error al enviar la encuesta')
+      mostrarModal('Error al enviar la encuesta')
       console.error('Error:', error)
     } finally {
       setEnviando(false)
     }
+  }
+
+  // Función para filtrar servicios por categoría
+  const filtrarServicios = (categoria) => {
+    return listaServicios.filter(s => s.servicioCategoria === categoria)
   }
 
   const renderEstrellas = (valor, onChange) => {
@@ -133,6 +164,39 @@ const EncuestaFinalizacion = () => {
     )
   }
 
+  const renderServiciosList = (categoria) => {
+    const serviciosFiltrados = filtrarServicios(categoria)
+    if (serviciosFiltrados.length === 0) return null
+
+    return (
+      <div style={{
+        backgroundColor: '#f8f9fa',
+        border: '1px solid #e8eaf6',
+        borderRadius: '6px',
+        padding: '14px',
+        marginTop: '15px'
+      }}>
+        <p style={{ fontSize: '13px', color: '#555', marginBottom: '10px', fontWeight: '600' }}>
+          Servicios {categoria.toLowerCase()} que ofrecía esta propiedad:
+        </p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          {serviciosFiltrados.map(s => (
+            <span key={s.idServicio} style={{
+              backgroundColor: '#e8eaf6',
+              color: '#1a237e',
+              padding: '4px 12px',
+              borderRadius: '20px',
+              fontSize: '12px',
+              fontWeight: '500'
+            }}>
+              {s.servicioNombre || s.servicioCategoria}
+            </span>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   if (loading) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -155,7 +219,7 @@ const EncuestaFinalizacion = () => {
           <p style={{ color: '#666', marginBottom: '25px', fontSize: '14px' }}>
             Tu arrendamiento ha sido finalizado. Gracias por tu opinión.
           </p>
-          <button 
+          <button
             onClick={() => navigate('/arrendatario/mi-arrendamiento')}
             style={{
               padding: '12px 30px',
@@ -179,6 +243,62 @@ const EncuestaFinalizacion = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <NavbarArrendatario />
+
+      {/* Modal personalizado */}
+      {modal.isOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '10px',
+            padding: '30px',
+            maxWidth: '400px',
+            width: '90%',
+            textAlign: 'center',
+            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+          }}>
+            <p style={{
+              fontSize: '40px',
+              marginBottom: '15px'
+            }}>
+              ⚠️
+            </p>
+            <p style={{
+              fontSize: '16px',
+              color: '#333',
+              marginBottom: '25px',
+              lineHeight: '1.5'
+            }}>
+              {modal.message}
+            </p>
+            <button
+              onClick={cerrarModal}
+              style={{
+                padding: '10px 25px',
+                backgroundColor: '#1a237e',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 'bold'
+              }}
+            >
+              Entendido
+            </button>
+          </div>
+        </div>
+      )}
 
       <div style={{ flex: 1, maxWidth: '700px', margin: '0 auto', padding: '20px', width: '100%' }}>
         <h1 style={{ fontSize: '24px', marginBottom: '5px', textAlign: 'center' }}>📝 Encuesta de Finalización</h1>
@@ -229,6 +349,7 @@ const EncuestaFinalizacion = () => {
                 {['', 'Muy malo', 'Malo', 'Regular', 'Bueno', 'Excelente'][calServiciosBasicos]}
               </p>
             )}
+            {renderServiciosList('Basico')}
           </div>
         )}
 
@@ -250,6 +371,7 @@ const EncuestaFinalizacion = () => {
                 {['', 'Muy malo', 'Malo', 'Regular', 'Bueno', 'Excelente'][calEntretenimiento]}
               </p>
             )}
+            {renderServiciosList('Entretenimiento')}
           </div>
         )}
 
@@ -271,6 +393,7 @@ const EncuestaFinalizacion = () => {
                 {['', 'Muy malo', 'Malo', 'Regular', 'Bueno', 'Excelente'][calAdicionales]}
               </p>
             )}
+            {renderServiciosList('Adicional')}
           </div>
         )}
 
@@ -285,6 +408,7 @@ const EncuestaFinalizacion = () => {
           <h3 style={{ fontSize: '16px', marginBottom: '15px', color: '#333' }}>
             💬 ¿Quieres dejar una reseña sobre tu experiencia?
           </h3>
+
           <textarea
             value={resena}
             onChange={(e) => setResena(e.target.value)}
@@ -303,7 +427,7 @@ const EncuestaFinalizacion = () => {
         </div>
 
         {/* BOTÓN ENVIAR */}
-        <button 
+        <button
           onClick={handleEnviarEncuesta}
           disabled={enviando}
           style={{
