@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import NavbarRegistro from '../../components/common/NavbarRegistro'
-import FooterRegistro from '../../components/common/FooterRegistro'
+import FooterRegistro from '../../components/common/FooterInicio'
 import { verificarCodigo, reenviarCodigo, actualizarCorreo, validarCampo } from '../../services/authService'
 import '../../styles/VerificarCorreo.css'
 

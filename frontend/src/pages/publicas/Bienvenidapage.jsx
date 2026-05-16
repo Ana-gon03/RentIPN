@@ -1,7 +1,7 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import NavbarRegistro from '../../components/common/NavbarRegistro'
-import FooterRegistro from '../../components/common/FooterRegistro'
+import FooterRegistro from '../../components/common/FooterInicio'
 
 const BienvenidaPage = () => {
   const location = useLocation()
@@ -146,7 +146,7 @@ const BienvenidaPage = () => {
             style={{
               width: '100%',
               padding: '0.75rem',
-              backgroundColor: '#2563eb',
+              backgroundColor: '#7F77DD',
               color: '#fff',
               border: 'none',
               borderRadius: '8px',
