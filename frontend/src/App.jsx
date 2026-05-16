@@ -12,6 +12,7 @@ import Bienvenidapage from './pages/publicas/Bienvenidapage'
 import AvisoPrivacidadPage from './pages/publicas/AvisoPrivacidadPage'
 import TerminosUsoPage from './pages/publicas/TerminosUsoPage'
 import FaqPage from './pages/publicas/FaqPage'
+import RestablecerPasswordPage from './pages/publicas/RestablecerPasswordPage'
 
 
 // Páginas de arrendador
@@ -39,6 +40,7 @@ import PerfilArrendatario from './pages/arrendatario/PerfilArrendatario'
 import VerificacionPendiente from './pages/arrendatario/VerificacionPendiente'
 import VerificarIdentidad from './pages/arrendatario/VerificarIdentidad'
 import VerificacionExitosa from './pages/arrendatario/VerificacionExitosa'
+import RenovarIdentidad from './pages/arrendatario/RenovarIdentidad'
 
 function App() {
   return (
@@ -55,6 +57,7 @@ function App() {
         <Route path="/legal/aviso-privacidad" element={<AvisoPrivacidadPage />} />
         <Route path="/legal/terminos-uso" element={<TerminosUsoPage />} />
         <Route path="/faq" element={<FaqPage />} />
+        <Route path="/restablecer-password" element={<RestablecerPasswordPage />} />
 
         {/* Rutas de arrendador */}
         <Route path="/arrendador/mis-arrendamientos" element={
@@ -102,6 +105,10 @@ function App() {
 
         <Route path="/arrendatario/verificacion-exitosa" element={
           <ProtectedArrendatarioRoute><VerificacionExitosa /></ProtectedArrendatarioRoute>
+        } />
+
+        <Route path="/arrendatario/renovar-identidad" element={
+          <ProtectedArrendatarioRoute><RenovarIdentidad /></ProtectedArrendatarioRoute>
         } />
 
         {/* Rutas de admin */}
