@@ -16,6 +16,9 @@ const PerfilArrendador = () => {
   const [modalEliminar, setModalEliminar] = useState(false)
   const [modalAlerta, setModalAlerta] = useState({ abierto: false, mensaje: '' })
 
+  // Estado para modales
+  const [modal, setModal] = useState({ isOpen: false, type: '', message: '', title: '' })
+
   const [perfil, setPerfil] = useState({
     usuario: { usuarioNom: '', usuarioApePat: '', usuarioApeMat: '', usuarioCorreo: '', usuarioTel: '', usuarioCurp: '', usuarioFechaNac: '' },
     arrendadorRFC: '',
@@ -35,6 +38,14 @@ const PerfilArrendador = () => {
   const [estado, setEstado] = useState('')
 
   useEffect(() => { cargarPerfil() }, [])
+
+  const mostrarModal = (type, title, message) => {
+    setModal({ isOpen: true, type, title, message })
+  }
+
+  const cerrarModal = () => {
+    setModal({ isOpen: false, type: '', message: '', title: '' })
+  }
 
   const cargarPerfil = async () => {
     try {

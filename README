@@ -51,112 +51,155 @@ cd ../..
 
 🔧 BACKEND
 Archivo	Descripción
-package.json	Dependencias y scripts
-.env	Variables de entorno
-server.js	Servidor Express principal
-Config	
-src/config/database.js	Conexión MySQL con Sequelize
-src/config/email.js	Envío de correos con Brevo
-Middleware	
-src/middlewares/upload.js	Subida de PDFs con Multer
-src/middlewares/uploadFotos.js	Subida y compresión de fotos
-Servicios	
-src/services/pdfco.service.js	Lectura de QR desde PDFs
-Rutas	
-src/routes/auth.routes.js	Registro, login, verificación de usuarios
-src/routes/admin.routes.js	CRUD de estudiantes, arrendadores, propiedades
-src/routes/arrendamiento.routes.js	Contratos y PDFs
-src/routes/propiedad.routes.js	Propiedades, servicios, fotos
-src/routes/catalogos.routes.js	Escuelas y carreras del IPN
-src/routes/cp.routes.js	Búsqueda de códigos postales
-src/routes/usuario.routes.js	Búsqueda de arrendatarios
-src/routes/contacto.routes.js	Formulario de contacto
-Modelos	
-src/models/usuario.model.js	Usuarios
-src/models/arrendatario.model.js	Estudiantes
-src/models/arrendador.model.js	Arrendadores
-src/models/propiedad.model.js	Propiedades
-src/models/arrendamiento.model.js	Contratos
-src/models/direccion.model.js	Direcciones
-src/models/cp.model.js	Códigos Postales
-src/models/carrera.model.js	Carreras
-src/models/unidadAcademica.model.js	Escuelas IPN
-src/models/fotos.model.js	Fotos de propiedades
-src/models/resena.model.js	Reseñas
-src/models/servicio.model.js	Servicios
-src/models/servicioHasPropiedad.model.js	Relación servicios-propiedades
-src/models/administrador.model.js	Administradores
-src/models/associations.js	Relaciones entre todos los modelos
+package.json	Dependencias, scripts y configuración del proyecto
+.env	Variables de entorno (credenciales, API keys, puertos)
+server.js	Servidor Express principal con CORS y archivos estáticos
+
+⚙️ Config
+Archivo	Descripción
+src/config/database.js	Conexión a MySQL con Sequelize y pooling de conexiones
+src/config/email.js	Envío de correos transaccionales con Brevo (Sendinblue)
+
+🛡️ Middleware
+Archivo	Descripción
+src/middlewares/upload.js	Subida de PDFs (constancias, CURP) con Multer
+src/middlewares/uploadFotos.js	Subida y compresión de fotos de propiedades con Sharp
+
+🔧 Servicios
+Archivo	Descripción
+src/services/pdfco.service.js	Lectura y validación de QR desde PDFs (constancias IPN, CURP)
+
+🛣️ Rutas
+Archivo	Descripción
+src/routes/auth.routes.js	Registro, login, verificación de correo, verificación/renovación de identidad, recuperación y restablecimiento de contraseña
+src/routes/admin.routes.js	CRUD completo de estudiantes, arrendadores y propiedades
+src/routes/arrendamiento.routes.js	Gestión de contratos, generación de PDFs, finalización con reseñas
+src/routes/propiedad.routes.js	CRUD de propiedades, servicios, fotos y búsqueda con degradación de filtros
+src/routes/catalogos.routes.js	Catálogo de escuelas y carreras del IPN
+src/routes/cp.routes.js	Búsqueda y autocompletado de códigos postales (Sepomex)
+src/routes/usuario.routes.js	Perfil de arrendatario/arrendador, actualización y eliminación de cuenta
+src/routes/contacto.routes.js	Formulario de contacto desde FAQ
+
+📦 Modelos
+Archivo	Descripción
+src/models/usuario.model.js	Usuarios base (datos personales, autenticación)
+src/models/arrendatario.model.js	Estudiantes (boleta, verificación de identidad, fecha de verificación)
+src/models/arrendador.model.js	Arrendadores (RFC, dirección)
+src/models/propiedad.model.js	Propiedades en renta (título, descripción, tipo, precio, estatus)
+src/models/arrendamiento.model.js	Contratos de arrendamiento entre estudiantes y arrendadores
+src/models/direccion.model.js	Direcciones físicas (calle, número, CP)
+src/models/cp.model.js	Catálogo de códigos postales con colonias y municipios
+src/models/carrera.model.js	Carreras del IPN
+src/models/unidadAcademica.model.js	Escuelas y unidades académicas del IPN
+src/models/fotos.model.js	Fotos de propiedades (URLs)
+src/models/resena.model.js	Reseñas con calificaciones, sentimiento y duración de renta
+src/models/servicio.model.js	Catálogo de servicios (básicos, entretenimiento, adicionales)
+src/models/servicioHasPropiedad.model.js	Relación muchos a muchos entre servicios y propiedades
+src/models/administrador.model.js	Administradores del sistema
+src/models/associations.js	Definición de todas las relaciones entre modelos
+
+
+
 
 🎨 FRONTEND
 Archivo	Descripción
-package.json	Dependencias y scripts
-vite.config.js	Configuración de Vite
-src/main.jsx	Punto de entrada React
-src/App.jsx	Rutas principales
-src/styles/global.css	Estilos globales
-Servicios	
-src/services/api.js	Cliente Axios
-src/services/authService.js	Autenticación y registro
-src/services/adminService.js	CRUD de administración
-src/services/propiedadService.js	Propiedades y servicios
-src/services/arrendamientoService.js	Arrendamientos
-src/services/catalogosService.js	Escuelas y carreras
-src/services/cpService.js	Códigos postales
-src/services/legalContent.js	Aviso de privacidad y términos
-Componentes Common	
-src/components/common/NavbarInicio.jsx	Navegación pública
-src/components/common/NavbarRegistro.jsx	Navegación registro
-src/components/common/NavbarAdmin.jsx	Navegación admin
-src/components/common/NavbarArrendador.jsx	Navegación arrendador
-src/components/common/NavbarArrendatario.jsx	Navegación estudiante
-src/components/common/FooterInicio.jsx	Pie público
-src/components/common/FooterRegistro.jsx	Pie registro
-src/components/common/FooterAdmin.jsx	Pie admin
-src/components/common/ProtectedAdminRoute.jsx	Ruta protegida admin
-src/components/common/ProtectedArrendadorRoute.jsx	Ruta protegida arrendador
-src/components/common/ProtectedArrendatarioRoute.jsx	Ruta protegida estudiante
-src/components/common/ModalConfirmacion.jsx	Modal de confirmación
-src/components/common/ModalContacto.jsx	Modal de contacto
-Componentes Registro	
-src/components/registro/RegistroEstudiante.jsx	Formulario registro estudiante
-src/components/registro/RegistroArrendador.jsx	Formulario registro arrendador
-Componentes UI	
-src/components/ui/SubirDocumento.jsx	Componente subida PDF
-src/components/ui/LegalModal.jsx	Modal aviso/terminos
-Componentes Admin	
-src/components/admin/FormEstudiante.jsx	Editar estudiante
-src/components/admin/FormArrendador.jsx	Editar arrendador
-src/components/admin/FormPropiedad.jsx	Editar propiedad
-src/components/admin/FormRegistroEstudiante.jsx	Registrar estudiante
-src/components/admin/FormRegistroArrendador.jsx	Registrar arrendador
-Componentes Arrendador	
-src/components/arrendador/ModalDetalleArrendamiento.jsx	Detalle de arrendamiento
-src/components/arrendador/ModalDetalleVivienda.jsx	Detalle/edición de vivienda
-Páginas Públicas	
-src/pages/publicas/HomePage.jsx	Página principal
-src/pages/publicas/RegistroUsuarioPage.jsx	Selección tipo usuario
-src/pages/publicas/UsuariosInicioSesionPage.jsx	Login usuarios
-src/pages/publicas/VerificarCorreoPage.jsx	Verificar correo post-registro
-src/pages/publicas/VerificarCorreoLogin.jsx	Verificar correo post-login
-src/pages/publicas/VerificarExpiracion.jsx	Verificar expiración cuenta
-src/pages/publicas/Bienvenidapage.jsx	Bienvenida post-registro
-src/pages/publicas/FaqPage.jsx	Preguntas frecuentes
-src/pages/publicas/AvisoPrivacidadPage.jsx	Aviso de privacidad
-src/pages/publicas/TerminosUsoPage.jsx	Términos de uso
-Páginas Admin	
-src/pages/admin/AdminInicioSesionPage.jsx	Login admin
-src/pages/admin/AdminArrendatariosPage.jsx	Gestión estudiantes
-src/pages/admin/AdminArrendadoresPage.jsx	Gestión arrendadores
-src/pages/admin/AdminPropiedadesPage.jsx	Gestión propiedades
-Páginas Arrendador	
-src/pages/arrendador/CrearVivienda.jsx	Crear vivienda
-src/pages/arrendador/CrearArrendamiento.jsx	Crear arrendamiento
-src/pages/arrendador/MisViviendas.jsx	Mis viviendas
-src/pages/arrendador/MisArrendamientosArrendador.jsx	Mis arrendamientos
-src/pages/arrendador/PerfilArrendador.jsx	Perfil arrendador
-Páginas Arrendatario	
-src/pages/arrendatario/buscarVivienda.jsx	Buscar vivienda
+package.json	Dependencias, scripts de build y desarrollo
+vite.config.js	Configuración de Vite con proxy para API en desarrollo
+.env	Variable VITE_API_URL para conexión con backend
+src/main.jsx	Punto de entrada de React, renderizado del App
+src/App.jsx	Definición de todas las rutas protegidas y públicas
+src/styles/global.css	Estilos globales del sistema
+
+🔌 Servicios
+Archivo	Descripción
+src/services/api.js	Cliente Axios con base URL configurable e interceptores de token
+src/services/authService.js	Autenticación, registro, login, verificación de identidad
+src/services/adminService.js	CRUD de administración (usuarios, propiedades)
+src/services/propiedadService.js	Búsqueda, detalle y servicios de propiedades
+src/services/arrendamientoService.js	Gestión de arrendamientos y contratos
+src/services/catalogosService.js	Obtención de escuelas y carreras del IPN
+src/services/cpService.js	Búsqueda de códigos postales
+src/services/legalContent.js	Contenido de aviso de privacidad y términos de uso
+
+🧩 Componentes Common
+Archivo	Descripción
+src/components/common/NavbarInicio.jsx	Barra de navegación para páginas públicas
+src/components/common/NavbarRegistro.jsx	Barra de navegación durante el registro
+src/components/common/NavbarAdmin.jsx	Barra de navegación del panel de administración
+src/components/common/NavbarArrendador.jsx	Barra de navegación para arrendadores
+src/components/common/NavbarArrendatario.jsx	Barra de navegación para estudiantes
+src/components/common/FooterInicio.jsx	Pie de página público
+src/components/common/FooterRegistro.jsx	Pie de página durante registro
+src/components/common/FooterAdmin.jsx	Pie de página del panel admin
+src/components/common/ProtectedAdminRoute.jsx	Ruta protegida para administradores
+src/components/common/ProtectedArrendadorRoute.jsx	Ruta protegida para arrendadores
+src/components/common/ProtectedArrendatarioRoute.jsx	Ruta protegida para estudiantes
+src/components/common/ModalConfirmacion.jsx	Modal genérico de confirmación (error, éxito, confirmar)
+src/components/common/ModalContacto.jsx	Modal de formulario de contacto
+
+📝 Componentes Registro
+Archivo	Descripción
+src/components/registro/RegistroEstudiante.jsx	Formulario de registro para estudiantes con subida de constancia
+src/components/registro/RegistroArrendador.jsx	Formulario de registro para arrendadores con subida de CURP
+
+🎨 Componentes UI
+Archivo	Descripción
+src/components/ui/SubirDocumento.jsx	Componente reutilizable de subida de PDFs con validación
+src/components/ui/LegalModal.jsx	Modal para mostrar aviso de privacidad y términos
+
+👨‍💼 Componentes Admin
+Archivo	Descripción
+src/components/admin/FormEstudiante.jsx	Formulario de edición de estudiantes
+src/components/admin/FormArrendador.jsx	Formulario de edición de arrendadores
+src/components/admin/FormPropiedad.jsx	Formulario de edición de propiedades
+src/components/admin/FormRegistroEstudiante.jsx	Formulario de registro de estudiantes desde admin
+src/components/admin/FormRegistroArrendador.jsx	Formulario de registro de arrendadores desde admin
+
+🏠 Componentes Arrendador
+Archivo	Descripción
+src/components/arrendador/ModalDetalleArrendamiento.jsx	Modal con detalle completo de un arrendamiento
+src/components/arrendador/ModalDetalleVivienda.jsx	Modal de detalle y edición de una vivienda
+
+🌐 Páginas Públicas
+Archivo	Descripción
+src/pages/publicas/HomePage.jsx	Página principal con buscador y propiedades destacadas
+src/pages/publicas/RegistroUsuarioPage.jsx	Selección de tipo de usuario (estudiante o arrendador)
+src/pages/publicas/UsuariosInicioSesionPage.jsx	Inicio de sesión con recuperación de contraseña por código
+src/pages/publicas/RestablecerPasswordPage.jsx	Restablecer contraseña en 2 pasos (código + nueva contraseña)
+src/pages/publicas/VerificarCorreoPage.jsx	Verificación de correo electrónico post-registro
+src/pages/publicas/VerificarCorreoLogin.jsx	Verificación de correo electrónico post-login
+src/pages/publicas/VerificarExpiracion.jsx	Verificación de expiración de cuenta (60 días sin verificar)
+src/pages/publicas/Bienvenidapage.jsx	Pantalla de bienvenida después del registro exitoso
+src/pages/publicas/FaqPage.jsx	Preguntas frecuentes con formulario de contacto
+src/pages/publicas/AvisoPrivacidadPage.jsx	Aviso de privacidad completo
+src/pages/publicas/TerminosUsoPage.jsx	Términos y condiciones de uso
+
+🔧 Páginas Admin
+Archivo	Descripción
+src/pages/admin/AdminInicioSesionPage.jsx	Inicio de sesión exclusivo para administradores
+src/pages/admin/AdminArrendatariosPage.jsx	Gestión completa de estudiantes (CRUD)
+src/pages/admin/AdminArrendadoresPage.jsx	Gestión completa de arrendadores (CRUD)
+src/pages/admin/AdminPropiedadesPage.jsx	Gestión completa de propiedades (CRUD)
+
+🏡 Páginas Arrendador
+Archivo	Descripción
+src/pages/arrendador/CrearVivienda.jsx	Formulario para crear una nueva propiedad en renta
+src/pages/arrendador/CrearArrendamiento.jsx	Asignar un estudiante a una propiedad (crear contrato)
+src/pages/arrendador/MisViviendas.jsx	Listado y gestión de todas las propiedades del arrendador
+src/pages/arrendador/MisArrendamientosArrendador.jsx	Gestión de arrendamientos activos y finalización
+src/pages/arrendador/PerfilArrendador.jsx	Perfil del arrendador con edición y eliminación de cuenta
+
+🎓 Páginas Arrendatario (Estudiante)
+Archivo	Descripción
+src/pages/arrendatario/buscarVivienda.jsx	Búsqueda avanzada con filtros, degradación automática y paginación
+src/pages/arrendatario/DetallePropiedad.jsx	Detalle de propiedad con galería, servicios, reseñas paginadas con filtro de sentimiento y contacto del arrendador protegido por verificación vigente
+src/pages/arrendatario/MiArrendamiento.jsx	Visualización del contrato activo con descarga de PDF y mensaje de verificación expirada
+src/pages/arrendatario/EncuestaFinalizacion.jsx	Encuesta de finalización con calificación por categoría de servicios, reseña escrita con filtro de groserías y modal de confirmación
+src/pages/arrendatario/PerfilArrendatario.jsx	Perfil del estudiante con edición, validación de username y eliminación de cuenta con modal
+src/pages/arrendatario/VerificarIdentidad.jsx	Primera verificación de identidad con subida de constancia IPN y validación QR
+src/pages/arrendatario/RenovarIdentidad.jsx	Renovación de verificación cada 6 meses con subida de constancia actualizada
+src/pages/arrendatario/VerificacionExitosa.jsx	Pantalla de éxito después de verificar o renovar identidad
+src/pages/arrendatario/VerificacionPendiente.jsx	Aviso cuando el estudiante no ha verificado su identidad
 
 
 
@@ -180,17 +223,23 @@ npm run dev
 
 
 
-
-
 ## 🔐 Funcionalidades Principales
-
-- **Registro de estudiantes** con verificación por constancia de estudios (QR)
-- **Registro de arrendadores** con verificación por documento CURP (QR)
-- **Verificación de correo** con código de 8 dígitos
-- **Panel de administración** completo (CRUD de estudiantes, arrendadores, propiedades)
-- **Página de preguntas frecuentes** con formulario de contacto
-- **Catálogo de escuelas y carreras** del IPN
-- **Búsqueda y autocompletado de códigos postales** (Sepomex)
+- Registro de estudiantes con verificación de identidad por constancia de estudios del IPN (código QR)
+- Registro de arrendadores con verificación de identidad por documento CURP oficial (código QR)
+- Verificación de correo electrónico con código de 8 dígitos enviado por Brevo
+- Verificación de identidad estudiantil con vigencia de 6 meses y renovación automática
+- Recuperación de contraseña en 2 pasos mediante código enviado al correo
+- Panel de administración completo con CRUD de estudiantes, arrendadores y propiedades
+- Búsqueda inteligente de viviendas con degradación automática de filtros para evitar resultados vacíos
+- Sistema de reseñas con calificaciones por categoría de servicios y análisis de sentimiento (positivo, neutral, negativo)
+- Generación de contratos en PDF con cláusulas, firmas y visualización en navegador
+- Encuesta de finalización de arrendamiento con calificación de servicios y filtro de palabras inapropiadas
+- Protección de datos de contacto del arrendador hasta que el estudiante verifique su identidad
+- Página de preguntas frecuentes con formulario de contacto integrado
+- Catálogo de escuelas y carreras del IPN para registro de estudiantes
+- Búsqueda y autocompletado de códigos postales (Sepomex) para direcciones
+- Eliminación de cuenta con conservación anónima de reseñas y eliminación de datos personales
+- Perfiles editables para arrendadores y estudiantes con validación de username único
 
 
 
