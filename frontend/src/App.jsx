@@ -12,6 +12,7 @@ import Bienvenidapage from './pages/publicas/Bienvenidapage'
 import AvisoPrivacidadPage from './pages/publicas/AvisoPrivacidadPage'
 import TerminosUsoPage from './pages/publicas/TerminosUsoPage'
 import FaqPage from './pages/publicas/FaqPage'
+import RestablecerPasswordPage from './pages/publicas/RestablecerPasswordPage'
 
 // Páginas de arrendador
 import MisArrendamientosArrendador from './pages/arrendador/MisArrendamientosArrendador'
@@ -55,6 +56,7 @@ function App() {
         <Route path="/legal/aviso-privacidad" element={<AvisoPrivacidadPage />} />
         <Route path="/legal/terminos-uso" element={<TerminosUsoPage />} />
         <Route path="/faq" element={<FaqPage />} />
+        <Route path="/restablecer-password" element={<RestablecerPasswordPage />} />
 
         {/* Rutas de arrendador */}
         <Route path="/arrendador/mis-arrendamientos" element={

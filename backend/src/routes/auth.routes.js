@@ -679,4 +679,143 @@ router.post('/renovar-identidad', upload.single('constancia'), async (req, res) 
   }
 });
 
+// ============ RECUPERAR CONTRASEÑA - ENVIAR CÓDIGO ============
+router.post('/recuperar-password', async (req, res) => {
+  try {
+    const { correo } = req.body;
+
+    if (!correo) {
+      return res.status(400).json({ error: 'El correo es requerido' });
+    }
+
+    // Buscar usuario
+    const usuario = await Usuario.findOne({ 
+      where: { usuarioCorreo: correo } 
+    });
+
+    if (!usuario) {
+      return res.status(404).json({ 
+        error: 'El correo no está registrado en nuestro sistema' 
+      });
+    }
+
+    // Generar código de 8 dígitos
+    const codigo = Math.floor(10000000 + Math.random() * 90000000).toString();
+
+    // Expira en 15 minutos
+    const expiracion = new Date();
+    expiracion.setMinutes(expiracion.getMinutes() + 15);
+
+    // Guardar código
+    await usuario.update({
+      usuarioCodigo: codigo,
+      usuarioCodigoFecha: expiracion
+    });
+
+    // Enviar código por correo
+    try {
+      await enviarCodigoVerificacion(correo, codigo, usuario.usuarioNom);
+      console.log(`📧 Código de recuperación enviado a ${correo}: ${codigo}`);
+    } catch (emailError) {
+      console.error('Error al enviar correo:', emailError);
+      // No detener el flujo si falla el correo
+    }
+
+    res.json({ 
+      success: true,
+      message: 'Se ha enviado un código de recuperación a tu correo',
+      correo: correo // Para pasarlo a la siguiente pantalla
+    });
+
+  } catch (error) {
+    console.error('Error en recuperar password:', error);
+    res.status(500).json({ error: 'Error al procesar la solicitud' });
+  }
+});
+
+// ============ VERIFICAR CÓDIGO DE RECUPERACIÓN ============
+router.post('/verificar-codigo-recuperacion', async (req, res) => {
+  try {
+    const { correo, codigo } = req.body;
+
+    if (!correo || !codigo) {
+      return res.status(400).json({ error: 'Correo y código son requeridos' });
+    }
+
+    const usuario = await Usuario.findOne({ 
+      where: { 
+        usuarioCorreo: correo,
+        usuarioCodigo: codigo,
+        usuarioCodigoFecha: { [Op.gt]: new Date() } // No expirado
+      } 
+    });
+
+    if (!usuario) {
+      return res.status(400).json({ 
+        error: 'Código incorrecto o expirado' 
+      });
+    }
+
+    res.json({ 
+      success: true,
+      message: 'Código verificado correctamente',
+      correo: correo
+    });
+
+  } catch (error) {
+    console.error('Error al verificar código:', error);
+    res.status(500).json({ error: 'Error al verificar el código' });
+  }
+});
+
+// ============ RESTABLECER CONTRASEÑA ============
+router.post('/restablecer-password', async (req, res) => {
+  try {
+    const { correo, codigo, nuevaPassword } = req.body;
+
+    if (!correo || !codigo || !nuevaPassword) {
+      return res.status(400).json({ error: 'Todos los campos son requeridos' });
+    }
+
+    if (nuevaPassword.length < 6) {
+      return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres' });
+    }
+
+    // Verificar código nuevamente
+    const usuario = await Usuario.findOne({ 
+      where: { 
+        usuarioCorreo: correo,
+        usuarioCodigo: codigo,
+        usuarioCodigoFecha: { [Op.gt]: new Date() }
+      } 
+    });
+
+    if (!usuario) {
+      return res.status(400).json({ 
+        error: 'Código incorrecto o expirado' 
+      });
+    }
+
+    // Hashear nueva contraseña
+    const salt = await bcrypt.genSalt(10);
+    const contraHash = await bcrypt.hash(nuevaPassword, salt);
+
+    // Actualizar contraseña y LIMPIAR código
+    await usuario.update({
+      usuarioContra: contraHash,
+      usuarioCodigo: null,
+      usuarioCodigoFecha: null
+    });
+
+    res.json({ 
+      success: true,
+      message: 'Contraseña restablecida exitosamente' 
+    });
+
+  } catch (error) {
+    console.error('Error al restablecer password:', error);
+    res.status(500).json({ error: 'Error al restablecer la contraseña' });
+  }
+});
+
 module.exports = router;
