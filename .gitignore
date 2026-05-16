@@ -10,4 +10,7 @@ frontend/.env
 dist/
 build/
 
-backend/uploads/
+backend/uploads/.claude/
+*.docx
+*.py
+~
