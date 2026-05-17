@@ -9,11 +9,11 @@ const FooterInicio = () => {
       style={{
         background: "#1A1633",
         color: "rgba(255,255,255,0.6)",
-        padding: "2rem 5vw",
+        padding: "1rem 5vw",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "0.75rem",
+        gap: "0.5rem",
         fontSize: "0.85rem",
         textAlign: "center",
       }}

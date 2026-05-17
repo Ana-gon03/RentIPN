@@ -72,7 +72,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 0.5rem 2rem;
 }
 
 /* Tarjeta de login */
@@ -94,7 +94,7 @@
 /* Header de la tarjeta */
 .login-header {
   background: linear-gradient(135deg, #534AB7 0%, #7F77DD 100%);
-  padding: 2rem 2rem 1.5rem;
+  padding: 1.25rem 2rem 1rem;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -125,28 +125,28 @@
 }
 
 .login-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 20px;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.2);
   border: 1.5px solid rgba(255, 255, 255, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1rem;
+  margin: 0 auto 0.75rem;
 }
 
 .login-icon img {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
 }
 
 .login-header h2 {
   color: var(--white);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
 }
 
 .login-header p {
@@ -156,12 +156,12 @@
 
 /* Body del formulario */
 .login-body {
-  padding: 2rem;
+  padding: 1.5rem;
 }
 
 /* Grupos de formulario */
 .login-group {
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.9rem;
 }
 
 .login-label {
@@ -282,7 +282,7 @@
   text-align: center;
   font-size: 0.85rem;
   color: var(--text-mid);
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 .login-register-link a {
@@ -300,7 +300,7 @@
 .login-divider {
   display: flex;
   align-items: center;
-  margin: 1.5rem 0;
+  margin: 0.9rem 0;
   color: var(--text-light);
   font-size: 0.75rem;
 }
