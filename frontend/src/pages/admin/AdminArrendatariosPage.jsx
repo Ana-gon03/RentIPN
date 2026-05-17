@@ -76,7 +76,7 @@ const AdminArrendatariosPage = () => {
         ) : arrendatarios.length === 0 ? (
           <p className="admin-state">No hay estudiantes registrados.</p>
         ) : (
-          <div className="admin-table-card" style={{ overflowX: 'auto' }}>
+          <div className="admin-table-card">
             <table className="admin-table">
               <thead>
                 <tr>
@@ -94,13 +94,13 @@ const AdminArrendatariosPage = () => {
                 {arrendatarios.map((a) => (
                   <tr key={a.idArrendatario}>
                     <td className="muted">{a.idArrendatario}</td>
-                    <td>{a.arrendatarioUser || '-'}</td>
-                    <td style={{ fontWeight: 500 }}>
+                    <td className="nowrap">{a.arrendatarioUser || '-'}</td>
+                    <td className="truncate" style={{ fontWeight: 500 }} title={`${a.usuario?.usuarioApePat} ${a.usuario?.usuarioApeMat || ''} ${a.usuario?.usuarioNom}`}>
                       {a.usuario?.usuarioApePat} {a.usuario?.usuarioApeMat || ''} {a.usuario?.usuarioNom}
                     </td>
-                    <td>{a.arrendatarioBoleta || '-'}</td>
-                    <td>{a.usuario?.usuarioCorreo || '-'}</td>
-                    <td className="muted">{a.usuario?.usuarioCurp || '-'}</td>
+                    <td className="nowrap">{a.arrendatarioBoleta || '-'}</td>
+                    <td className="truncate" title={a.usuario?.usuarioCorreo || '-'}>{a.usuario?.usuarioCorreo || '-'}</td>
+                    <td className="muted truncate" title={a.usuario?.usuarioCurp || '-'}>{a.usuario?.usuarioCurp || '-'}</td>
                     <td className="center">
                       <span className={`admin-badge ${a.arrendatarioVerificado === 1 ? 'badge-success' : 'badge-warning'}`}>
                         {a.arrendatarioVerificado === 1 ? '✓ Verificado' : '⏳ Pendiente'}

@@ -110,7 +110,8 @@
   border-radius: var(--radius-lg);
   border: 1px solid var(--gray-300);
   box-shadow: var(--shadow-card);
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .admin-table {
@@ -124,9 +125,9 @@
 }
 
 .admin-table th {
-  padding: 0.85rem 1rem;
+  padding: 0.65rem 0.75rem;
   text-align: left;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--text-light);
   text-transform: uppercase;
@@ -153,9 +154,20 @@
 }
 
 .admin-table td {
-  padding: 0.85rem 1rem;
-  font-size: 0.875rem;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.82rem;
   color: var(--text-dark);
+}
+
+.admin-table td.truncate {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-table td.nowrap {
+  white-space: nowrap;
 }
 
 .admin-table td.muted {
