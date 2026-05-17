@@ -624,7 +624,7 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #f5f3ff 0%, #f8f7ff 100%);
-  padding: 2rem;
+  padding: 1.25rem 2rem;
 }
 
 .seleccion-container {
@@ -632,7 +632,7 @@
   width: 100%;
   margin: 0 auto;
   position: relative;
-  padding-top: 4rem;
+  padding-top: 2rem;
 }
 
 .seleccion-regresar {
@@ -668,7 +668,7 @@
 
 .seleccion-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
 }
 
 .seleccion-header h1 {
@@ -686,7 +686,7 @@
 .seleccion-cards {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+  gap: 1.5rem;
   align-items: stretch;
 }
 

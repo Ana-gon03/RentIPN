@@ -129,16 +129,16 @@ function ProfileCard({ delay, variant, checks, icon, tag, title, description }) 
       {/* Header con gradiente */}
       <div style={{
         background: theme.gradient,
-        padding: "2rem 2rem 1.75rem",
+        padding: "1.25rem 1.5rem 1.25rem",
         position: "relative", overflow: "hidden",
       }}>
         {/* ... resto del header igual ... */}
         <div style={{
-          width: "60px", height: "60px", borderRadius: "14px",
+          width: "48px", height: "48px", borderRadius: "12px",
           background: "rgba(255,255,255,0.2)",
           border: "1.5px solid rgba(255,255,255,0.35)",
           display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: "28px", marginBottom: "1.2rem",
+          fontSize: "22px", marginBottom: "0.75rem",
         }}>
           {icon}
         </div>
@@ -159,12 +159,12 @@ function ProfileCard({ delay, variant, checks, icon, tag, title, description }) 
 
       {/* Body blanco - SIN BOTÓN */}
       <div style={{
-        background: "#ffffff", padding: "1.75rem 2rem 2rem",
+        background: "#ffffff", padding: "1.25rem 1.5rem 1.5rem",
         display: "flex", flexDirection: "column", flex: 1,
       }}>
         <p style={{
           fontSize: "0.875rem", color: "#4A4668",
-          lineHeight: 1.75, marginBottom: "1.5rem",
+          lineHeight: 1.6, marginBottom: "1rem",
         }}>
           {description}
         </p>
@@ -388,7 +388,7 @@ function Perfiles() {
       </div>
       
       {/* Botón central de registro */}
-      <div style={{ textAlign: "center", marginTop: "3rem" }}>
+      <div style={{ textAlign: "center", marginTop: "1.75rem" }}>
         <Link to="/registro" className="btn btn-primary" style={{ 
           padding: "14px 40px", 
           fontSize: "1rem",
