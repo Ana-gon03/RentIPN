@@ -184,19 +184,11 @@ const DetallePropiedad = () => {
       <div style={{ flex: 1, maxWidth: '1200px', margin: '0 auto', padding: '20px', width: '100%' }}>
         {/* Botón volver */}
         <button 
-          onClick={() => navigate('/arrendatario/buscar-vivienda')}
-          style={{
-            padding: '10px 20px',
-            marginBottom: '20px',
-            cursor: 'pointer',
-            backgroundColor: '#f0f0f0',
-            border: '1px solid #ddd',
-            borderRadius: '5px',
-            fontSize: '14px'
-          }}
-        >
-          ← Volver a resultados
-        </button>
+        onClick={() => navigate('/arrendatario/buscar-vivienda')}
+        className="atr-btn-back"
+      >
+        ← Regresar
+      </button>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '20px' }}>
           {/* Columna principal */}

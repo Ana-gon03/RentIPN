@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import NavbarInicio from '../../components/common/NavbarInicio'
+import NavbarSimple from '../../components/common/NavbarSimple'
 import FooterInicio from '../../components/common/FooterInicio'
 import { loginUsuario, reenviarCodigo } from '../../services/authService'
+import '../../styles/Login.css'
+import burroLogo from '../../assets/burro.png'
 
 const UsuariosInicioSesionPage = () => {
   const navigate = useNavigate()
@@ -12,7 +14,7 @@ const UsuariosInicioSesionPage = () => {
   const [cargando, setCargando] = useState(false)
   const [mostrarPassword, setMostrarPassword] = useState(false)
 
-  // Estados para recuperar contraseña
+  // Estados para recuperar contraseña (funcionalidad de ella)
   const [mostrarRecuperar, setMostrarRecuperar] = useState(false)
   const [correoRecuperar, setCorreoRecuperar] = useState('')
   const [enviandoRecuperar, setEnviandoRecuperar] = useState(false)
@@ -27,7 +29,6 @@ const UsuariosInicioSesionPage = () => {
     try {
       const data = await loginUsuario(correo, password)
 
-      // ── ARRENDADOR ──────────────────────────────────────────────
       if (data.rol === 'arrendador') {
         localStorage.setItem('userId', data.userId)
         localStorage.setItem('rol', data.rol)
@@ -51,7 +52,6 @@ const UsuariosInicioSesionPage = () => {
         return
       }
 
-      // ── ARRENDATARIO ─────────────────────────────────────────────
       if (data.rol === 'arrendatario') {
         localStorage.setItem('userId', data.userId)
         localStorage.setItem('rol', data.rol)
@@ -95,8 +95,8 @@ const UsuariosInicioSesionPage = () => {
     }
   }
 
-  // ============ RECUPERAR CONTRASEÑA ============
-const handleRecuperarPassword = async (e) => {
+  // ============ RECUPERAR CONTRASEÑA (funcionalidad de ella) ============
+  const handleRecuperarPassword = async (e) => {
     e.preventDefault()
     
     if (!correoRecuperar.trim()) {
@@ -136,113 +136,129 @@ const handleRecuperarPassword = async (e) => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <NavbarInicio />
-      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-        <div style={{ width: '100%', maxWidth: '400px' }}>
-          <h2 style={{ marginBottom: '1.5rem' }}>Iniciar Sesión</h2>
-
-          <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: '1rem' }}>
-              <label>Correo electrónico</label><br />
-              <input
-                type="email"
-                value={correo}
-                onChange={(e) => setCorreo(e.target.value)}
-                placeholder="correo@ejemplo.com"
-                style={{ width: '100%', padding: '0.5rem', marginTop: '0.25rem' }}
-                required
+    <div className="login-page">
+      <NavbarSimple />
+      
+      <div className="login-container">
+        <div className="login-card">
+          <div className="login-header">
+            <div className="login-icon">
+              <img 
+                src={burroLogo} 
+                alt="RentIPN" 
+                style={{ width: '40px', height: '40px', objectFit: 'contain' }}
               />
             </div>
-
-            <div style={{ marginBottom: '0.5rem' }}>
-              <label>Contraseña</label><br />
-              <div style={{ position: 'relative', marginTop: '0.25rem' }}>
-                <input
-                  type={mostrarPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Tu contraseña"
-                  style={{ width: '100%', padding: '0.5rem', paddingRight: '40px' }}
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setMostrarPassword(!mostrarPassword)}
-                  style={{
-                    position: 'absolute',
-                    right: '5px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    fontSize: '1.2rem',
-                    padding: '5px'
-                  }}
-                  title={mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-                >
-                  {mostrarPassword ? '🙈' : '👁️'}
-                </button>
+            <h2>¡Bienvenido de vuelta!</h2>
+            <p>Ingresa tus datos para acceder a tu cuenta</p>
+          </div>
+          
+          <div className="login-body">
+            <form onSubmit={handleSubmit}>
+              <div className="login-group">
+                <label className="login-label">
+                  Correo electrónico <span>*</span>
+                </label>
+                <div className="login-input-wrapper">
+                  <input
+                    type="email"
+                    className="login-input"
+                    value={correo}
+                    onChange={(e) => setCorreo(e.target.value)}
+                    placeholder="correo@ejemplo.com"
+                    required
+                  />
+                </div>
               </div>
-            </div>
 
-            {/* Link de recuperar contraseña */}
-            <div style={{ textAlign: 'right', marginBottom: '1rem' }}>
+              <div className="login-group">
+                <label className="login-label">
+                  Contraseña <span>*</span>
+                </label>
+                <div className="login-input-wrapper">
+                  <input
+                    type={mostrarPassword ? 'text' : 'password'}
+                    className="login-input login-input-icon"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Tu contraseña"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="login-password-toggle"
+                    onClick={() => setMostrarPassword(!mostrarPassword)}
+                    title={mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                  >
+                    {mostrarPassword ? (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                    ) : (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    )}
+                  </button>
+                </div>
+                
+                {/* Link de recuperar contraseña - funcionalidad de ella con diseño tuyo */}
+                <div style={{ textAlign: 'right', marginTop: '8px' }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMostrarRecuperar(true)
+                      setErrorRecuperar('')
+                      setMensajeRecuperar('')
+                      setCorreoRecuperar('')
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#6c63ff',
+                      cursor: 'pointer',
+                      fontSize: '13px',
+                      textDecoration: 'underline',
+                      padding: 0
+                    }}
+                  >
+                    ¿Olvidaste tu contraseña?
+                  </button>
+                </div>
+              </div>
+
+              {error && (
+                <div className="login-error">
+                  <span className="login-error-icon">⚠️</span>
+                  <span className="login-error-text">{error}</span>
+                </div>
+              )}
+
               <button
-                type="button"
-                onClick={() => {
-                  setMostrarRecuperar(true)
-                  setErrorRecuperar('')
-                  setMensajeRecuperar('')
-                  setCorreoRecuperar('')
-                }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#1a237e',
-                  cursor: 'pointer',
-                  fontSize: '0.85rem',
-                  textDecoration: 'underline',
-                  padding: 0
-                }}
+                type="submit"
+                className="login-btn"
+                disabled={cargando}
               >
-                ¿Olvidaste tu contraseña?
+                {cargando ? 'Ingresando...' : 'Iniciar Sesión'}
               </button>
-            </div>
 
-            {error && (
-              <div style={{ color: 'red', marginBottom: '1rem', padding: '0.5rem', border: '1px solid red', borderRadius: '4px', fontSize: '0.9rem' }}>
-                {error}
+              <div className="login-divider">
+                <div className="login-divider-line"></div>
+                <span className="login-divider-text">¿No tienes cuenta?</span>
+                <div className="login-divider-line"></div>
               </div>
-            )}
 
-            <button
-              type="submit"
-              disabled={cargando}
-              style={{ 
-                width: '100%', 
-                padding: '0.75rem', 
-                cursor: cargando ? 'not-allowed' : 'pointer',
-                backgroundColor: '#1a237e',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                fontSize: '1rem',
-                fontWeight: 'bold'
-              }}
-            >
-              {cargando ? 'Ingresando...' : 'Iniciar Sesión'}
-            </button>
-          </form>
-
-          <p style={{ marginTop: '1rem', textAlign: 'center', fontSize: '0.9rem' }}>
-            ¿No tienes cuenta? <Link to="/registro">Regístrate aquí</Link>
-          </p>
+              <div className="login-register-link">
+                <Link to="/registro">Regístrate aquí</Link>
+              </div>
+            </form>
+          </div>
         </div>
-      </main>
-
-      {/* ===== MODAL RECUPERAR CONTRASEÑA ===== */}
+      </div>
+      
+      {/* ===== MODAL RECUPERAR CONTRASEÑA (con diseño bonito) ===== */}
       {mostrarRecuperar && (
         <div style={{
           position: 'fixed',
@@ -258,16 +274,27 @@ const handleRecuperarPassword = async (e) => {
         }}>
           <div style={{
             backgroundColor: 'white',
-            borderRadius: '10px',
+            borderRadius: '16px',
             padding: '30px',
             maxWidth: '420px',
             width: '90%',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
+            boxShadow: '0 20px 35px rgba(0,0,0,0.2)',
+            textAlign: 'center'
           }}>
-            {/* Header */}
-            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-              <p style={{ fontSize: '40px', marginBottom: '10px' }}>🔑</p>
-              <h3 style={{ margin: '0 0 8px 0', color: '#333', fontSize: '18px' }}>
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{
+                width: '60px',
+                height: '60px',
+                background: '#f0eef7',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 15px'
+              }}>
+                <span style={{ fontSize: '30px' }}>🔐</span>
+              </div>
+              <h3 style={{ margin: '0 0 8px 0', color: '#1A1633', fontSize: '20px' }}>
                 Recuperar Contraseña
               </h3>
               <p style={{ color: '#666', fontSize: '13px', margin: 0 }}>
@@ -275,13 +302,12 @@ const handleRecuperarPassword = async (e) => {
               </p>
             </div>
 
-            {/* Mensaje de éxito */}
             {mensajeRecuperar && (
               <div style={{
                 padding: '12px',
                 backgroundColor: '#d4edda',
                 color: '#155724',
-                borderRadius: '5px',
+                borderRadius: '8px',
                 marginBottom: '15px',
                 textAlign: 'center',
                 fontSize: '13px',
@@ -291,13 +317,12 @@ const handleRecuperarPassword = async (e) => {
               </div>
             )}
 
-            {/* Mensaje de error */}
             {errorRecuperar && (
               <div style={{
                 padding: '12px',
                 backgroundColor: '#ffebee',
                 color: '#c62828',
-                borderRadius: '5px',
+                borderRadius: '8px',
                 marginBottom: '15px',
                 textAlign: 'center',
                 fontSize: '13px'
@@ -306,11 +331,10 @@ const handleRecuperarPassword = async (e) => {
               </div>
             )}
 
-            {/* Formulario */}
             {!mensajeRecuperar && (
               <form onSubmit={handleRecuperarPassword}>
-                <div style={{ marginBottom: '20px' }}>
-                  <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', fontSize: '14px' }}>
+                <div style={{ marginBottom: '20px', textAlign: 'left' }}>
+                  <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', fontSize: '14px', color: '#333' }}>
                     Correo electrónico
                   </label>
                   <input
@@ -323,11 +347,12 @@ const handleRecuperarPassword = async (e) => {
                     placeholder="correo@ejemplo.com"
                     style={{
                       width: '100%',
-                      padding: '10px',
-                      borderRadius: '5px',
+                      padding: '12px',
+                      borderRadius: '8px',
                       border: '1px solid #ddd',
                       fontSize: '14px',
-                      boxSizing: 'border-box'
+                      boxSizing: 'border-box',
+                      transition: 'border-color 0.2s'
                     }}
                     required
                   />
@@ -339,13 +364,17 @@ const handleRecuperarPassword = async (e) => {
                     onClick={() => setMostrarRecuperar(false)}
                     style={{
                       flex: 1,
-                      padding: '10px',
-                      backgroundColor: '#f0f0f0',
+                      padding: '12px',
+                      backgroundColor: '#f5f5f5',
                       border: '1px solid #ddd',
-                      borderRadius: '5px',
+                      borderRadius: '8px',
                       cursor: 'pointer',
-                      fontSize: '14px'
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      transition: 'background-color 0.2s'
                     }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e8e8e8'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
                   >
                     Cancelar
                   </button>
@@ -354,17 +383,24 @@ const handleRecuperarPassword = async (e) => {
                     disabled={enviandoRecuperar}
                     style={{
                       flex: 1,
-                      padding: '10px',
-                      backgroundColor: enviandoRecuperar ? '#ccc' : '#1a237e',
+                      padding: '12px',
+                      backgroundColor: enviandoRecuperar ? '#ccc' : '#1A1633',
                       color: 'white',
                       border: 'none',
-                      borderRadius: '5px',
+                      borderRadius: '8px',
                       cursor: enviandoRecuperar ? 'not-allowed' : 'pointer',
                       fontSize: '14px',
-                      fontWeight: 'bold'
+                      fontWeight: 'bold',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!enviandoRecuperar) e.currentTarget.style.backgroundColor = '#2a2348'
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!enviandoRecuperar) e.currentTarget.style.backgroundColor = '#1A1633'
                     }}
                   >
-                    {enviandoRecuperar ? '⏳ Enviando...' : '📧 Enviar enlace'}
+                    {enviandoRecuperar ? '⏳ Enviando...' : 'Enviar enlace'}
                   </button>
                 </div>
               </form>

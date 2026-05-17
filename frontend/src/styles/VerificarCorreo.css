@@ -357,3 +357,59 @@
     letter-spacing: 0.3rem;
   }
 }
+
+/* ════════════════════════════════════════════════
+   RestablecerPasswordPage - Estilos adicionales
+════════════════════════════════════════════════ */
+
+.verificar-password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0;
+  color: #9ca3af;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.verificar-password-toggle:hover {
+  color: var(--purple-600);
+}
+
+.verificar-info ul {
+  margin: 0.5rem 0 0 1rem;
+  padding: 0;
+}
+
+.verificar-info li {
+  font-size: 0.75rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.verificar-back-btn {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: color 0.2s;
+}
+
+.verificar-back-btn:hover {
+  color: var(--purple-600);
+}
+
+/* Ajuste para el input de código cuando no necesita letter-spacing */
+.verificar-code-input.normal {
+  letter-spacing: normal;
+  font-size: 1rem;
+  font-weight: 500;
+}
