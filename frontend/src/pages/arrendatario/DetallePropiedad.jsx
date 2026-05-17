@@ -193,11 +193,11 @@ const DetallePropiedad = () => {
 
       <div className="atr-detail-container">
         {/* Botón volver */}
-        <button 
+        <button
           onClick={() => navigate('/arrendatario/buscar-vivienda')}
           className="atr-btn-back"
         >
-          ← Volver a resultados
+          ← Regresar
         </button>
 
         <div className="atr-detail-grid">

@@ -14,7 +14,7 @@ const UsuariosInicioSesionPage = () => {
   const [cargando, setCargando] = useState(false)
   const [mostrarPassword, setMostrarPassword] = useState(false)
 
-  // Estados para recuperar contraseña
+  // Estados para recuperar contraseña (funcionalidad de ella)
   const [mostrarRecuperar, setMostrarRecuperar] = useState(false)
   const [correoRecuperar, setCorreoRecuperar] = useState('')
   const [enviandoRecuperar, setEnviandoRecuperar] = useState(false)
@@ -95,6 +95,7 @@ const UsuariosInicioSesionPage = () => {
     }
   }
 
+  // ============ RECUPERAR CONTRASEÑA (funcionalidad de ella) ============
   const handleRecuperarPassword = async (e) => {
     e.preventDefault()
 
@@ -202,30 +203,30 @@ const UsuariosInicioSesionPage = () => {
                     )}
                   </button>
                 </div>
-              </div>
 
-              {/* Recuperar contraseña */}
-              <div style={{ textAlign: 'right', marginBottom: '1rem' }}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMostrarRecuperar(true)
-                    setErrorRecuperar('')
-                    setMensajeRecuperar('')
-                    setCorreoRecuperar('')
-                  }}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#1a237e',
-                    cursor: 'pointer',
-                    fontSize: '0.85rem',
-                    textDecoration: 'underline',
-                    padding: 0
-                  }}
-                >
-                  ¿Olvidaste tu contraseña?
-                </button>
+                {/* Link de recuperar contraseña - funcionalidad de ella con diseño tuyo */}
+                <div style={{ textAlign: 'right', marginTop: '8px' }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMostrarRecuperar(true)
+                      setErrorRecuperar('')
+                      setMensajeRecuperar('')
+                      setCorreoRecuperar('')
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#6c63ff',
+                      cursor: 'pointer',
+                      fontSize: '13px',
+                      textDecoration: 'underline',
+                      padding: 0
+                    }}
+                  >
+                    ¿Olvidaste tu contraseña?
+                  </button>
+                </div>
               </div>
 
               {error && (
@@ -240,7 +241,7 @@ const UsuariosInicioSesionPage = () => {
                 className="login-btn"
                 disabled={cargando}
               >
-                {cargando ? 'Ingresando...' : 'Iniciar Sesión →'}
+                {cargando ? 'Ingresando...' : 'Iniciar Sesión'}
               </button>
 
               <div className="login-divider">
@@ -257,7 +258,7 @@ const UsuariosInicioSesionPage = () => {
         </div>
       </div>
 
-      {/* Modal recuperar contraseña */}
+      {/* ===== MODAL RECUPERAR CONTRASEÑA (con diseño bonito) ===== */}
       {mostrarRecuperar && (
         <div style={{
           position: 'fixed',
@@ -270,15 +271,27 @@ const UsuariosInicioSesionPage = () => {
         }}>
           <div style={{
             backgroundColor: 'white',
-            borderRadius: '10px',
+            borderRadius: '16px',
             padding: '30px',
             maxWidth: '420px',
             width: '90%',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
+            boxShadow: '0 20px 35px rgba(0,0,0,0.2)',
+            textAlign: 'center'
           }}>
-            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-              <p style={{ fontSize: '40px', marginBottom: '10px' }}>🔑</p>
-              <h3 style={{ margin: '0 0 8px 0', color: '#333', fontSize: '18px' }}>
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{
+                width: '60px',
+                height: '60px',
+                background: '#f0eef7',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 15px'
+              }}>
+                <span style={{ fontSize: '30px' }}>🔐</span>
+              </div>
+              <h3 style={{ margin: '0 0 8px 0', color: '#1A1633', fontSize: '20px' }}>
                 Recuperar Contraseña
               </h3>
               <p style={{ color: '#666', fontSize: '13px', margin: 0 }}>
@@ -287,21 +300,38 @@ const UsuariosInicioSesionPage = () => {
             </div>
 
             {mensajeRecuperar && (
-              <div style={{ padding: '12px', backgroundColor: '#d4edda', color: '#155724', borderRadius: '5px', marginBottom: '15px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold' }}>
+              <div style={{
+                padding: '12px',
+                backgroundColor: '#d4edda',
+                color: '#155724',
+                borderRadius: '8px',
+                marginBottom: '15px',
+                textAlign: 'center',
+                fontSize: '13px',
+                fontWeight: 'bold'
+              }}>
                 ✅ {mensajeRecuperar}
               </div>
             )}
 
             {errorRecuperar && (
-              <div style={{ padding: '12px', backgroundColor: '#ffebee', color: '#c62828', borderRadius: '5px', marginBottom: '15px', textAlign: 'center', fontSize: '13px' }}>
+              <div style={{
+                padding: '12px',
+                backgroundColor: '#ffebee',
+                color: '#c62828',
+                borderRadius: '8px',
+                marginBottom: '15px',
+                textAlign: 'center',
+                fontSize: '13px'
+              }}>
                 ❌ {errorRecuperar}
               </div>
             )}
 
             {!mensajeRecuperar && (
               <form onSubmit={handleRecuperarPassword}>
-                <div style={{ marginBottom: '20px' }}>
-                  <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', fontSize: '14px' }}>
+                <div style={{ marginBottom: '20px', textAlign: 'left' }}>
+                  <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', fontSize: '14px', color: '#333' }}>
                     Correo electrónico
                   </label>
                   <input
@@ -309,7 +339,15 @@ const UsuariosInicioSesionPage = () => {
                     value={correoRecuperar}
                     onChange={(e) => { setCorreoRecuperar(e.target.value); setErrorRecuperar('') }}
                     placeholder="correo@ejemplo.com"
-                    style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd', fontSize: '14px', boxSizing: 'border-box' }}
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      border: '1px solid #ddd',
+                      fontSize: '14px',
+                      boxSizing: 'border-box',
+                      transition: 'border-color 0.2s'
+                    }}
                     required
                   />
                 </div>
@@ -318,16 +356,45 @@ const UsuariosInicioSesionPage = () => {
                   <button
                     type="button"
                     onClick={() => setMostrarRecuperar(false)}
-                    style={{ flex: 1, padding: '10px', backgroundColor: '#f0f0f0', border: '1px solid #ddd', borderRadius: '5px', cursor: 'pointer', fontSize: '14px' }}
+                    style={{
+                      flex: 1,
+                      padding: '12px',
+                      backgroundColor: '#f5f5f5',
+                      border: '1px solid #ddd',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e8e8e8'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
                     disabled={enviandoRecuperar}
-                    style={{ flex: 1, padding: '10px', backgroundColor: enviandoRecuperar ? '#ccc' : '#1a237e', color: 'white', border: 'none', borderRadius: '5px', cursor: enviandoRecuperar ? 'not-allowed' : 'pointer', fontSize: '14px', fontWeight: 'bold' }}
+                    style={{
+                      flex: 1,
+                      padding: '12px',
+                      backgroundColor: enviandoRecuperar ? '#ccc' : '#1A1633',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: enviandoRecuperar ? 'not-allowed' : 'pointer',
+                      fontSize: '14px',
+                      fontWeight: 'bold',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!enviandoRecuperar) e.currentTarget.style.backgroundColor = '#2a2348'
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!enviandoRecuperar) e.currentTarget.style.backgroundColor = '#1A1633'
+                    }}
                   >
-                    {enviandoRecuperar ? '⏳ Enviando...' : '📧 Enviar código'}
+                    {enviandoRecuperar ? '⏳ Enviando...' : 'Enviar enlace'}
                   </button>
                 </div>
               </form>

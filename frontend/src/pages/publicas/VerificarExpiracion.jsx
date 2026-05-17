@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import NavbarInicio from '../../components/common/NavbarArrendatario'
 import FooterInicio from '../../components/common/FooterInicio'
 import { verificarExpiracion } from '../../services/authService'
 import '../../styles/Arrendatario.css'
-import NavbarArrendatario from '../../components/common/NavbarArrendatario'
 
 const VerificarExpiracion = () => {
   const location = useLocation()
@@ -39,7 +39,7 @@ const VerificarExpiracion = () => {
   if (estado === 'cargando') {
     return (
       <div className="atr-page">
-        <NavbarArrendatario/>
+        <NavbarInicio />
         <div className="atr-verify-wrapper">
           <div className="atr-loading">
             <p>Verificando tu cuenta...</p>
@@ -53,7 +53,7 @@ const VerificarExpiracion = () => {
   if (estado === 'eliminado') {
     return (
       <div className="atr-page">
-        <NavbarArrendatario />
+        <NavbarInicio />
         <div className="atr-verify-wrapper">
           <div className="atr-verify-card atr-verify-card-bordered" style={{ borderColor: '#DC2626' }}>
             <div className="atr-verify-header atr-verify-header-danger">
@@ -108,6 +108,7 @@ const VerificarExpiracion = () => {
 
     const getHeaderClass = () => {
       if (diasRestantes <= 10) return 'atr-verify-header-danger'
+      if (diasRestantes <= 20) return 'atr-verify-header-warning'
       return 'atr-verify-header-warning'
     }
 
@@ -117,25 +118,33 @@ const VerificarExpiracion = () => {
       return '⏳'
     }
 
+    const getHeaderTitle = () => {
+      if (diasRestantes <= 10) return '¡Urgente! Cuenta por expirar'
+      if (diasRestantes <= 20) return 'Atención requerida'
+      return 'Cuenta sin verificar'
+    }
+
     const getHeaderSub = () => {
-      if (diasRestantes <= 10) return '¡Urgente! Tu cuenta está por expirar'
-      if (diasRestantes <= 20) return 'Atención: Tu cuenta requiere verificación'
+      if (diasRestantes <= 10) return '¡Últimos días! Verifica tu identidad ahora'
+      if (diasRestantes <= 20) return 'Tu cuenta será eliminada si no verificas'
       return 'Verifica tu identidad para usar todas las funciones'
     }
 
     const color = getColorByDays()
     const headerClass = getHeaderClass()
     const headerIcon = getHeaderIcon()
+    const headerTitle = getHeaderTitle()
     const headerSub = getHeaderSub()
+    const porcentajeUsado = diasRestantes !== null ? ((60 - diasRestantes) / 60) * 100 : 0
 
     return (
       <div className="atr-page">
-        <NavbarArrendatario />
+        <NavbarInicio />
         <div className="atr-verify-wrapper">
           <div className="atr-verify-card">
             <div className={`atr-verify-header ${headerClass}`}>
               <div className="atr-verify-header-icon">{headerIcon}</div>
-              <div className="atr-verify-header-title">Cuenta sin verificar</div>
+              <div className="atr-verify-header-title">{headerTitle}</div>
               <div className="atr-verify-header-sub">{headerSub}</div>
             </div>
             <div className="atr-verify-body">
@@ -147,12 +156,12 @@ const VerificarExpiracion = () => {
                 <div className="atr-days-unit" style={{ color }}>
                   {diasRestantes === 1 ? 'día' : 'días'}
                 </div>
-                
+
                 <div className="atr-progress-bar-track">
-                  <div 
+                  <div
                     className="atr-progress-bar-fill"
-                    style={{ 
-                      width: `${((60 - diasRestantes) / 60) * 100}%`,
+                    style={{
+                      width: `${porcentajeUsado}%`,
                       backgroundColor: color
                     }}
                   />
@@ -175,7 +184,13 @@ const VerificarExpiracion = () => {
 
               <div className="atr-btn-group">
                 <button
-                  onClick={() => navigate('/arrendatario/perfil')}
+                  onClick={() => navigate('/arrendatario/buscar-vivienda')}
+                  className="atr-btn-ghost"
+                >
+                  🏠 Buscar vivienda (sin verificar)
+                </button>
+                <button
+                  onClick={() => navigate('/arrendatario/verificar-identidad')}
                   className="atr-btn-primary"
                   style={{ background: '#F59E0B', boxShadow: '0 4px 16px rgba(245,158,11,0.25)' }}
                 >
@@ -193,7 +208,7 @@ const VerificarExpiracion = () => {
   if (estado === 'error') {
     return (
       <div className="atr-page">
-        <NavbarArrendatario />
+        <NavbarInicio />
         <div className="atr-verify-wrapper">
           <div className="atr-verify-card">
             <div className="atr-verify-header atr-verify-header-danger">
