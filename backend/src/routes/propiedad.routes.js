@@ -90,14 +90,11 @@ router.get('/buscar-cp/:cp', async (req, res) => {
     const { cp } = req.params;
     
     const direccion = await CP.findOne({
-      where: { 
-        d_codigo: cp,
-        cpAceptadoSistema: 1
-      }
+      where: { d_codigo: cp }
     });
-    
+
     if (!direccion) {
-      return res.status(404).json({ error: 'CP no encontrado o no aceptado en el sistema' });
+      return res.status(404).json({ error: 'CP no encontrado en el sistema' });
     }
     
     res.json({
