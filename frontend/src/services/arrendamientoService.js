@@ -36,13 +36,19 @@ export const buscarArrendatario = async (termino) => {
   return response.data;
 };
 
-// Descargar PDF del contrato (ABRE EN NUEVA PESTAÑA)
+// Ver/descargar PDF del contrato
 export const descargarContratoPDF = async (id) => {
   const response = await api.get(`/arrendamientos/${id}/pdf`, {
     responseType: 'blob'
   });
-  
-  // Crear URL del blob y abrir en nueva pestaña
+
   const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-  window.open(url, '_blank');
+  const link = document.createElement('a');
+  link.href = url;
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  setTimeout(() => window.URL.revokeObjectURL(url), 1000);
 };
