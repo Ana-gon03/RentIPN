@@ -81,10 +81,11 @@ const CrearArrendamiento = () => {
     if (!formData.arrendamientoFechaInicio) {
       errs.arrendamientoFechaInicio = 'La fecha de inicio es obligatoria'
     } else {
-      const hoy = new Date()
-      hoy.setHours(0, 0, 0, 0)
+      const ayer = new Date()
+      ayer.setDate(ayer.getDate() - 1)
+      ayer.setHours(0, 0, 0, 0)
       const fechaSeleccionada = new Date(formData.arrendamientoFechaInicio + 'T00:00:00')
-      if (fechaSeleccionada < hoy) errs.arrendamientoFechaInicio = 'La fecha de inicio no puede ser una fecha pasada'
+      if (fechaSeleccionada < ayer) errs.arrendamientoFechaInicio = 'La fecha de inicio no puede ser una fecha pasada'
     }
     if (!formData.arrendamientoRenta) errs.arrendamientoRenta = 'La renta es obligatoria'
     else if (isNaN(formData.arrendamientoRenta) || parseFloat(formData.arrendamientoRenta) <= 0) errs.arrendamientoRenta = 'La renta debe ser un número mayor a 0'

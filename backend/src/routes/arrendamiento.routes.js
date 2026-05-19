@@ -533,11 +533,12 @@ router.post('/', async (req, res) => {
     }
 
     if (arrendamientoFechaInicio) {
-      const hoy = new Date();
-      hoy.setHours(0, 0, 0, 0);
+      const ayer = new Date();
+      ayer.setDate(ayer.getDate() - 1);
+      ayer.setHours(0, 0, 0, 0);
       const fechaInicio = new Date(arrendamientoFechaInicio + 'T00:00:00');
       fechaInicio.setHours(0, 0, 0, 0);
-      if (fechaInicio < hoy) {
+      if (fechaInicio < ayer) {
         return res.status(400).json({ error: 'La fecha de inicio no puede ser una fecha pasada' });
       }
     }
