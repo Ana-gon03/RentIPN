@@ -80,38 +80,9 @@ const MiArrendamiento = () => {
     navigate(`/arrendatario/encuesta-finalizacion/${arrendamiento.idArrendamiento}`)
   }
 
-  const handleDescargarContrato = async () => {
-    // Abrir ventana ANTES del await: iOS Safari solo permite window.open() en gesto de usuario directo
-    const ventana = window.open('', '_blank')
-
-    try {
-      const token = localStorage.getItem('token') || localStorage.getItem('burroomies_token')
-      const response = await fetch(`${API_URL}/arrendamientos/${arrendamiento.idArrendamiento}/pdf`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-
-      if (!response.ok) throw new Error('Error al obtener el PDF')
-
-      const blob = await response.blob()
-      const url = URL.createObjectURL(blob)
-
-      if (ventana && !ventana.closed) {
-        ventana.location.replace(url)
-      } else {
-        const link = document.createElement('a')
-        link.href = url
-        link.setAttribute('download', 'contrato.pdf')
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-      }
-
-      setTimeout(() => URL.revokeObjectURL(url), 30000)
-    } catch (error) {
-      if (ventana && !ventana.closed) ventana.close()
-      console.error('Error al abrir contrato:', error)
-      alert('No se pudo abrir el contrato')
-    }
+  const handleDescargarContrato = () => {
+    // El endpoint PDF no requiere auth — abrir URL directamente (síncrono, iOS lo permite)
+    window.open(`${API_URL}/arrendamientos/${arrendamiento.idArrendamiento}/pdf`, '_blank')
   }
 
   const propiedad = arrendamiento?.propiedad
