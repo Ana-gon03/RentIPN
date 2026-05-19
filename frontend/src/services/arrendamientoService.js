@@ -45,8 +45,16 @@ export const descargarContratoPDF = async (id) => {
   const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
   const link = document.createElement('a');
   link.href = url;
-  link.target = '_blank';
-  link.rel = 'noopener noreferrer';
+
+  // iOS Safari bloquea target="_blank" después de await; con download lo abre en el visor nativo
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (isMobile) {
+    link.setAttribute('download', 'contrato.pdf');
+  } else {
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+  }
+
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
