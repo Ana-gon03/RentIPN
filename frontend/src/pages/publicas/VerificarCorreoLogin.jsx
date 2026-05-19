@@ -45,7 +45,7 @@ const RestablecerPasswordPage = () => {
     setCargando(true)
 
     try {
-      const response = await fetch('${API_URL}/auth/verificar-codigo-recuperacion', {
+      const response = await fetch(`${API_URL}/auth/verificar-codigo-recuperacion`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo, codigo })
@@ -86,7 +86,7 @@ const RestablecerPasswordPage = () => {
     setCargando(true)
 
     try {
-      const response = await fetch('${API_URL}/auth/restablecer-password', {
+      const response = await fetch(`${API_URL}/auth/restablecer-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo, codigo, nuevaPassword })
@@ -116,7 +116,7 @@ const RestablecerPasswordPage = () => {
     setMensaje('')
 
     try {
-      const response = await fetch('${API_URL}/auth/recuperar-password', {
+      const response = await fetch(`${API_URL}/auth/recuperar-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo })

@@ -401,8 +401,8 @@ INSERT INTO `administrador` (`adminUser`, `adminContra`, `adminFechaInicioSesion
 -- Actualizar códigos postales aceptados en el sistema
 -- -----------------------------------------------------
 
-UPDATE cp 
-SET cpAceptadoSistema = 1 
+UPDATE CP
+SET cpAceptadoSistema = 1
 WHERE d_codigo IN ('07700', '07720', '07755', '07730', '07739', '07300', '07340', '07330', '07320', '07708', '07754', '07740', '07750', '07369');
 
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

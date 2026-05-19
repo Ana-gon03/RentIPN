@@ -279,7 +279,7 @@ const RegistroArrendador = ({ volver }) => {
     fd.append('password', formData.password)
     fd.append('documentoCURP', curpFile)
     try {
-      const response = await fetch('${API_URL}/auth/registro-arrendador', { method: 'POST', body: fd })
+      const response = await fetch(`${API_URL}/auth/registro-arrendador`, { method: 'POST', body: fd })
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || 'Error al registrar')
       navigate('/verificar-correo', {

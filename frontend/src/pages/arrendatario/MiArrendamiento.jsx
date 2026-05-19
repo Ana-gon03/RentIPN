@@ -41,7 +41,7 @@ const MiArrendamiento = () => {
         return
       }
 
-      const response = await fetch('${API_URL}/arrendamientos/mi-arrendamiento', {
+      const response = await fetch(`${API_URL}/arrendamientos/mi-arrendamiento`, {
         headers: { 
           'Content-Type': 'application/json',
           'x-user-id': userId,

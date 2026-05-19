@@ -384,7 +384,7 @@ const RegistroEstudiante = ({ volver }) => {
     if (constanciaFile) fd.append('constancia', constanciaFile)
 
     try {
-      const response = await fetch('${API_URL}/auth/registro-estudiante', { method: 'POST', body: fd })
+      const response = await fetch(`${API_URL}/auth/registro-estudiante`, { method: 'POST', body: fd })
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || 'Error al registrar')
       navigate('/verificar-correo', {

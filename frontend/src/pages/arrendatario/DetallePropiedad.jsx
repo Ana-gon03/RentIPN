@@ -57,7 +57,7 @@ const DetallePropiedad = () => {
       // Si no tiene fecha en localStorage, consultar al backend
       try {
         const userId = localStorage.getItem('userId')
-        const response = await fetch('${API_URL}/auth/estado-verificacion', {
+        const response = await fetch(`${API_URL}/auth/estado-verificacion`, {
           headers: { 'x-user-id': userId }
         })
         const data = await response.json()
