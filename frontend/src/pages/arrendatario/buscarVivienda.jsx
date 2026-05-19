@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { buscarPropiedades, obtenerServicios } from '../../services/propiedadService'
 import NavbarArrendatario from '../../components/common/NavbarArrendatario'
 import FooterInicio from '../../components/common/FooterInicio'
+import { BASE_URL } from '../../config'
 import '../../styles/Arrendatario.css'
 
 const BuscarVivienda = () => {
@@ -361,7 +362,7 @@ const BuscarVivienda = () => {
                     {/* Imagen */}
                     <div className="atr-property-img">
                       {propiedad.fotoPrincipal ? (
-                        <img src={`http://localhost:5000${propiedad.fotoPrincipal}`} alt={propiedad.titulo} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={`${BASE_URL}${propiedad.fotoPrincipal}`} alt={propiedad.titulo} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
                         <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px' }}>🏠</div>
                       )}

@@ -4,6 +4,7 @@ import { obtenerDetallePropiedad } from '../../services/propiedadService'
 import NavbarArrendatario from '../../components/common/NavbarArrendatario'
 import FooterInicio from '../../components/common/FooterInicio'
 import '../../styles/Arrendatario.css'
+import { API_URL, BASE_URL } from '../../config'
 
 const RESENAS_POR_PAGINA = 5
 
@@ -56,7 +57,7 @@ const DetallePropiedad = () => {
       // Si no tiene fecha en localStorage, consultar al backend
       try {
         const userId = localStorage.getItem('userId')
-        const response = await fetch('http://localhost:5000/api/auth/estado-verificacion', {
+        const response = await fetch('${API_URL}/auth/estado-verificacion', {
           headers: { 'x-user-id': userId }
         })
         const data = await response.json()
@@ -209,7 +210,7 @@ const DetallePropiedad = () => {
                 <>
                   <div className="atr-gallery-main">
                     <img
-                      src={`http://localhost:5000${propiedad.fotos[fotoActiva].fotosURL}`}
+                      src={`${BASE_URL}${propiedad.fotos[fotoActiva].fotosURL}`}
                       alt={`Foto ${fotoActiva + 1}`}
                     />
                   </div>
@@ -218,7 +219,7 @@ const DetallePropiedad = () => {
                       {propiedad.fotos.map((foto, index) => (
                         <img
                           key={foto.idFotos}
-                          src={`http://localhost:5000${foto.fotosURL}`}
+                          src={`${BASE_URL}${foto.fotosURL}`}
                           alt={`Miniatura ${index + 1}`}
                           onClick={() => setFotoActiva(index)}
                           className={`atr-gallery-thumb ${index === fotoActiva ? 'active' : ''}`}

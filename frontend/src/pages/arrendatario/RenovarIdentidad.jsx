@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import NavbarArrendatario from '../../components/common/NavbarArrendatario'
 import FooterInicio from '../../components/common/FooterInicio'
 import SubirDocumento from '../../components/ui/SubirDocumento'
+import { API_URL } from '../../config'
 
 const RenovarIdentidad = () => {
   const navigate = useNavigate()
@@ -32,7 +33,7 @@ const RenovarIdentidad = () => {
       fd.append('userId', userId)
       fd.append('constancia', constanciaFile)
 
-      const response = await fetch('http://localhost:5000/api/auth/renovar-identidad', {
+      const response = await fetch(`${API_URL}/auth/renovar-identidad`, {
         method: 'POST',
         body: fd
       })

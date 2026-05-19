@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import NavbarArrendatario from '../../components/common/NavbarArrendatario'
 import FooterInicio from '../../components/common/FooterInicio'
 import SubirDocumento from '../../components/ui/SubirDocumento'
+import { API_URL } from '../../config'
 import '../../styles/Arrendatario.css'
 
 const VerificarIdentidad = () => {
@@ -33,7 +34,7 @@ const VerificarIdentidad = () => {
       fd.append('userId', userId)
       fd.append('constancia', constanciaFile)
 
-      const response = await fetch('http://localhost:5000/api/auth/verificar-identidad', {
+      const response = await fetch(`${API_URL}/auth/verificar-identidad`, {
         method: 'POST',
         body: fd
       })

@@ -5,6 +5,7 @@ import FooterInicio from '../../components/common/FooterInicio'
 import { loginUsuario, reenviarCodigo } from '../../services/authService'
 import '../../styles/Login.css'
 import burroLogo from '../../assets/burro.png'
+import { API_URL } from '../../config'
 
 const UsuariosInicioSesionPage = () => {
   const navigate = useNavigate()
@@ -109,7 +110,7 @@ const UsuariosInicioSesionPage = () => {
     setMensajeRecuperar('')
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/recuperar-password', {
+      const response = await fetch('${API_URL}/auth/recuperar-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo: correoRecuperar })

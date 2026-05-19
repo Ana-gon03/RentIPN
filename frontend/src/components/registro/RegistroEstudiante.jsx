@@ -6,6 +6,7 @@ import SubirDocumento from '../ui/SubirDocumento'
 import LegalModal from '../ui/LegalModal'
 import burroLogo from '../../assets/burro.png'
 import '../../styles/Registro.css'
+import { API_URL } from '../../config'
 
 
 // ─── Estilos del toggle "postergar" ─────────────────────────────────────────
@@ -383,7 +384,7 @@ const RegistroEstudiante = ({ volver }) => {
     if (constanciaFile) fd.append('constancia', constanciaFile)
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/registro-estudiante', { method: 'POST', body: fd })
+      const response = await fetch('${API_URL}/auth/registro-estudiante', { method: 'POST', body: fd })
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || 'Error al registrar')
       navigate('/verificar-correo', {

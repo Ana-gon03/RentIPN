@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import NavbarInicio from '../../components/common/NavbarRegistro'
 import FooterInicio from '../../components/common/FooterInicio'
 import '../../styles/VerificarCorreo.css'
+import { API_URL } from '../../config'
 
 const RestablecerPasswordPage = () => {
   const navigate = useNavigate()
@@ -35,7 +36,7 @@ const RestablecerPasswordPage = () => {
     setCargando(true)
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/verificar-codigo-recuperacion', {
+      const response = await fetch('${API_URL}/auth/verificar-codigo-recuperacion', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo, codigo })
@@ -74,7 +75,7 @@ const RestablecerPasswordPage = () => {
     setCargando(true)
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/restablecer-password', {
+      const response = await fetch('${API_URL}/auth/restablecer-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo, codigo, nuevaPassword })
@@ -102,7 +103,7 @@ const RestablecerPasswordPage = () => {
     setError('')
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/recuperar-password', {
+      const response = await fetch('${API_URL}/auth/recuperar-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo })

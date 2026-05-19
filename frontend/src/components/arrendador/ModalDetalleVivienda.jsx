@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { getPropiedadCompleta, actualizarPropiedad, getServiciosCatalogo, buscarCP } from '../../services/propiedadService'
 import '../../styles/Arrendador.css'
+import { BASE_URL } from '../../config'
 
 const ModalDetalleVivienda = ({ propiedad, onClose, onUpdate }) => {
   const [editando, setEditando] = useState(false)
@@ -199,7 +200,7 @@ const ModalDetalleVivienda = ({ propiedad, onClose, onUpdate }) => {
                   <div className="arr-foto-grid">
                     {fotosExistentes.map(foto => (
                       <div key={foto.idFotos} className="arr-foto-item">
-                        <img src={`http://localhost:5000${foto.fotosURL}`} alt="Foto" />
+                        <img src={`${BASE_URL}${foto.fotosURL}`} alt="Foto" />
                       </div>
                     ))}
                   </div>
@@ -328,7 +329,7 @@ const ModalDetalleVivienda = ({ propiedad, onClose, onUpdate }) => {
                   <div className="arr-foto-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))' }}>
                     {fotosExistentes.map(foto => (
                       <div key={foto.idFotos} className="arr-foto-item">
-                        <img src={`http://localhost:5000${foto.fotosURL}`} alt="Foto" />
+                        <img src={`${BASE_URL}${foto.fotosURL}`} alt="Foto" />
                         <button type="button" className="arr-foto-remove" onClick={() => eliminarFotoExistente(foto.idFotos)}>✕</button>
                       </div>
                     ))}

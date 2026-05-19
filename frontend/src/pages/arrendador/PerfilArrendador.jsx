@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import NavbarArrendador from '../../components/common/NavbarArrendador'
 import FooterInicio from '../../components/common/FooterInicio'
 import ModalConfirmacion from '../../components/common/ModalConfirmacion'
+import { API_URL } from '../../config'
 import { getPerfilArrendador, actualizarPerfilArrendador } from '../../services/authService'
 import '../../styles/Arrendador.css'
 
@@ -119,7 +120,7 @@ const PerfilArrendador = () => {
       const userId = localStorage.getItem('userId')
       const arrendadorId = localStorage.getItem('arrendadorId')
       if (!userId || !arrendadorId) { setError('No has iniciado sesión'); return }
-      const response = await fetch('http://localhost:5000/api/usuarios/eliminar-cuenta-arrendador', {
+      const response = await fetch(`${API_URL}/usuarios/eliminar-cuenta-arrendador`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', 'x-user-id': userId, 'x-arrendador-id': arrendadorId }
       })

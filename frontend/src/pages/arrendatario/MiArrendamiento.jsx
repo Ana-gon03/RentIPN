@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import NavbarArrendatario from '../../components/common/NavbarArrendatario'
 import FooterInicio from '../../components/common/FooterInicio'
+import { API_URL, BASE_URL } from '../../config'
 
 const MiArrendamiento = () => {
   const navigate = useNavigate()
@@ -40,7 +41,7 @@ const MiArrendamiento = () => {
         return
       }
 
-      const response = await fetch('http://localhost:5000/api/arrendamientos/mi-arrendamiento', {
+      const response = await fetch('${API_URL}/arrendamientos/mi-arrendamiento', {
         headers: { 
           'Content-Type': 'application/json',
           'x-user-id': userId,
@@ -84,7 +85,7 @@ const MiArrendamiento = () => {
       const token = localStorage.getItem('token') || localStorage.getItem('burroomies_token')
       
       // Hacer la petición como blob
-      const response = await fetch(`http://localhost:5000/api/arrendamientos/${arrendamiento.idArrendamiento}/pdf`, {
+      const response = await fetch(`${API_URL}/arrendamientos/${arrendamiento.idArrendamiento}/pdf`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       
@@ -265,7 +266,7 @@ const MiArrendamiento = () => {
               }}>
                 {primeraFoto ? (
                   <img 
-                    src={`http://localhost:5000${primeraFoto}`}
+                    src={`${BASE_URL}${primeraFoto}`}
                     alt={propiedad?.propiedadTitulo}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     onError={(e) => { e.target.style.display = 'none'; }}

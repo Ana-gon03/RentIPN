@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import NavbarArrendador from '../../components/common/NavbarArrendador'
 import FooterInicio from '../../components/common/FooterInicio'
 import ModalDetalleVivienda from '../../components/arrendador/ModalDetalleVivienda'
+import { BASE_URL } from '../../config'
 import ModalConfirmacion from '../../components/common/ModalConfirmacion'
 import { getPropiedadesArrendador, cambiarEstadoPropiedad, eliminarPropiedad } from '../../services/propiedadService'
 import '../../styles/Arrendador.css'
@@ -108,7 +109,7 @@ const MisViviendas = () => {
                   <div className="arr-card-image">
                     {propiedad.fotos?.[0] ? (
                       <img
-                        src={`http://localhost:5000${propiedad.fotos[0].fotosURL}`}
+                        src={`${BASE_URL}${propiedad.fotos[0].fotosURL}`}
                         alt={propiedad.propiedadTitulo}
                         onError={(e) => { e.target.style.display = 'none' }}
                       />

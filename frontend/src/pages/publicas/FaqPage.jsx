@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import NavbarInicio from '../../components/common/NavbarInicio'
 import FooterInicio from '../../components/common/FooterInicio'
+import { API_URL } from '../../config'
 
 const FaqPage = () => {
   const [formData, setFormData] = useState({
@@ -72,7 +73,7 @@ const FaqPage = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/contacto', {
+      const response = await fetch(`${API_URL}/contacto`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
