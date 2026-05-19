@@ -159,8 +159,9 @@ const RegistroArrendador = ({ volver }) => {
       setBuscandoCP(true)
       try {
         const resultados = await buscarCP(cpNumeros)
-        if (resultados.length > 0) {
-          setSugerenciasCP(resultados)
+        const lista = Array.isArray(resultados) ? resultados : []
+        if (lista.length > 0) {
+          setSugerenciasCP(lista)
           setMostrarSugerencias(true)
         } else {
           setSugerenciasCP([])
@@ -168,6 +169,7 @@ const RegistroArrendador = ({ volver }) => {
         }
       } catch (error) {
         console.error('Error al buscar CP:', error)
+        setSugerenciasCP([])
       } finally {
         setBuscandoCP(false)
       }

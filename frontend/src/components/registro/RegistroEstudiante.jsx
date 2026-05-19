@@ -403,14 +403,16 @@ const RegistroEstudiante = ({ volver }) => {
 
   // ── Effects ────────────────────────────────────────────────────────────────
   useEffect(() => {
-    getUnidadesAcademicas().then(setUnidades).catch(console.error)
+    getUnidadesAcademicas()
+      .then(data => setUnidades(Array.isArray(data) ? data : []))
+      .catch(console.error)
   }, [])
 
   useEffect(() => {
     if (formData.escuela) {
       setLoading(true)
       getCarrerasByUnidad(formData.escuela)
-        .then(setCarreras)
+        .then(data => setCarreras(Array.isArray(data) ? data : []))
         .catch(console.error)
         .finally(() => setLoading(false))
     } else {
