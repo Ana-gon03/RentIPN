@@ -81,29 +81,34 @@ const MiArrendamiento = () => {
   }
 
   const handleDescargarContrato = async () => {
+    // Abrir ventana ANTES del await: iOS Safari solo permite window.open() en gesto de usuario directo
+    const ventana = window.open('', '_blank')
+
     try {
       const token = localStorage.getItem('token') || localStorage.getItem('burroomies_token')
-      
-      // Hacer la petición como blob
       const response = await fetch(`${API_URL}/arrendamientos/${arrendamiento.idArrendamiento}/pdf`, {
         headers: { Authorization: `Bearer ${token}` }
       })
-      
+
       if (!response.ok) throw new Error('Error al obtener el PDF')
-      
-      // Convertir a blob
+
       const blob = await response.blob()
-      
-      // Crear URL temporal
       const url = URL.createObjectURL(blob)
-      
-      // Abrir en nueva pestaña
-      window.open(url, '_blank')
-      
-      // Liberar memoria después de un tiempo
-      setTimeout(() => URL.revokeObjectURL(url), 1000)
-      
+
+      if (ventana && !ventana.closed) {
+        ventana.location.replace(url)
+      } else {
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', 'contrato.pdf')
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }
+
+      setTimeout(() => URL.revokeObjectURL(url), 30000)
     } catch (error) {
+      if (ventana && !ventana.closed) ventana.close()
       console.error('Error al abrir contrato:', error)
       alert('No se pudo abrir el contrato')
     }
