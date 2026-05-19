@@ -7,12 +7,20 @@ import burroLogo from "../../assets/burro.png";
 ════════════════════════════════ */
 const NavbarInicio = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [menuMovil, setMenuMovil] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (!menuMovil) return;
+    const cerrar = () => setMenuMovil(false);
+    document.addEventListener("click", cerrar);
+    return () => document.removeEventListener("click", cerrar);
+  }, [menuMovil]);
 
   return (
     <nav
@@ -33,6 +41,7 @@ const NavbarInicio = () => {
         transition: "box-shadow 0.25s",
         boxShadow: scrolled ? "0 2px 16px rgba(83,74,183,0.10)" : "none",
       }}
+      onClick={(e) => e.stopPropagation()}
     >
       {/* Marca */}
       <Link
@@ -93,8 +102,8 @@ const NavbarInicio = () => {
         ))}
       </ul>
 
-      {/* Acciones */}
-      <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+      {/* Acciones desktop */}
+      <div className="nav-inicio-actions">
         <Link
           to="/usuarios/inicio-sesion"
           style={{
@@ -110,6 +119,7 @@ const NavbarInicio = () => {
             color: "#534AB7",
             border: "1.5px solid #AFA9EC",
             transition: "background 0.2s",
+            whiteSpace: "nowrap",
           }}
           onMouseEnter={(e) => (e.currentTarget.style.background = "#EEEDFE")}
           onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
@@ -133,6 +143,7 @@ const NavbarInicio = () => {
             border: "none",
             boxShadow: "0 4px 16px rgba(83,74,183,0.28)",
             transition: "background 0.2s, transform 0.2s",
+            whiteSpace: "nowrap",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "#3C3489";
@@ -146,6 +157,27 @@ const NavbarInicio = () => {
           Registrarse
         </Link>
       </div>
+
+      {/* Hamburger móvil */}
+      <button
+        className="nav-inicio-hamburger"
+        onClick={() => setMenuMovil(!menuMovil)}
+        aria-label="Menú"
+      >
+        {menuMovil ? "✕" : "☰"}
+      </button>
+
+      {/* Menú móvil desplegable */}
+      {menuMovil && (
+        <div className="nav-inicio-mobile-menu">
+          <Link to="/usuarios/inicio-sesion" onClick={() => setMenuMovil(false)}>
+            Iniciar Sesión
+          </Link>
+          <Link to="/registro" onClick={() => setMenuMovil(false)}>
+            Registrarse
+          </Link>
+        </div>
+      )}
     </nav>
   );
 };

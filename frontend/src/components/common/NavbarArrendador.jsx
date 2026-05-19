@@ -63,28 +63,31 @@ const NavbarArrendador = () => {
       </div>
 
       {menuAbierto && (
-        <div className="arr-nav-mobile-menu">
-          <Link
-            to="/arrendador/mis-viviendas"
-            className={`arr-nav-mobile-link${isActive('/arrendador/mis-viviendas') ? ' active' : ''}`}
-            onClick={cerrarMenu}
-          >
-            🏠 Mis Viviendas
-          </Link>
-          <Link
-            to="/arrendador/mis-arrendamientos"
-            className={`arr-nav-mobile-link${isActive('/arrendador/mis-arrendamientos') ? ' active' : ''}`}
-            onClick={cerrarMenu}
-          >
-            📋 Mis Arrendamientos
-          </Link>
-          <Link to="/arrendador/perfil" className="arr-nav-mobile-link" onClick={cerrarMenu}>
-            👤 Mi Perfil
-          </Link>
-          <button className="arr-nav-mobile-btn" onClick={() => { cerrarMenu(); handleCerrarSesion(); }}>
-            🚪 Cerrar Sesión
-          </button>
-        </div>
+        <>
+          <div className="arr-nav-backdrop" onClick={cerrarMenu} />
+          <div className="arr-nav-mobile-menu" style={{ position: 'relative', zIndex: 100 }}>
+            <Link
+              to="/arrendador/mis-viviendas"
+              className={`arr-nav-mobile-link${isActive('/arrendador/mis-viviendas') ? ' active' : ''}`}
+              onClick={cerrarMenu}
+            >
+              🏠 Mis Viviendas
+            </Link>
+            <Link
+              to="/arrendador/mis-arrendamientos"
+              className={`arr-nav-mobile-link${isActive('/arrendador/mis-arrendamientos') ? ' active' : ''}`}
+              onClick={cerrarMenu}
+            >
+              📋 Mis Arrendamientos
+            </Link>
+            <Link to="/arrendador/perfil" className="arr-nav-mobile-link" onClick={cerrarMenu}>
+              👤 Mi Perfil
+            </Link>
+            <button className="arr-nav-mobile-btn" onClick={() => { cerrarMenu(); handleCerrarSesion(); }}>
+              🚪 Cerrar Sesión
+            </button>
+          </div>
+        </>
       )}
     </nav>
   )

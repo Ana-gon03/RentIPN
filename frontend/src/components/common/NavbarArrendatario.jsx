@@ -63,28 +63,31 @@ const NavbarArrendatario = () => {
       </div>
 
       {menuAbierto && (
-        <div className="atr-nav-mobile-menu">
-          <Link
-            to="/arrendatario/buscar-vivienda"
-            className={`atr-nav-mobile-link${isActive('/arrendatario/buscar-vivienda') ? ' active' : ''}`}
-            onClick={cerrarMenu}
-          >
-            🔍 Buscar Vivienda
-          </Link>
-          <Link
-            to="/arrendatario/mi-arrendamiento"
-            className={`atr-nav-mobile-link${isActive('/arrendatario/mi-arrendamiento') ? ' active' : ''}`}
-            onClick={cerrarMenu}
-          >
-            📋 Mi Arrendamiento
-          </Link>
-          <Link to="/arrendatario/perfil" className="atr-nav-mobile-link" onClick={cerrarMenu}>
-            👤 Mi Perfil
-          </Link>
-          <button className="atr-nav-mobile-btn" onClick={() => { cerrarMenu(); handleCerrarSesion(); }}>
-            🚪 Cerrar Sesión
-          </button>
-        </div>
+        <>
+          <div className="atr-nav-backdrop" onClick={cerrarMenu} />
+          <div className="atr-nav-mobile-menu" style={{ position: 'relative', zIndex: 100 }}>
+            <Link
+              to="/arrendatario/buscar-vivienda"
+              className={`atr-nav-mobile-link${isActive('/arrendatario/buscar-vivienda') ? ' active' : ''}`}
+              onClick={cerrarMenu}
+            >
+              🔍 Buscar Vivienda
+            </Link>
+            <Link
+              to="/arrendatario/mi-arrendamiento"
+              className={`atr-nav-mobile-link${isActive('/arrendatario/mi-arrendamiento') ? ' active' : ''}`}
+              onClick={cerrarMenu}
+            >
+              📋 Mi Arrendamiento
+            </Link>
+            <Link to="/arrendatario/perfil" className="atr-nav-mobile-link" onClick={cerrarMenu}>
+              👤 Mi Perfil
+            </Link>
+            <button className="atr-nav-mobile-btn" onClick={() => { cerrarMenu(); handleCerrarSesion(); }}>
+              🚪 Cerrar Sesión
+            </button>
+          </div>
+        </>
       )}
     </nav>
   )

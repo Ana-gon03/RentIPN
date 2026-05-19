@@ -959,19 +959,17 @@
 
 /* Responsive Navbar */
 @media (max-width: 768px) {
-  .atr-nav-links {
-    display: none;
-  }
-
-  .atr-nav-profile-name {
-    display: none;
-  }
-
-  .atr-nav-profile {
-    padding: 5px;
-  }
-
+  .atr-nav-links    { display: none; }
+  .atr-nav-profile  { display: none; }
+  .atr-nav-logout   { display: none; }
   .atr-nav-hamburger { display: flex; align-items: center; }
+}
+
+.atr-nav-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 98;
 }
 
 /* ── Responsive ───────────────────────────────────────── */
