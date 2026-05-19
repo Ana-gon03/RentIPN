@@ -38,25 +38,28 @@ export const buscarArrendatario = async (termino) => {
 
 // Ver/descargar PDF del contrato
 export const descargarContratoPDF = async (id) => {
-  const response = await api.get(`/arrendamientos/${id}/pdf`, {
-    responseType: 'blob'
-  });
+  // Abrir ventana ANTES del await: iOS Safari solo permite window.open() en gesto de usuario directo
+  const ventana = window.open('', '_blank');
 
-  const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-  const link = document.createElement('a');
-  link.href = url;
+  try {
+    const response = await api.get(`/arrendamientos/${id}/pdf`, { responseType: 'blob' });
+    const url = URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
 
-  // iOS Safari bloquea target="_blank" después de await; con download lo abre en el visor nativo
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  if (isMobile) {
-    link.setAttribute('download', 'contrato.pdf');
-  } else {
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
+    if (ventana && !ventana.closed) {
+      ventana.location.replace(url);
+    } else {
+      // Fallback si el popup fue bloqueado (escritorio con bloqueador)
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'contrato.pdf');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+  } catch (err) {
+    if (ventana && !ventana.closed) ventana.close();
+    throw err;
   }
-
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  setTimeout(() => window.URL.revokeObjectURL(url), 1000);
 };
